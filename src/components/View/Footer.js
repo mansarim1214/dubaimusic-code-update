@@ -8,9 +8,9 @@ const Footer = () => {
     <div className="footer pt-3 pb-2 text-center">
       <div className="container">
         <div className="social-icons">
-          <Link to=""> <BsInstagram /> </Link>
-          <Link to=""><BsFacebook /></Link>
-          <Link to=""><BsYoutube /></Link>
+          <Link to="https://www.instagram.com/dubaimusic" target="_blank"> <BsInstagram /> </Link>
+          <Link to="https://www.facebook.com/dubaimusic.comm" target="_blank"><BsFacebook /></Link>
+          {/* <Link to=""><BsYoutube /></Link> */}
         </div>
         <p className="mt-3">© 2024 Dubai Music . All Rights Reserved.</p>
       </div>

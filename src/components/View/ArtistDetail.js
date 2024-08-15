@@ -6,6 +6,7 @@ import emailjs from "emailjs-com";
 const ArtistDetail = () => {
   const { id } = useParams();
   const [artist, setArtist] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [formMessage, setFormMessage] = useState("");
 
@@ -16,8 +17,10 @@ const ArtistDetail = () => {
           `${process.env.REACT_APP_API_URL}/api/artists/${id}`
         );
         setArtist(response.data);
+        setLoading(false); // Set loading to false when data is fetched
       } catch (error) {
         console.error("Error fetching artist:", error);
+        setLoading(false); // Set loading to false on error as well
       }
     };
 
@@ -54,7 +57,9 @@ const ArtistDetail = () => {
       });
   };
 
-  if (!artist) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // Show a loading indicator while fetching data
+
+  if (!artist) return <div>Artist not found.</div>; // Handle the case when artist is not found
 
   return (
     <div className="artist-detail bg-custom">

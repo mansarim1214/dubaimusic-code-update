@@ -10,9 +10,7 @@ import Venues from "./components/View/Venues";
 import VenueDetail from "./components/View/VenueDetail";
 import "./App.css";
 import "./index.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "bootstrap/dist/js/bootstrap.min.js";
+
 import Login from "./components/Login";
 
 

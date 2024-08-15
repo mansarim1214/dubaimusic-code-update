@@ -26,6 +26,7 @@ body.offcanvas-active {
     margin: 10px 1rem;
     position: relative;
     padding: 5px 15px;
+    letter-spacing: 1px;
   }
 
   .nav-item a::before{

@@ -10,8 +10,8 @@ import "./frontend.css";
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [artistsByCategory, setArtistsByCategory] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [setLoading] = useState(true);
+  // const [setError] = useState(null);
 
   // console.log('API URL:', process.env.REACT_APP_API_URL);
   useEffect(() => {
@@ -47,11 +47,11 @@ const Home = () => {
 
         setCategories(fetchedCategories);
         setArtistsByCategory(groupedArtists);
-        setLoading(false);
+        // setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Error fetching data. Please try again later.");
-        setLoading(false);
+        // setError("Error fetching data. Please try again later.");
+        // setLoading(false);
       }
     };
 
@@ -111,7 +111,21 @@ const Home = () => {
             <section key={category._id} className="artSection">
               <h2 className="artCat">{category.name}</h2>
               <div className="artistCarousel">
-                <MultiCarousel responsive={responsive} >
+                <MultiCarousel responsive={responsive} 
+                
+                // ssr={true} // means to render carousel on server-side.
+               
+                autoPlaySpeed={2000} // auto-play speed in milliseconds
+                
+                customTransition="all 1.2s" // transition timing for scroll
+                transitionDuration={400} // how long the transition takes
+               
+               
+                slidesToSlide={3} // number of items to slide on each scroll
+          
+                
+                
+                >
                   {artistsByCategory[category.name]?.map((artist) => (
                     <div key={artist._id}>
                       <span
