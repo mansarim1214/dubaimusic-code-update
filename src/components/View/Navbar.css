@@ -26,9 +26,12 @@ body.offcanvas-active {
     margin: 10px 1rem;
     position: relative;
     padding: 5px 15px;
-    letter-spacing: 1px;
+    
   }
 
+  .navbar a{
+    letter-spacing: 1.3px;
+  }
   .nav-item a::before{
     position: absolute !important;
     content: "" !important;
@@ -40,7 +43,7 @@ body.offcanvas-active {
     z-index: -1;
     transition: all 0.3s;
     display: block;
-    background-color: #b2b2b2;
+    background-color: #6e6e6e;
     display: block;
   }
 

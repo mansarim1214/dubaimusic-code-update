@@ -53,7 +53,18 @@ const Venues = () => {
             <h2 className="my-2 fav-title">{category}</h2>
             <div className="row">
               <div className="col">
-                <MultiCarousel responsive={responsive}>
+                <MultiCarousel responsive={responsive}
+                ssr={true}
+
+                autoPlaySpeed={2000}
+
+                customTransition="all 1.2s"
+                transitionDuration={400}
+
+
+                slidesToSlide={3}
+                
+                >
                   {groupedVenues[category].map((venue) => (
                     <div key={venue._id}>
                       <Link to={`/venuedetail/${venue._id}`}>

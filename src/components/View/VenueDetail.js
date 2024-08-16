@@ -83,16 +83,21 @@ const VenueDetail = () => {
         <div>Category: <span>{venue.category}</span></div>
         <div>Location: <span>{venue.location}</span></div>
 
-        <div className='row mt-3' id='description'>
-          <div className='col-md-6'>
-            <div dangerouslySetInnerHTML={{ __html: venue.description || '<em>Description not available yet</em>' }} />
-          </div>
-          <div className='col-md-5'>
+        <div className='mt-3' id='description'>
+          <div className="row">
+          <h4>Venue Details</h4>
+            <div className={`col-md-${venue.gallery && venue.gallery.length > 0 ? 6 : 12}`}>
+              <div dangerouslySetInnerHTML={{ __html: venue.description || '<em>Description not available yet</em>' }} />
+            </div>
             {venue.gallery && venue.gallery.length > 0 && (
-              <div className="venue-gallery">
-                {venue.gallery.map((image, index) => (
-                  <img key={index} src={`${process.env.REACT_APP_API_URL}/${image}`} alt={`Gallery ${index + 1}`} className="mb-2" />
-                ))}
+              <div className="col-md-6">
+                <div className="venue-gallery d-flex flex-wrap">
+                  {venue.gallery.map((image, index) => (
+                    <div key={index} className="gallery-item mb-2 me-2">
+                      <img src={`${process.env.REACT_APP_API_URL}/${image}`} alt={`Gallery ${index + 1}`} className="img-fluid" />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>

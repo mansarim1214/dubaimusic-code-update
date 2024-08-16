@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const AddVenue = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const navigate = useNavigate();
   
   const [venue, setVenue] = useState({
     title: '',
@@ -58,7 +56,7 @@ const AddVenue = () => {
       // Redirect to the venues dashboard or any other route after successful submission
       setTimeout(() => {
         setShowAlert(false);
-        navigate('/venues'); // Replace with the appropriate route
+        
       }, 3000);
 
     } catch (error) {

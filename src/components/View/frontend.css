@@ -68,7 +68,7 @@ overflow-x: hidden;
     font-size: 14px;
 }
 .react-multi-carousel-track {
-    gap: 10px;
+    gap: 20px;
 }
 
 .artSection{
@@ -81,7 +81,7 @@ overflow-x: hidden;
     border-radius: 0;
 }
 .react-multi-carousel-item{
-    width: 213px !important;
+    width: 203px !important;
 }
 /* ------------ mobile media query start-------------- */
 
@@ -265,3 +265,19 @@ overflow-x: hidden;
   }
 
  
+
+  .venue-gallery {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .gallery-item {
+    flex: 0 1 30%; /* Adjust percentage based on the desired number of images per row */
+    margin-bottom: 10px;
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensure the image covers the container without distortion */
+  }

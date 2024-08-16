@@ -91,7 +91,7 @@ const Home = () => {
     mobile: { breakpoint: { max: 464, min: 0 }, items: 2 },
   };
 
- 
+
   return (
     <div className="mainFront bg-custom">
       <div className="container-fluid">
@@ -109,22 +109,22 @@ const Home = () => {
               artistsByCategory[category.name].length > 0
           ).map((category) => (
             <section key={category._id} className="artSection">
-              <h2 className="artCat">{category.name}</h2>
+              <h2 className="my-2 artCat">{category.name}</h2>
               <div className="artistCarousel">
-                <MultiCarousel responsive={responsive} 
-                
-                // ssr={true} // means to render carousel on server-side.
-               
-                autoPlaySpeed={2000} // auto-play speed in milliseconds
-                
-                customTransition="all 1.2s" // transition timing for scroll
-                transitionDuration={400} // how long the transition takes
-               
-               
-                slidesToSlide={3} // number of items to slide on each scroll
-          
-                
-                
+                <MultiCarousel responsive={responsive}
+
+                  ssr={true}
+
+                  autoPlaySpeed={2000}
+
+                  customTransition="all 1.2s"
+                  transitionDuration={400}
+
+
+                  slidesToSlide={3}
+
+
+
                 >
                   {artistsByCategory[category.name]?.map((artist) => (
                     <div key={artist._id}>

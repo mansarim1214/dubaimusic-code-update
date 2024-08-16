@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom'; 
 import "./Navbar.css";
-import { BsInstagram, BsFacebook, BsYoutube } from "react-icons/bs";
+import { BsInstagram, BsFacebook } from "react-icons/bs";
 
 const Footer = () => {
   return (
