@@ -67,6 +67,12 @@ const Navbar = () => {
                 Favorites
               </NavLink>
             </li>
+
+            <li className="nav-item">
+              <NavLink to="/jobs" className="nav-link">
+                Jobs
+              </NavLink>
+            </li>
           </ul>
         </div>
       </nav>

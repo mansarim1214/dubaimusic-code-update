@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import emailjs from "emailjs-com";
+import Masonry from 'react-masonry-css';
+import { Gallery, Item } from 'react-photoswipe-gallery';
+import 'photoswipe/dist/photoswipe.css';
 
 const ArtistDetail = () => {
   const { id } = useParams();
   const [artist, setArtist] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [formMessage, setFormMessage] = useState("");
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -17,10 +21,23 @@ const ArtistDetail = () => {
           `${process.env.REACT_APP_API_URL}/api/artists/${id}`
         );
         setArtist(response.data);
-        setLoading(false); // Set loading to false when data is fetched
+        setLoading(false);
+
+        // Load images to get their dimensions
+        const imagePromises = response.data.galleryImages.map(async (img) => {
+          const src = `${process.env.REACT_APP_API_URL}/${img}`;
+          return new Promise((resolve) => {
+            const image = new Image();
+            image.src = src;
+            image.onload = () => resolve({ src, width: image.width, height: image.height });
+          });
+        });
+
+        const loadedImages = await Promise.all(imagePromises);
+        setImages(loadedImages);
       } catch (error) {
         console.error("Error fetching artist:", error);
-        setLoading(false); // Set loading to false on error as well
+        setLoading(false);
       }
     };
 
@@ -37,7 +54,7 @@ const ArtistDetail = () => {
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
-      artistName: artist?.title, // Ensure artist name is included
+      artistName: artist?.title,
     };
 
     emailjs
@@ -57,9 +74,16 @@ const ArtistDetail = () => {
       });
   };
 
-  if (loading) return <div>Loading...</div>; // Show a loading indicator while fetching data
+  if (loading) return <div>Loading...</div>;
 
-  if (!artist) return <div>Artist not found.</div>; // Handle the case when artist is not found
+  if (!artist) return <div>Artist not found.</div>;
+
+  const breakpointColumnsObj = {
+    default: 2,
+    1100: 2,
+    700: 1,
+    500: 1
+  };
 
   return (
     <div className="artist-detail bg-custom">
@@ -72,9 +96,10 @@ const ArtistDetail = () => {
               src={`${artist.videoUrl.replace(
                 "watch?v=",
                 "embed/"
-              )}?rel=0&modestbranding=0showinfo=0controls=0`}
+              )}?rel=0&modestbranding=1&showinfo=0&controls=1`}
               title={artist.title}
               frameBorder="0"
+              allowFullScreen
             ></iframe>
           </div>
         )}
@@ -87,8 +112,8 @@ const ArtistDetail = () => {
         </div>
 
         <div id="description" className="mt-3">
-          <div className="row ">
-            <div className="col-md-6">
+          <div className="row">
+            <div className={`col-md-${(artist.galleryImages.length || artist.imageUrl) ? '6' : '12'}`}>
               <h4>About</h4>
               <div
                 dangerouslySetInnerHTML={{
@@ -98,15 +123,53 @@ const ArtistDetail = () => {
                 }}
               />
             </div>
-            <div className="col-md-5">
-              {artist.imageUrl && (
-                <img
-                  src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                  alt={artist.title}
-                  className="artist-image mb-2"
-                />
-              )}
-            </div>
+
+            {(artist.galleryImages.length || artist.imageUrl) && (
+              <div className={`col-md-${artist.imageUrl ? '6' : '12'}`}>
+                {artist.imageUrl && (
+                  <img
+                    src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                    alt={artist.title}
+                    className="artist-image mb-2"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                )}
+
+                {artist.galleryImages.length > 0 && (
+                  <div className="gallery-container">
+                    <h4>Gallery</h4>
+                    <Gallery>
+                      <Masonry
+                        breakpointCols={breakpointColumnsObj}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column"
+                      >
+                        {images.map((img, index) => (
+                          <Item
+                            key={index}
+                            original={img.src}
+                            thumbnail={img.src}
+                            width={img.width}
+                            height={img.height}
+                          >
+                            {({ ref, open }) => (
+                              <img
+                                ref={ref}
+                                onClick={open}
+                                src={img.src}
+                                alt={`Gallery Image ${index + 1}`}
+                                className="img-fluid"
+                                style={{ cursor: 'pointer', width: '100%', height: 'auto' }}
+                              />
+                            )}
+                          </Item>
+                        ))}
+                      </Masonry>
+                    </Gallery>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -116,7 +179,6 @@ const ArtistDetail = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
-                  
                   <input
                     type="text"
                     id="name"
@@ -128,10 +190,9 @@ const ArtistDetail = () => {
                     placeholder="Your Name"
                   />
                 </div>
-                </div>
-                <div className="col-md-6">
+              </div>
+              <div className="col-md-6">
                 <div className="form-group">
-                 
                   <input
                     type="tel"
                     id="phone"
@@ -148,25 +209,24 @@ const ArtistDetail = () => {
 
             <div className="row">
               <div className="col-md-6">
-            <div className="form-group">
-            
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-control"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Your Email"
-              />
-            </div>
-            </div>
-            <div className="col-md-6">
-            <button type="submit" className="btn btn-danger enquirybtn">
-              Enquire Now
-            </button>
-            </div>
+                <div className="form-group">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your Email"
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <button type="submit" className="btn btn-danger enquirybtn">
+                  Enquire Now
+                </button>
+              </div>
             </div>
           </form>
           {formMessage && <p className="form-message">{formMessage}</p>}

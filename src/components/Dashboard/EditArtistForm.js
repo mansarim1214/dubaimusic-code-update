@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-
+import Masonry from 'react-masonry-css';
 
 const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [title, setTitle] = useState(artist.title);
@@ -14,9 +13,10 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [categories, setCategories] = useState([]);
+  const [galleryImages, setGalleryImages] = useState(artist.galleryImages || []);
+  const [newGalleryImages, setNewGalleryImages] = useState([]);
 
   useEffect(() => {
-    // Fetch categories from the server
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
@@ -35,67 +35,138 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setFileName(file ? file.name : "No file chosen");
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleGalleryImageUpload = async (event) => {
+    const file = event.target.files[0];
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("category", category);
-    formData.append("speciality", speciality);
-    formData.append("description", description);
-    formData.append("videoUrl", videoUrl);
-    if (image) formData.append("image", image);
+    formData.append('image', file);
+  
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      // Update the state with the new image
+      setGalleryImages((prevImages) => [...prevImages, response.data.newImageUrl]);
+  
+    } catch (error) {
+      console.error('Error uploading gallery image:', error);
+    }
+  };
+  
+  const handleGalleryImagesChange = (e) => {
+    setNewGalleryImages([...newGalleryImages, ...Array.from(e.target.files)]);
+  };
+  
+
+  const removeGalleryImage = async (index) => {
+    const imageToRemove = galleryImages[index];
 
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/artists/${artist._id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`, {
+        data: { image: imageToRemove },
       });
-      console.log("Artist updated:", response.data);
-      setShowAlert(true);
-      setEditArtist(null);
+
+      setGalleryImages(galleryImages.filter((_, i) => i !== index));
     } catch (error) {
-      console.error("Error updating artist:", error);
+      console.error('Error removing gallery image:', error);
     }
   };
 
-  return (
-<>
+  const removeNewGalleryImage = (index) => {
+    setNewGalleryImages(newGalleryImages.filter((_, i) => i !== index));
+  };
 
-    <h3>Edit Artist</h3>
-    <form onSubmit={handleSubmit} className="mt-4">
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter title"
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="category">Category</label>
-        <select
-          className="form-control"
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-        >
-          <option value="">Select category</option>
-          {categories.map((cat) => (
-            <option key={cat._id} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-          <label htmlFor="name">Speciality</label>
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    const artistId = artist._id; // Use the artist's ID from the props
+  
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('speciality', speciality);
+    formData.append('description', description);
+    formData.append('videoUrl', videoUrl);
+  
+    if (image) {
+      formData.append('image', image); // Field name 'image'
+    }
+  
+    // Append new gallery images
+    newGalleryImages.forEach((img) => {
+      formData.append('galleryImages', img); // Field name 'galleryImages'
+    });
+  
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/artists/${artistId}`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      );
+  
+      console.log('Artist updated successfully:', response.data);
+      setShowAlert({ type: 'success', message: 'Artist updated successfully!' });
+      setEditArtist(null);
+    } catch (error) {
+      console.error('Error updating artist:', error.response ? error.response.data : error.message);
+      setShowAlert({ type: 'danger', message: 'Failed to update artist.' });
+    }
+  };
+  
+  
+  
+  
+
+  const breakpointColumnsObj = {
+    default: 5,
+    1100: 2,
+    700: 1,
+    500: 1,
+  };
+
+  return (
+    <>
+      <h3>Edit Artist</h3>
+      <form onSubmit={handleSubmit} className="mt-4">
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            className="form-control"
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select category</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="speciality">Speciality</label>
           <input
             type="text"
             className="form-control"
@@ -106,61 +177,125 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             required
           />
         </div>
-      <div className="form-group">
-        <label htmlFor="bio">Bio</label>
-        <CKEditor
-          editor={ClassicEditor}
-          data={description}
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            setDescription(data);
-          }}
-          config={{
-            placeholder: "Enter artist bio",
-          }}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="videoUrl">Video URL</label>
-        <input
-          type="text"
-          className="form-control"
-          id="videoUrl"
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          placeholder="Enter video URL"
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="image">Artist Photo</label>
-        <div className="custom-file-input-wrapper">
-          <input
-            type="file"
-            className="form-control-file"
-            id="image"
-            onChange={handleFileChange}
+        <div className="form-group">
+          <label htmlFor="bio">Bio</label>
+          <CKEditor
+            editor={ClassicEditor}
+            data={description}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setDescription(data);
+            }}
+            config={{
+              placeholder: "Enter artist bio",
+            }}
           />
-          <button
-            type="button"
-            className="btn btn-dark"
-            onClick={() => document.getElementById("image").click()}
-          >
-            Upload Photo
-          </button>
-          <span id="file-name">{fileName}</span>
         </div>
-      </div>
-      <button type="submit" className="btn btn-lg btn-dark mt-5">
-        Update Artist
-      </button>
-      <button type="button" className="btn btn-secondary ml-3 mt-5" onClick={() => setEditArtist(null)}>
-        Cancel
-      </button>
-    </form>
+        <div className="form-group">
+          <label htmlFor="videoUrl">Video URL</label>
+          <input
+            type="text"
+            className="form-control"
+            id="videoUrl"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="Enter video URL"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="image">Artist Photo</label>
+          <div className="custom-file-input-wrapper">
+            <input
+              type="file"
+              className="form-control-file"
+              id="image"
+              onChange={handleFileChange}
+            />
+            <button
+              type="button"
+              className="btn btn-dark"
+              onClick={() => document.getElementById("image").click()}
+            >
+              Upload Photo
+            </button>
+            <span id="file-name">{fileName}</span>
+          </div>
+        </div>
 
+        <div className="form-group">
+          <label>Gallery Images</label>
+          <div>
+            <input
+              type="file"
+              multiple
+              className="form-control"
+              onChange={handleGalleryImagesChange}
+            />
+          </div>
+          <div className="gallery-container mt-3">
+            <h5>Existing Gallery Images</h5>
+            <Masonry
+              breakpointCols={breakpointColumnsObj}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {galleryImages.map((img, index) => (
+                <div key={index} className="gallery-item">
+                  <img
+                    src={`${process.env.REACT_APP_API_URL}/${img}`}
+                    alt={`Gallery Image ${index + 1}`}
+                    className="img-fluid"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm mt-2"
+                    onClick={() => removeGalleryImage(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </Masonry>
+
+            {newGalleryImages.length > 0 && (
+              <>
+                <h5 className="mt-4">New Gallery Images</h5>
+                <Masonry
+                  breakpointCols={breakpointColumnsObj}
+                  className="my-masonry-grid"
+                  columnClassName="my-masonry-grid_column"
+                >
+                  {newGalleryImages.map((img, index) => (
+                    <div key={index} className="gallery-item">
+                      <img
+                        src={URL.createObjectURL(img)}
+                        alt={`New Gallery Image ${index + 1}`}
+                        className="img-fluid"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm mt-2"
+                        onClick={() => removeNewGalleryImage(index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </Masonry>
+              </>
+            )}
+          </div>
+        </div>
+
+        <button type="submit" className="btn btn-lg btn-dark mt-5">
+          Update Artist
+        </button>
+        <button type="button" className="btn btn-secondary ml-3 mt-5" onClick={() => setEditArtist(null)}>
+          Cancel
+        </button>
+      </form>
     </>
-
   );
 };
 

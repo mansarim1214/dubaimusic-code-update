@@ -10,17 +10,28 @@ const AddArtistForm = () => {
   const [speciality, setSpeciality] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [categories, setCategories] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
+  const [galleryFileNames, setGalleryFileNames] = useState([]);
+  const [mainImageFile, setMainImageFile] = useState(null); // State for main image
+  const [galleryImageFiles, setGalleryImageFiles] = useState([]); // State for gallery images
 
+  // Handle main image file change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
+    setMainImageFile(file);
     setFileName(file ? file.name : "No file chosen");
   };
 
+  // Handle gallery images file change
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    setGalleryImageFiles(files);
+    setGalleryFileNames(files.map((file) => file.name));
+  };
+
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -30,7 +41,11 @@ const AddArtistForm = () => {
     formData.append("speciality", speciality);
     formData.append("description", description);
     formData.append("videoUrl", videoUrl);
-    formData.append("image", image);
+    formData.append("image", mainImageFile); // Append main image file
+
+    galleryImageFiles.forEach((file) => {
+      formData.append("galleryImages", file);
+    });
 
     try {
       const response = await axios.post(
@@ -43,7 +58,6 @@ const AddArtistForm = () => {
         }
       );
       console.log("Artist created:", response.data);
-      // Show Bootstrap alert
       setShowAlert(true);
       // Reset form fields
       setTitle("");
@@ -51,13 +65,16 @@ const AddArtistForm = () => {
       setSpeciality("");
       setDescription("");
       setVideoUrl("");
-      setImage(null);
+      setMainImageFile(null);
+      setGalleryImageFiles([]);
       setFileName("No file chosen");
+      setGalleryFileNames([]);
     } catch (error) {
       console.error("Error creating artist:", error);
     }
   };
 
+  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -73,8 +90,6 @@ const AddArtistForm = () => {
     fetchCategories();
   }, []);
 
-
-  
   return (
     <>
       <h3>Add New Artist</h3>
@@ -109,7 +124,7 @@ const AddArtistForm = () => {
           </select>
         </div>
         <div className="form-group">
-          <label htmlFor="name">Speciality</label>
+          <label htmlFor="speciality">Speciality</label>
           <input
             type="text"
             className="form-control"
@@ -142,7 +157,8 @@ const AddArtistForm = () => {
             id="videoUrl"
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
-            placeholder="Enter video URL" required
+            placeholder="Enter video URL"
+            required
           />
         </div>
         <div className="form-group">
@@ -151,7 +167,8 @@ const AddArtistForm = () => {
             <input
               type="file"
               className="form-control-file"
-              id="image" required
+              id="image"
+              required
               onChange={handleFileChange}
             />
             <button
@@ -164,6 +181,29 @@ const AddArtistForm = () => {
             <span id="file-name">{fileName}</span>
           </div>
         </div>
+        <div className="form-group">
+          <label htmlFor="gallery">Artist Gallery</label>
+          <div className="custom-file-input-wrapper">
+            <input
+              type="file"
+              className="form-control-file"
+              id="gallery"
+              multiple
+              onChange={handleGalleryChange}
+            />
+            <button
+              type="button"
+              className="btn btn-dark"
+              onClick={() => document.getElementById("gallery").click()}
+            >
+              Upload Gallery Images
+            </button>
+            <span id="file-name">
+              {galleryFileNames.join(", ") || "No files chosen"}
+            </span>
+          </div>
+        </div>
+
         {showAlert && (
           <div
             className="alert alert-success alert-dismissible fade show"

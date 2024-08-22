@@ -50,9 +50,9 @@ const Venues = () => {
       <div className="container-fluid">
         {Object.keys(groupedVenues).map((category) => (
           <div key={category} className="category-wrapper">
-            <h2 className="my-2 fav-title">{category}</h2>
+            {/* <h2 className="my-2 fav-title">{category}</h2> */}
             <div className="row">
-              <div className="col">
+              {/* <div className="col">
                 <MultiCarousel responsive={responsive}
                 ssr={true}
 
@@ -86,7 +86,11 @@ const Venues = () => {
                     </div>
                   ))}
                 </MultiCarousel>
-              </div>
+              </div> */}
+
+              <h1 className='text-center'>
+                Coming Soon
+              </h1>
             </div>
           </div>
         ))}
