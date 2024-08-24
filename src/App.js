@@ -10,12 +10,18 @@ import Venues from "./components/View/Venues";
 import VenueDetail from "./components/View/VenueDetail";
 import "./App.css";
 import "./index.css";
+import Unauthorized from './components/Dashboard/Unauthorized';
+import ProtectedRoute from './components/Dashboard/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+
 
 import Login from "./components/Login";
 
 
 const App = () => {
   return (
+
+    <AuthProvider>
     <div className="App">
     <Router>
      
@@ -25,7 +31,8 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
            
           <Route path="/artist/:id" element={<ArtistDetail />} />
           <Route path="/favorites" element={<Favorites />} />
@@ -37,6 +44,8 @@ const App = () => {
 
         </Router>
       </div>
+
+      </AuthProvider>
    
   );
 };

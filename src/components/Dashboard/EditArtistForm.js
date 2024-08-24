@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import Masonry from 'react-masonry-css';
 
 const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [title, setTitle] = useState(artist.title);
@@ -234,58 +233,51 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             />
           </div>
           <div className="gallery-container mt-3">
-            <h5>Existing Gallery Images</h5>
-            <Masonry
-              breakpointCols={breakpointColumnsObj}
-              className="my-masonry-grid"
-              columnClassName="my-masonry-grid_column"
-            >
-              {galleryImages.map((img, index) => (
-                <div key={index} className="gallery-item">
-                  <img
-                    src={`${process.env.REACT_APP_API_URL}/${img}`}
-                    alt={`Gallery Image ${index + 1}`}
-                    className="img-fluid"
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm mt-2"
-                    onClick={() => removeGalleryImage(index)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </Masonry>
+  <h5>Existing Gallery Images</h5>
+  <div className="grid-container">
+    {galleryImages.map((img, index) => (
+      <div key={index} className="gallery-item">
+        <img
+          src={`${process.env.REACT_APP_API_URL}/${img}`}
+          alt={`Gallery Image ${index + 1}`}
+          className="img-fluid"
+        />
+        <button
+          type="button"
+          className="btn btn-danger btn-sm mt-2"
+          onClick={() => removeGalleryImage(index)}
+        >
+          Remove
+        </button>
+      </div>
+    ))}
+  </div>
 
-            {newGalleryImages.length > 0 && (
-              <>
-                <h5 className="mt-4">New Gallery Images</h5>
-                <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                  columnClassName="my-masonry-grid_column"
-                >
-                  {newGalleryImages.map((img, index) => (
-                    <div key={index} className="gallery-item">
-                      <img
-                        src={URL.createObjectURL(img)}
-                        alt={`New Gallery Image ${index + 1}`}
-                        className="img-fluid"
-                      />
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm mt-2"
-                        onClick={() => removeNewGalleryImage(index)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </Masonry>
-              </>
-            )}
+  {newGalleryImages.length > 0 && (
+    <>
+      <h5 className="mt-4">New Gallery Images</h5>
+      <div className="grid-container">
+        {newGalleryImages.map((img, index) => (
+          <div key={index} className="gallery-item">
+            <img
+              src={URL.createObjectURL(img)}
+              alt={`New Gallery Image ${index + 1}`}
+              className="img-fluid"
+            />
+            <button
+              type="button"
+              className="btn btn-danger btn-sm mt-2"
+              onClick={() => removeNewGalleryImage(index)}
+            >
+              Remove
+            </button>
           </div>
+        ))}
+      </div>
+    </>
+  )}
+</div>
+
         </div>
 
         <button type="submit" className="btn btn-lg btn-dark mt-5">

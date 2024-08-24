@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import emailjs from "emailjs-com";
-import Masonry from 'react-masonry-css';
 import { Gallery, Item } from 'react-photoswipe-gallery';
 import 'photoswipe/dist/photoswipe.css';
+import './frontend.css'; // Import the CSS file for styling
 
 const ArtistDetail = () => {
   const { id } = useParams();
@@ -78,12 +78,9 @@ const ArtistDetail = () => {
 
   if (!artist) return <div>Artist not found.</div>;
 
-  const breakpointColumnsObj = {
-    default: 2,
-    1100: 2,
-    700: 1,
-    500: 1
-  };
+  // Categories that should hide Category and Speciality fields
+  const hiddenCategories = ["Wedding Packages", "VIP"];
+  const shouldHideDetails = hiddenCategories.includes(artist.category);
 
   return (
     <div className="artist-detail bg-custom">
@@ -104,12 +101,18 @@ const ArtistDetail = () => {
           </div>
         )}
         <h1>{artist.title}</h1>
-        <div>
-          Category: <span>{artist.category}</span>
-        </div>
-        <div>
-          Speciality: <span>{artist.speciality}</span>
-        </div>
+
+        {/* Conditionally show Category and Speciality */}
+        {!shouldHideDetails && (
+          <>
+            <div>
+              Category: <span>{artist.category}</span>
+            </div>
+            <div>
+              Speciality: <span>{artist.speciality}</span>
+            </div>
+          </>
+        )}
 
         <div id="description" className="mt-3">
           <div className="row">
@@ -139,11 +142,7 @@ const ArtistDetail = () => {
                   <div className="gallery-container">
                     <h4>Gallery</h4>
                     <Gallery>
-                      <Masonry
-                        breakpointCols={breakpointColumnsObj}
-                        className="my-masonry-grid"
-                        columnClassName="my-masonry-grid_column"
-                      >
+                      <div className="grid-container">
                         {images.map((img, index) => (
                           <Item
                             key={index}
@@ -158,13 +157,13 @@ const ArtistDetail = () => {
                                 onClick={open}
                                 src={img.src}
                                 alt={`Gallery Image ${index + 1}`}
-                                className="img-fluid"
-                                style={{ cursor: 'pointer', width: '100%', height: 'auto' }}
+                                className="grid-item"
+                                style={{ cursor: 'pointer' }}
                               />
                             )}
                           </Item>
                         ))}
-                      </Masonry>
+                      </div>
                     </Gallery>
                   </div>
                 )}
@@ -174,7 +173,7 @@ const ArtistDetail = () => {
         </div>
 
         <div className="artistForm mt-3">
-          <h1 className="mx-2 my-2">Book this Artist</h1>
+          <h1 className="mx-2 my-2">Book Artist</h1>
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6">

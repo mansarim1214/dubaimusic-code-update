@@ -86,9 +86,13 @@ const Home = () => {
   };
 
   const responsive = {
-    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 6 },
-    tablet: { breakpoint: { max: 1024, min: 464 }, items: 3 },
-    mobile: { breakpoint: { max: 464, min: 0 }, items: 2 },
+    desktop: {
+       breakpoint: { max: 3000, min: 1024 }, 
+       items: 6, 
+       slidesToSlide:3, 
+      },
+    tablet: { breakpoint: { max: 1024, min: 464 }, items: 3, slidesToSlide:2,  },
+    mobile: { breakpoint: { max: 464, min: 0 }, items: 2, slidesToSlide:2,  },
   };
 
 
@@ -117,11 +121,12 @@ const Home = () => {
 
                   autoPlaySpeed={2000}
 
-                  customTransition="all 1.2s"
-                  transitionDuration={400}
+                  customTransition="all 1.5s"
+                  transitionDuration={600}
+                  
 
 
-                  slidesToSlide={3}
+                  
 
 
 

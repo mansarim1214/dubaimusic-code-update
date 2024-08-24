@@ -87,7 +87,7 @@ overflow-x: hidden;
 
 @media only screen and (max-width: 500px) {
     .react-multi-carousel-item{
-        width: 172px !important;
+        width: 162px !important;
     }
 .react-multiple-carousel__arrow{
  display: none;
@@ -114,9 +114,9 @@ overflow-x: hidden;
 
 }
 #description h4{
-    color: #e10101;
+    color: #b2b2b2;
     font-weight: bold;
-    text-decoration: underline;
+  
 }
 #description, .artistForm{
     background: black;
@@ -200,7 +200,7 @@ overflow-x: hidden;
   }
   
   .artist-detail span, .venue-detail span{
-    color: #e10101;
+    color: #b2b2b2;
   }
 
   .artist-detail h1, .venue-detail h1{
@@ -231,7 +231,7 @@ overflow-x: hidden;
   } */
 
   a{
-    color: #e60023 !important;
+    color: #4e2a84 !important;
     
   }
 
@@ -261,7 +261,8 @@ overflow-x: hidden;
 
   .enquirybtn{
     width: 100%;
-    background-color: #e60023 !important;
+    background-color: #4e2a84 !important;
+    border: 0px !important;
   }
 
  
@@ -305,5 +306,18 @@ overflow-x: hidden;
     display: block;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 3fr));
+    gap: 15px;
+}
+  .grid-item {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
   }
   
