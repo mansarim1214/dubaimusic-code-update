@@ -156,7 +156,7 @@ const ArtistDetail = () => {
                                 ref={ref}
                                 onClick={open}
                                 src={img.src}
-                                alt={`Gallery Image ${index + 1}`}
+                                alt={`Gallery-Image ${index + 1}`}
                                 className="grid-item"
                                 style={{ cursor: 'pointer' }}
                               />
