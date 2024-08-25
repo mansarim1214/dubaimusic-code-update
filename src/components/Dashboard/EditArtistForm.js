@@ -34,21 +34,21 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setFileName(file ? file.name : "No file chosen");
   };
 
-  const handleGalleryImageUpload = async (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
+  // const handleGalleryImageUpload = async (event) => {
+  //   const file = event.target.files[0];
+  //   const formData = new FormData();
+  //   formData.append('image', file);
   
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //         },
+  //       }
+  //     );
   
       // Update the state with the new image
       setGalleryImages((prevImages) => [...prevImages, response.data.newImageUrl]);
@@ -124,12 +124,12 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   
   
 
-  const breakpointColumnsObj = {
-    default: 5,
-    1100: 2,
-    700: 1,
-    500: 1,
-  };
+  // const breakpointColumnsObj = {
+  //   default: 5,
+  //   1100: 2,
+  //   700: 1,
+  //   500: 1,
+  // };
 
   return (
     <>
@@ -239,7 +239,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
       <div key={index} className="gallery-item">
         <img
           src={`${process.env.REACT_APP_API_URL}/${img}`}
-          alt={`Gallery Image ${index + 1}`}
+          alt={`Gallery-image  ${index + 1}`}
           className="img-fluid"
         />
         <button
@@ -261,7 +261,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
           <div key={index} className="gallery-item">
             <img
               src={URL.createObjectURL(img)}
-              alt={`New Gallery Image ${index + 1}`}
+              alt={`New Gallery-Image ${index + 1}`}
               className="img-fluid"
             />
             <button
