@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 // import MultiCarousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import "react-multi-carousel/lib/styles.css";
 // import { Link } from 'react-router-dom';
 // import { BsFillGeoAltFill } from "react-icons/bs";
-
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
@@ -12,11 +11,13 @@ const Venues = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/venues`);
-        console.log('Fetched Venues:', response.data); // Debugging
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/venues`
+        );
+        console.log("Fetched Venues:", response.data); // Debugging
         setVenues(response.data);
       } catch (error) {
-        console.error('Error fetching venues:', error);
+        console.error("Error fetching venues:", error);
       }
     };
 
@@ -37,7 +38,7 @@ const Venues = () => {
 
   // Get grouped venues
   const groupedVenues = groupVenuesByCategory();
-  console.log('Grouped Venues:', groupedVenues); // Debugging
+  console.log("Grouped Venues:", groupedVenues); // Debugging
 
   // const responsive = {
   //   desktop: { breakpoint: { max: 3000, min: 1024 }, items: 6 },
@@ -47,7 +48,7 @@ const Venues = () => {
 
   return (
     <div className="bg-custom">
-      <div className="container-fluid">
+      <div className="container">
         {Object.keys(groupedVenues).map((category) => (
           <div key={category} className="category-wrapper">
             {/* <h2 className="my-2 fav-title">{category}</h2> */}
@@ -88,9 +89,15 @@ const Venues = () => {
                 </MultiCarousel>
               </div> */}
 
-              <h1 className='text-center'>
-                Coming Soon
-              </h1>
+              <h1 style={{ fontFamily: "cursive" }}>Stay tuned!</h1>
+              <h5 style={{ fontFamily: "system-ui" }}>
+                Our Venues section is coming soon, where you’ll find the best
+                live music spots in Dubai, listed for every day of the week.
+                Whether you're looking for the hottest spots to catch live
+                performances or planning your next big event, we’ve got you
+                covered. Keep an eye out—this exciting feature is just around
+                the corner!
+              </h5>
             </div>
           </div>
         ))}

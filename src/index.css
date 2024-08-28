@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'Netflix';
-  src: url('http://54.150.199.132:3000/fonts/NetflixSans-Medium.otf') format('opentype');
-  src: url('http://54.150.199.132:3000/fonts/NetflixSans-Light.otf') format('opentype');
-  src: url('http://54.150.199.132:3000/NetflixSans-Bold.otf') format('opentype');
-  src: url('http://54.150.199.132:3000/NetflixSans-Regular.otf') format('opentype');
+  src: url('http://54.150.199.132:3000/fonts/NetflixSans-Medium.woff2') format('woff2');
+  src: url('http://54.150.199.132:3000/fonts/NetflixSans-Light.woff2') format('woff2');
+  src: url('http://54.150.199.132:3000/NetflixSans-Bold.woff2') format('woff2');
+  src: url('http://54.150.199.132:3000/NetflixSans-Regular.woff2') format('woff2');
 
   font-weight: normal;
  

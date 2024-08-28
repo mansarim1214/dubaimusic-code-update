@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import emailjs from "emailjs-com";
-import { Gallery, Item } from 'react-photoswipe-gallery';
-import 'photoswipe/dist/photoswipe.css';
-import './frontend.css'; // Import the CSS file for styling
+import { Gallery, Item } from "react-photoswipe-gallery";
+import "photoswipe/dist/photoswipe.css";
+import "./frontend.css"; // Import the CSS file for styling
 
 const ArtistDetail = () => {
   const { id } = useParams();
@@ -13,6 +13,32 @@ const ArtistDetail = () => {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [formMessage, setFormMessage] = useState("");
   const [images, setImages] = useState([]);
+
+
+  // Video URL Functions
+
+  function getEmbedUrl(url) {
+    let embedUrl = url;
+  
+    // Check if the URL is a standard YouTube watch URL
+    if (url.includes("watch?v=")) {
+      embedUrl = url.replace("watch?v=", "embed/");
+    } else if (url.includes("youtu.be/")) {
+      // Handle shortened youtu.be links
+      embedUrl = url.replace("youtu.be/", "www.youtube.com/embed/");
+    } else if (url.includes("youtube.com/embed/")) {
+      // URL is already in embed format
+      return url;
+    } else {
+      // Handle other cases or invalid URLs (optional)
+      console.error("Invalid or unsupported YouTube URL:", url);
+      return null; // Or return a placeholder URL
+    }
+  
+    // Append YouTube parameters if needed
+    return `${embedUrl}?rel=0&modestbranding=1&showinfo=0&controls=1`;
+  }
+  
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -29,7 +55,8 @@ const ArtistDetail = () => {
           return new Promise((resolve) => {
             const image = new Image();
             image.src = src;
-            image.onload = () => resolve({ src, width: image.width, height: image.height });
+            image.onload = () =>
+              resolve({ src, width: image.width, height: image.height });
           });
         });
 
@@ -90,10 +117,7 @@ const ArtistDetail = () => {
             <iframe
               width="100%"
               height="500"
-              src={`${artist.videoUrl.replace(
-                "watch?v=",
-                "embed/"
-              )}?rel=0&modestbranding=1&showinfo=0&controls=1`}
+              src={getEmbedUrl(artist.videoUrl)}
               title={artist.title}
               frameBorder="0"
               allowFullScreen
@@ -116,7 +140,11 @@ const ArtistDetail = () => {
 
         <div id="description" className="mt-3">
           <div className="row">
-            <div className={`col-md-${(artist.galleryImages.length || artist.imageUrl) ? '6' : '12'}`}>
+            <div
+              className={`col-md-${
+                artist.galleryImages.length || artist.imageUrl ? "6" : "12"
+              }`}
+            >
               <h4>About</h4>
               <div
                 dangerouslySetInnerHTML={{
@@ -128,13 +156,13 @@ const ArtistDetail = () => {
             </div>
 
             {(artist.galleryImages.length || artist.imageUrl) && (
-              <div className={`col-md-${artist.imageUrl ? '6' : '12'}`}>
+              <div className={`col-md-${artist.imageUrl ? "6" : "12"}`}>
                 {artist.imageUrl && (
                   <img
                     src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
                     alt={artist.title}
                     className="artist-image mb-2"
-                    style={{ width: '100%', height: 'auto' }}
+                    style={{ width: "100%", height: "auto" }}
                   />
                 )}
 
@@ -158,7 +186,7 @@ const ArtistDetail = () => {
                                 src={img.src}
                                 alt={`Galleryimage ${index + 1}`}
                                 className="grid-item"
-                                style={{ cursor: 'pointer' }}
+                                style={{ cursor: "pointer" }}
                               />
                             )}
                           </Item>
@@ -222,7 +250,7 @@ const ArtistDetail = () => {
                 </div>
               </div>
               <div className="col-md-6">
-                <button type="submit" className="btn btn-danger enquirybtn">
+                <button type="submit" className="btn enquirybtn">
                   Enquire Now
                 </button>
               </div>

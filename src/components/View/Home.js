@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MultiCarousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { BsHeartFill } from "react-icons/bs";
 import "./frontend.css";
-
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -17,13 +16,17 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
+        const categoriesResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/categories`
+        );
         const fetchedCategories = categoriesResponse.data;
 
-        const artistsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/artists`);
+        const artistsResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/artists`
+        );
         const fetchedArtists = artistsResponse.data;
 
-        const desiredOrder = ['Trending', 'Singers', 'Band', 'DJ', 'Musicians'];
+        const desiredOrder = ["Trending", "Singers", "Band", "DJ", "Musicians"];
 
         fetchedCategories.sort((a, b) => {
           const aIndex = desiredOrder.indexOf(a.name);
@@ -34,7 +37,8 @@ const Home = () => {
           return aIndex - bIndex;
         });
 
-        const storedFavorites = JSON.parse(localStorage.getItem('favoriteArtists')) || {};
+        const storedFavorites =
+          JSON.parse(localStorage.getItem("favoriteArtists")) || {};
         const groupedArtists = {};
         fetchedCategories.forEach((category) => {
           groupedArtists[category.name] = fetchedArtists
@@ -64,7 +68,9 @@ const Home = () => {
 
     // Update local state
     Object.keys(updatedArtistsByCategory).forEach((category) => {
-      updatedArtistsByCategory[category] = updatedArtistsByCategory[category].map((artist) => {
+      updatedArtistsByCategory[category] = updatedArtistsByCategory[
+        category
+      ].map((artist) => {
         if (artist._id === artistId) {
           isFavorite = !artist.isFavorite;
           return { ...artist, isFavorite };
@@ -76,95 +82,120 @@ const Home = () => {
     setArtistsByCategory(updatedArtistsByCategory);
 
     // Update localStorage
-    const favoriteArtists = JSON.parse(localStorage.getItem('favoriteArtists')) || {};
+    const favoriteArtists =
+      JSON.parse(localStorage.getItem("favoriteArtists")) || {};
     if (isFavorite) {
       favoriteArtists[artistId] = true;
     } else {
       delete favoriteArtists[artistId];
     }
-    localStorage.setItem('favoriteArtists', JSON.stringify(favoriteArtists));
+    localStorage.setItem("favoriteArtists", JSON.stringify(favoriteArtists));
   };
 
   const responsive = {
     desktop: {
-       breakpoint: { max: 3000, min: 1024 }, 
-       items: 6, 
-       slidesToSlide:3, 
-      },
-    tablet: { breakpoint: { max: 1024, min: 464 }, items: 3, slidesToSlide:2,  },
-    mobile: { breakpoint: { max: 464, min: 0 }, items: 2, slidesToSlide:2,  },
+      breakpoint: { max: 3000, min: 1024 },
+      items: 6,
+      slidesToSlide: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+      slidesToSlide: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 2,
+      slidesToSlide: 1, // Adjusted for smoother sliding
+    },
   };
 
-
   return (
-    <div className="mainFront bg-custom">
-      <div className="container-fluid">
-        <div className="row">
-          {/* <div className="col-md-7 main-text mb-5">
-            <h3><strong>Welcome to Dubai Music</strong></h3>
-            <p className="mt-3">
-              Dubai Music is a hub featuring the city’s best singers and musicians. Explore the artists below and use our directory to hire singers and musicians in Dubai for your events.
-            </p>
-          </div> */}
+    <>
+      <div className="mainFront">
+        {/* Hero Section  */}
+        <div className="heroSection text-white d-flex justify-content-center align-items-center">
+          <div className="col-md-6">
+            <div className="text-center">
+              <h1 className="display-4">Welcome to Dubai Music</h1>
+              <p>
+                your go-to hub for booking the best musicians in Dubai. Whether
+                you're planning a wedding, event, or managing a venue, you can
+                easily book your favourite music acts with just a click. Explore
+                our curated list of top talent and create the perfect atmosphere
+                for any experience..
+              </p>
+{/* 
+              <a href="#explore" className="btn btn-md homebtn">
+                Explore
+              </a> */}
+            </div>
 
-          {categories.filter(
-            (category) =>
-              artistsByCategory[category.name] &&
-              artistsByCategory[category.name].length > 0
-          ).map((category) => (
-            <section key={category._id} className="artSection">
-              <h2 className="my-2 artCat">{category.name}</h2>
-              <div className="artistCarousel">
-                <MultiCarousel responsive={responsive}
-
-                  ssr={true}
-
-                  autoPlaySpeed={2000}
-
-                  customTransition="all 1.5s"
-                  transitionDuration={600}
-                  
-
-
-                  
-
-
-
-                >
-                  {artistsByCategory[category.name]?.map((artist) => (
-                    <div key={artist._id}>
-                      <span
-                        className={`favorite ${artist.isFavorite ? 'favorited' : ''}`}
-                        onClick={() => toggleFavorite(artist._id)}
-                        style={{ color: artist.isFavorite ? 'red' : 'grey' }}
-                      >
-                        <BsHeartFill />
-                      </span>
-                      <Link to={`/artist/${artist._id}`}>
-                        <div className="artistImage">
-                          {artist.imageUrl && (
-                            <img
-                              src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                              alt={artist.title}
-                              width="100%"
-                              loading="lazy"
-                            />
-                          )}
-                          <div className="artContent">
-                            <h4 className="artTitle">{artist.title}</h4>
-                            {/* <span className="speciality">{artist.speciality}</span> */}
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
-                </MultiCarousel>
+            <div class="default-ltr-cache-dulgtd">
+              <div class="curve-container">
+                <div class="default-ltr-cache-1f97ztc"></div>
               </div>
-            </section>
-          ))}
+              <div class="default-ltr-cache-jtcpfi"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero section  */}
+
+        <div className="container-fluid" id="explore">
+          {categories
+            .filter(
+              (category) =>
+                artistsByCategory[category.name] &&
+                artistsByCategory[category.name].length > 0
+            )
+            .map((category) => (
+              <section key={category._id} className="artSection">
+                <h2 className="my-2 artCat">{category.name}</h2>
+                <div className="artistCarousel">
+                  <MultiCarousel
+                    responsive={responsive}
+                    autoPlaySpeed={2000}
+                    customTransition="all 0.4s ease" // Reduced duration for smoother effect
+                    transitionDuration={400}
+                    ssr
+                  >
+                    {artistsByCategory[category.name]?.map((artist) => (
+                      <div key={artist._id}>
+                        <span
+                          className={`favorite ${
+                            artist.isFavorite ? "favorited" : ""
+                          }`}
+                          onClick={() => toggleFavorite(artist._id)}
+                          style={{ color: artist.isFavorite ? "red" : "grey" }}
+                        >
+                          <BsHeartFill />
+                        </span>
+                        <Link to={`/artist/${artist._id}`}>
+                          <div className="artistImage">
+                            {artist.imageUrl && (
+                              <img
+                                src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                                alt={artist.title}
+                                width="100%"
+                                loading="lazy"
+                              />
+                            )}
+                            <div className="artContent">
+                              <h4 className="artTitle">{artist.title}</h4>
+                              {/* <span className="speciality">{artist.speciality}</span> */}
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    ))}
+                  </MultiCarousel>
+                </div>
+              </section>
+            ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

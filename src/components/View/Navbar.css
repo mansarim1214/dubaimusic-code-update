@@ -7,7 +7,7 @@ body.offcanvas-active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem 2rem !important;
     background-color: #333;
   }
   #navbarNav{
@@ -20,12 +20,14 @@ body.offcanvas-active {
   .nav-link{
     list-style: none;
     display: flex;
+
   }
   
   .nav-item a{
-    margin: 10px 1rem;
+    margin: 16px 1rem;
     position: relative;
     padding: 5px 15px;
+    font-weight: 600;
     
   }
 
@@ -43,7 +45,7 @@ body.offcanvas-active {
     z-index: -1;
     transition: all 0.3s;
     display: block;
-    background-color: #6e6e6e;
+    background-color: #693dab;
     display: block;
   }
 
@@ -54,7 +56,7 @@ body.offcanvas-active {
   
   .nav-link {
     color: #fff !important;
- 
+    font-size: 18px !important;
   }
 
 
@@ -131,9 +133,24 @@ body.offcanvas-active {
       border-bottom: 1px solid #5a5a5a;
       width: 85%;
     }
+
+    .navbar{
+      padding: 0.5rem 1rem !important;
+    }
+    .nav-link{
+      font-size: 14px !important;
+    }
+
+    .d-flex{
+      gap: 0 !important;
+    }
+    .sidebar-nav .social-icons{
+      margin-top: 20px;
+    }
   }
   .sidebar-nav{
     list-style-type: none;
+    width: 90%;
   }
 
   nav .navbar-toggler{
@@ -167,7 +184,7 @@ body.offcanvas-active {
   nav label{
     display:flex;
      flex-direction:column;
-     width:40px;
+
      cursor:pointer;
    }
    
@@ -223,16 +240,6 @@ body.offcanvas-active {
    
    }
    
-
-
-
-
-
-
-
-
-
-
 
   /* Hamburger Icon Styles */
 .hamburger-icon {
@@ -292,7 +299,7 @@ input[type="checkbox"] {
   position: fixed;
   top: 0;
   left: 0;
-  width: 250px;
+  width: 270px;
   height: 100%;
   background-color: #111;
   z-index: 1000;
@@ -306,5 +313,130 @@ input[type="checkbox"] {
 
 .btn-close {
   font-size: 24px;
-  color: white;
+
+}
+.instant-btn{
+  position: relative;
+  z-index: 9;
+  color:white !important;
+  border: 0px !important;
+}
+.instant-btn a{
+  color: white !important;
+  border: 0;
+  font-weight: 600;
+  border: 0px !important;
+
+}
+.instant-btn::before{
+  position: absolute !important;
+  content: "" !important;
+  width: 100%;
+  transform: skewX(-30deg);
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  transition: all 0.3s;
+  display: block;
+  background-color: #693dab;
+  display: block;
+}
+
+@media only screen and (max-width: 500px) {
+  .nav-item a{
+    position: relative;
+    padding: 5px 15px;
+    margin: 10px 1rem;
+    font-size: 16px;
+}
+
+}
+
+.navbar ul{
+  margin-bottom: 0 !important;
+  list-style-type: none;
+}
+
+.navbar .d-flex{
+  gap: 25px;
+  align-items: center;
+}
+
+
+.sidebar-nav svg{
+  background-color: #693dab;
+}
+
+/* Custom Modal Styling */
+.modal-content {
+  background-color: #000 !important; /* Black background */
+  color: #fff !important; /* White text color */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px;
+}
+
+.modal-header {
+  border-bottom: none !important; /* Remove the bottom border */
+}
+
+.modal-title {
+  font-size: 24px; /* Larger title font size */
+  font-weight: bold; /* Bold title text */
+}
+
+.modal-body {
+  padding: 20px 10px !important; /* Padding for the modal body */
+}
+
+.modal-footer {
+  border-top: none !important; /* Remove the top border */
+  justify-content: flex-end; /* Align the button to the right */
+}
+
+
+
+.homeBtn {
+  background-color: #4e2a84;
+  border: none;
+  color: #fff !important;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.homeBtn:hover {
+  background-color: #4e2a84;
+}
+
+
+.modal-open{
+  padding-right: 0 !important;
+}
+
+.modal-backdrop{
+  z-index: 9 !important;
+  background-color: #ffffff3b !important;
+}
+#instantBookModal{
+  top: 15%;
+}
+
+.modal-dialog{
+  --bs-modal-width: 630px;
+}
+
+/* Custom CSS to make the modal close button white */
+.modal-header .btn-close {
+  filter: invert(1); /* Inverts colors, making dark elements light */
+}
+
+/* If you want to ensure it's pure white without inverting */
+.modal-header .btn-close {
+  background-color: transparent; /* Remove any background */
+  opacity: 1; /* Ensure full opacity */
+}
+
+.modal-header .btn-close::before {
+  color: white; /* Color of the close icon */
 }
