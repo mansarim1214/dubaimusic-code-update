@@ -135,7 +135,7 @@ body.offcanvas-active {
     }
 
     .navbar{
-      padding: 0.5rem 1rem !important;
+      padding: 0 !important;
     }
     .nav-link{
       font-size: 14px !important;
@@ -147,6 +147,7 @@ body.offcanvas-active {
     .sidebar-nav .social-icons{
       margin-top: 20px;
     }
+    
   }
   .sidebar-nav{
     list-style-type: none;
@@ -351,11 +352,17 @@ input[type="checkbox"] {
     font-size: 16px;
 }
 
+.homeBtn{
+  font-size: 14px !important;
+}
+
 }
 
 .navbar ul{
   margin-bottom: 0 !important;
   list-style-type: none;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 .navbar .d-flex{
@@ -408,6 +415,8 @@ input[type="checkbox"] {
 .homeBtn:hover {
   background-color: #4e2a84;
 }
+
+
 
 
 .modal-open{
