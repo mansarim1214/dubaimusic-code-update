@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
 import "./frontend.css";
 
 const Jobs = () => {
-  const [jobs, setJobs] = useState([]);
+  // const [jobs, setJobs] = useState([]);
 
-  useEffect(() => {
-    // Fetch jobs data from an API
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/jobs`)
-      .then((response) => {
-        setJobs(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the jobs!", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   // Fetch jobs data from an API
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/jobs`)
+  //     .then((response) => {
+  //       setJobs(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error fetching the jobs!", error);
+  //     });
+  // }, []);
 
   return (
     <div className=" bg-custom">
