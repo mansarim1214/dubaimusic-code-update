@@ -92,14 +92,14 @@ const Navbar = ({ handleShow }) => {
           </button>
         </div>
         <ul className="sidebar-nav">
-          <a className="navbar-brand" href="/">
-            <img
-              src="/dubai-music-white-logo.webp"
-              width="150px"
-              className="d-inline-block align-top"
-              alt="Logo"
-            />
-          </a>
+          // <a className="navbar-brand" href="/">
+          //   <img
+          //     src="/dubai-music-white-logo.webp"
+          //     width="150px"
+          //     className="d-inline-block align-top"
+          //     alt="Logo"
+          //   />
+          // </a>
           <li className="nav-item">
             <NavLink
               exact="true"
