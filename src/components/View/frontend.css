@@ -381,12 +381,12 @@ overflow-x: hidden;
 
 }
 
-@media (min-width: 1280px) {
+
   .default-ltr-cache-1f97ztc {
       width: 130%;
       left: -15%;
   }
-}
+
 
 .default-ltr-cache-1f97ztc {
   box-sizing: border-box;
