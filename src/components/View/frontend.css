@@ -339,7 +339,7 @@ overflow-x: hidden;
   
 
   .heroSection {
-    background-image: url('http://localhost:3001/bg6.webp'); /* Replace with your image path */
+    background-image: url('http://54.150.199.132:3000/bg6.webp'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     height: 100vh; /* Full viewport height */
