@@ -18,26 +18,28 @@ const ArtistDetail = () => {
   // Video URL Functions
 
   function getEmbedUrl(url) {
-    let embedUrl = url;
+    if (!url) {
+      console.error("URL is null or undefined");
+      return null; // Handle missing URL
+    }
   
-    // Check if the URL is a standard YouTube watch URL
-    if (url.includes("watch?v=")) {
-      embedUrl = url.replace("watch?v=", "embed/");
-    } else if (url.includes("youtu.be/")) {
-      // Handle shortened youtu.be links
-      embedUrl = url.replace("youtu.be/", "www.youtube.com/embed/");
-    } else if (url.includes("youtube.com/embed/")) {
-      // URL is already in embed format
-      return url;
-    } else {
-      // Handle other cases or invalid URLs (optional)
+    const extractVideoId = (url) => {
+      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    };
+  
+    const videoId = extractVideoId(url);
+  
+    if (!videoId) {
       console.error("Invalid or unsupported YouTube URL:", url);
       return null; // Or return a placeholder URL
     }
   
-    // Append YouTube parameters if needed
-    return `${embedUrl}`;
+    // Return the embed URL format
+    return `https://www.youtube.com/embed/${videoId}`;
   }
+  
   
 
   useEffect(() => {

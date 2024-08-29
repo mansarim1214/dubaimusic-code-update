@@ -11,7 +11,7 @@ import VenueDetail from "./components/View/VenueDetail";
 import "./App.css";
 import "./index.css";
 import Unauthorized from './components/Dashboard/Unauthorized';
-import ProtectedRoute from './components/Dashboard/ProtectedRoute';
+// import ProtectedRoute from './components/Dashboard/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Jobs from './components/View/Jobs';
 
