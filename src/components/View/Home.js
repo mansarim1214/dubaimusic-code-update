@@ -125,10 +125,7 @@ const Home = () => {
                 our curated list of top talent and create the perfect atmosphere
                 for any experience..
               </p>
-{/* 
-              <a href="#explore" className="btn btn-md homebtn">
-                Explore
-              </a> */}
+
             </div>
 
             <div class="default-ltr-cache-dulgtd">

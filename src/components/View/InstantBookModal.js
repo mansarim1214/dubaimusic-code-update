@@ -5,12 +5,15 @@ const InstantBookModal = () => {
 <div className="modal fade" id="instantBookModal" tabIndex="-1" aria-labelledby="instantBookLabel" aria-hidden="true">
   <div className="modal-dialog">
     <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title" id="instantBookLabel">Instant Book</h5>
+      <div className="modal-header p-0">
         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div className="modal-body">
-        <form>
+      <h4 className="modal-title text-center" id="instantBookLabel" >Instant Book</h4>
+      <p className="text-center" style={{color: "#8e56e3"}}>(10AM to 6PM)</p>
+      <h5 className="text-center mt-3">Instant Book, instant response. We’ll be in touch within the next few minutes.</h5>
+
+        <form className="mt-4">
           <div className="row mb-3">
             <div className="col-md-6">
               <label htmlFor="name" className="form-label">Name</label>

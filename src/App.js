@@ -16,7 +16,7 @@ import { AuthProvider } from './context/AuthContext';
 import Jobs from './components/View/Jobs';
 
 
-import Login from "./components/Login";
+import Login from "./components/Dashboard/Login";
 
 
 const App = () => {
@@ -30,9 +30,11 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          
           <Route path="/login" element={<Login />} />
           
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
            
           <Route path="/artist/:id" element={<ArtistDetail />} />

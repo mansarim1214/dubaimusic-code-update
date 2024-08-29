@@ -36,7 +36,7 @@ const ArtistDetail = () => {
     }
   
     // Append YouTube parameters if needed
-    return `${embedUrl}?rel=0&modestbranding=1&showinfo=0&controls=1`;
+    return `${embedUrl}`;
   }
   
 
@@ -133,7 +133,7 @@ const ArtistDetail = () => {
               Category: <span>{artist.category}</span>
             </div>
             <div>
-              Speciality: <span>{artist.speciality}</span>
+              Music Style: <span>{artist.speciality}</span>
             </div>
           </>
         )}

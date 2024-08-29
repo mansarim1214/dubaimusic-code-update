@@ -213,7 +213,7 @@ overflow-x: hidden;
   }
   
   .artist-detail span, .venue-detail span{
-    color: #b2b2b2;
+    color: #9156e9;
   }
 
   .artist-detail h1, .venue-detail h1{
@@ -339,7 +339,7 @@ overflow-x: hidden;
   
 
   .heroSection {
-    background-image: url('http://54.150.199.132:3000/bg6.webp'); /* Replace with your image path */
+    background-image: url('http://54.150.199.132:3000/bg5.jpg'); /* Replace with your image path */
     background-size: cover;
     background-position: center;
     height: 100vh; /* Full viewport height */

@@ -89,8 +89,8 @@ const Venues = () => {
                 </MultiCarousel>
               </div> */}
 
-              <h1 style={{ fontFamily: "cursive" }}>Stay tuned!</h1>
-              <h5 style={{ fontFamily: "system-ui" }}>
+              <h1 style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign: "center" }}>Stay tuned!</h1>
+              <h5 className="mt-3" style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign:"center", lineHeight:"30px" }}>
                 Our Venues section is coming soon, where you’ll find the best
                 live music spots in Dubai, listed for every day of the week.
                 Whether you're looking for the hottest spots to catch live
