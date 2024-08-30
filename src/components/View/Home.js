@@ -101,12 +101,12 @@ const Home = () => {
     tablet: {
       breakpoint: { max: 1024, min: 464 },
       items: 3,
-      slidesToSlide: 2,
+      slidesToSlide: 3,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 2,
-      slidesToSlide: 1, // Adjusted for smoother sliding
+      slidesToSlide: 3, // Adjusted for smoother sliding
     },
   };
 
@@ -152,9 +152,9 @@ const Home = () => {
                 <div className="artistCarousel">
                   <MultiCarousel
                     responsive={responsive}
-                    autoPlaySpeed={2000}
-                    customTransition="all 0.4s ease" // Reduced duration for smoother effect
-                    transitionDuration={400}
+                    autoPlaySpeed={3000}
+                    customTransition="all 0.5s ease" // Reduced duration for smoother effect
+                    transitionDuration={300}
                     ssr
                   >
                     {artistsByCategory[category.name]?.map((artist) => (
