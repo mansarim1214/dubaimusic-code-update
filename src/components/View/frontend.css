@@ -84,12 +84,13 @@ overflow-x: hidden;
 }
 .react-multi-carousel-item{
     width: 203px !important;
+    will-change: transform;
 }
 /* ------------ mobile media query start-------------- */
 
 @media only screen and (max-width: 500px) {
     .react-multi-carousel-item{
-        width: 162px !important;
+        width: 157px !important;
     }
 .react-multiple-carousel__arrow{
  display: none;

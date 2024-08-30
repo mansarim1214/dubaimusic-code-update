@@ -95,7 +95,7 @@ const Home = () => {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 6,
+      items: 5,
       slidesToSlide: 3,
     },
     tablet: {
@@ -106,7 +106,7 @@ const Home = () => {
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 2,
-      slidesToSlide: 3, // Adjusted for smoother sliding
+      slidesToSlide: 4,
     },
   };
 
@@ -125,7 +125,6 @@ const Home = () => {
                 our curated list of top talent and create the perfect atmosphere
                 for any experience..
               </p>
-
             </div>
 
             <div class="default-ltr-cache-dulgtd">
@@ -151,11 +150,14 @@ const Home = () => {
                 <h2 className="my-2 artCat">{category.name}</h2>
                 <div className="artistCarousel">
                   <MultiCarousel
-                    responsive={responsive}
-                    autoPlaySpeed={3000}
-                    customTransition="all 0.5s ease" // Reduced duration for smoother effect
-                    transitionDuration={300}
-                    ssr
+                     responsive={responsive}
+                     autoPlaySpeed={4000}
+                     transitionDuration={150} // Faster transitions
+                     swipeable={true}
+                     draggable={true}
+                     infinite={false}
+                     partialVisible={true}
+                     keyBoardControl={true}
                   >
                     {artistsByCategory[category.name]?.map((artist) => (
                       <div key={artist._id}>
