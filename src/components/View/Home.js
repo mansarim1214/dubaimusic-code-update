@@ -26,7 +26,7 @@ const Home = () => {
         );
         const fetchedArtists = artistsResponse.data;
 
-        const desiredOrder = ["Trending", "Singers", "Band", "DJ", "Musicians"];
+        const desiredOrder = ["Trending", "Singers", "Solo Looping Artists", "Band", "DJ", "Musicians"];
 
         fetchedCategories.sort((a, b) => {
           const aIndex = desiredOrder.indexOf(a.name);
@@ -114,7 +114,7 @@ const Home = () => {
     <>
       <div className="mainFront">
         {/* Hero Section  */}
-        <div className="heroSection text-white d-flex justify-content-center align-items-center">
+        {/* <div className="heroSection text-white d-flex justify-content-center align-items-center">
           <div className="col-md-6">
             <div className="text-center">
               <h1 className="display-4">Welcome to Dubai Music</h1>
@@ -134,7 +134,7 @@ const Home = () => {
               <div class="default-ltr-cache-jtcpfi"></div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Hero section  */}
 

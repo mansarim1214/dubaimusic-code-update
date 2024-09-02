@@ -126,6 +126,11 @@ const Navbar = ({ handleShow }) => {
               Jobs
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/about" className="nav-link" >
+              About
+            </NavLink>
+          </li>
 
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">

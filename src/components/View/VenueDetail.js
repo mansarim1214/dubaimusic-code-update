@@ -104,7 +104,7 @@ const VenueDetail = () => {
         </div>
 
         <div className="artistForm mt-3">
-          <h1 className="mx-2 my-2">Book this Venue</h1>
+          <h1 className="mx-2 my-2">Book Now</h1>
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6">

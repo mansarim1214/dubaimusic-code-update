@@ -14,6 +14,7 @@ import Unauthorized from './components/Dashboard/Unauthorized';
 // import ProtectedRoute from './components/Dashboard/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import Jobs from './components/View/Jobs';
+import About from "./components/View/About";
 
 
 import Login from "./components/Dashboard/Login";
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/venues" element={<Venues />} />
           <Route path="/venuedetail/:id" element={<VenueDetail />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/about" element={<About />} />
         </Routes>
         
         <Footer />
