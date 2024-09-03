@@ -12,22 +12,43 @@ const Home = () => {
   // const [setLoading] = useState(true);
   // const [setError] = useState(null);
 
-  // console.log('API URL:', process.env.REACT_APP_API_URL);
   useEffect(() => {
+    const manualArtistOrder = {
+      Singers: [
+        "Jerome Deligero", "Emily Peacock", "Toi Dupras", "Yvonne Park", 
+        "Matt Palmer", "Lina Ammor- Jevtic", "Eirini Devitt", 
+        "Juan Pablo Pellicer", "Nick Pritchard", "Mostafa Sattar", 
+        "Jin Flora", "Robbi McFaulds"
+      ],
+      DJ: ["Dadou", "Elena", "Yana Kulyk", "Raphy J", "DJ Stylez", "DJ Melyna"],
+      Musicians: [
+        "Ksenia Kot", "Jose Ramon Nunez", "Soren Lyng Hansen", 
+        "Tatiana Durova", "Aleksandra Dudek", "Ulyana Goncharova"
+      ],
+      Trending: [
+        "Carrie Gibson’s NuvoSoul", "Jaymie Deville", "Chelsey Chantelle", 
+        "Golden Collective", "Abdallah Seleem", "Dany Echemendia", 
+        "Marvin Lee"
+      ],
+    };
+  
     const fetchData = async () => {
       try {
         const categoriesResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/categories`
         );
         const fetchedCategories = categoriesResponse.data;
-
+  
         const artistsResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/artists`
         );
         const fetchedArtists = artistsResponse.data;
-
-        const desiredOrder = ["Trending", "Singers", "Solo Looping Artists", "Band", "DJ", "Musicians"];
-
+  
+        const desiredOrder = [
+          "Trending", "Singers", "Solo Looping Artists", 
+          "Band", "DJ", "Musicians"
+        ];
+  
         fetchedCategories.sort((a, b) => {
           const aIndex = desiredOrder.indexOf(a.name);
           const bIndex = desiredOrder.indexOf(b.name);
@@ -36,31 +57,49 @@ const Home = () => {
           if (bIndex === -1) return -1;
           return aIndex - bIndex;
         });
-
+  
         const storedFavorites =
           JSON.parse(localStorage.getItem("favoriteArtists")) || {};
         const groupedArtists = {};
+        
         fetchedCategories.forEach((category) => {
-          groupedArtists[category.name] = fetchedArtists
+          let sortedArtists = fetchedArtists
             .filter((artist) => artist.category === category.name)
             .map((artist) => ({
               ...artist,
               isFavorite: storedFavorites[artist._id] || false,
             }));
+  
+          const order = manualArtistOrder[category.name];
+          if (order) {
+            // Sort based on manualArtistOrder
+            const sortedByManualOrder = sortedArtists.filter(artist =>
+              order.includes(artist.title)
+            ).sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+  
+            // Add artists not in the manualArtistOrder at the end
+            const remainingArtists = sortedArtists.filter(
+              artist => !order.includes(artist.title)
+            );
+  
+            sortedArtists = [...sortedByManualOrder, ...remainingArtists];
+          }
+  
+          groupedArtists[category.name] = sortedArtists;
         });
-
+  
         setCategories(fetchedCategories);
         setArtistsByCategory(groupedArtists);
-        // setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        // setError("Error fetching data. Please try again later.");
-        // setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+   // Dependency array is now empty, no need to include `manualArtistOrder`
+  
+
 
   const toggleFavorite = (artistId) => {
     const updatedArtistsByCategory = { ...artistsByCategory };
@@ -96,47 +135,24 @@ const Home = () => {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
       items: 5,
-      slidesToSlide: 3,
+      slidesToSlide: 2,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
       items: 3,
-      slidesToSlide: 3,
+      slidesToSlide: 2,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 2,
-      slidesToSlide: 4,
+      slidesToSlide: 3,
     },
   };
 
   return (
     <>
       <div className="mainFront">
-        {/* Hero Section  */}
-        {/* <div className="heroSection text-white d-flex justify-content-center align-items-center">
-          <div className="col-md-6">
-            <div className="text-center">
-              <h1 className="display-4">Welcome to Dubai Music</h1>
-              <p>
-                your go-to hub for booking the best musicians in Dubai. Whether
-                you're planning a wedding, event, or managing a venue, you can
-                easily book your favourite music acts with just a click. Explore
-                our curated list of top talent and create the perfect atmosphere
-                for any experience..
-              </p>
-            </div>
 
-            <div class="default-ltr-cache-dulgtd">
-              <div class="curve-container">
-                <div class="default-ltr-cache-1f97ztc"></div>
-              </div>
-              <div class="default-ltr-cache-jtcpfi"></div>
-            </div>
-          </div>
-        </div> */}
-
-        {/* Hero section  */}
 
         <div className="container-fluid" id="explore">
           {categories
@@ -152,12 +168,14 @@ const Home = () => {
                   <MultiCarousel
                      responsive={responsive}
                      autoPlaySpeed={4000}
-                     transitionDuration={150} // Faster transitions
-                     swipeable={true}
-                     draggable={true}
+                     transitionDuration={300} // Adjust transition duration
+                     swipeable={true} // Enable swipeable
+                     draggable={true} // Enable dragging
                      infinite={false}
                      partialVisible={true}
                      keyBoardControl={true}
+                     
+                     shouldResetAutoplay={false}
                   >
                     {artistsByCategory[category.name]?.map((artist) => (
                       <div key={artist._id}>
