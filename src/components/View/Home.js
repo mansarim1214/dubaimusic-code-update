@@ -145,7 +145,7 @@ const Home = () => {
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 2,
-      slidesToSlide: 3,
+      slidesToSlide: 1,
     },
   };
 
@@ -166,16 +166,15 @@ const Home = () => {
                 <h2 className="my-2 artCat">{category.name}</h2>
                 <div className="artistCarousel">
                   <MultiCarousel
-                     responsive={responsive}
-                     autoPlaySpeed={4000}
-                     transitionDuration={300} // Adjust transition duration
-                     swipeable={true} // Enable swipeable
-                     draggable={true} // Enable dragging
-                     infinite={false}
-                     partialVisible={true}
-                     keyBoardControl={true}
-                     
-                     shouldResetAutoplay={false}
+                      responsive={responsive}
+                      autoPlaySpeed={4000}
+                      transitionDuration={300} // Adjust transition duration
+                      swipeable={true}         // Enable swipeable
+                      draggable={true}         // Enable dragging
+                      infinite={false}
+                      partialVisible={true}
+                      keyBoardControl={true}
+                      shouldResetAutoplay={false}
                   >
                     {artistsByCategory[category.name]?.map((artist) => (
                       <div key={artist._id}>

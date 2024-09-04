@@ -36,9 +36,10 @@ const ArtistDetail = () => {
       return null; // Or return a placeholder URL
     }
   
-    // Return the embed URL format
-    return `https://www.youtube.com/embed/${videoId}`;
+    // Return the embed URL format with the rel=0 parameter
+    return `https://www.youtube.com/embed/${videoId}?rel=0`;
   }
+  
   
   
 
