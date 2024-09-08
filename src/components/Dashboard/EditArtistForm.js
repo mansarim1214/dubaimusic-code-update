@@ -34,30 +34,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setFileName(file ? file.name : "No file chosen");
   };
 
-  // const handleGalleryImageUpload = async (event) => {
-  //   const file = event.target.files[0];
-  //   const formData = new FormData();
-  //   formData.append('image', file);
-  
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //       }
-  //     );
-  
-  //     // Update the state with the new image
-  //     setGalleryImages((prevImages) => [...prevImages, response.data.newImageUrl]);
-  
-  //   } catch (error) {
-  //     console.error('Error uploading gallery image:', error);
-  //   }
-  // };
-  
+
   const handleGalleryImagesChange = (e) => {
     setNewGalleryImages([...newGalleryImages, ...Array.from(e.target.files)]);
   };
@@ -199,7 +176,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
-            required
+            
           />
         </div>
         <div className="form-group">

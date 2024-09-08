@@ -92,6 +92,14 @@ const Navbar = ({ handleShow }) => {
           </button>
         </div>
         <ul className="sidebar-nav">
+        <a className="navbar-brand" href="/">
+          <img
+            src="/dubai-music-white-logo.webp"
+            width="150px"
+            className="d-inline-block align-top"
+            alt="Logo"
+          />
+        </a>
           <li className="nav-item">
             <NavLink
               exact="true"
@@ -121,17 +129,22 @@ const Navbar = ({ handleShow }) => {
               Favorites
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink to="/jobs" className="nav-link" onClick={closeSidebar}>
-              Jobs
-            </NavLink>
-          </li>
+
           <li className="nav-item">
             <NavLink to="/about" className="nav-link" >
               About
             </NavLink>
           </li>
-
+          <li className="nav-item">
+            <NavLink to="https://jobs.dubaimusic.com" className="nav-link" onClick={closeSidebar}>
+              Jobs
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="https://jobs.dubaimusic.com/submit-job/" className="nav-link" onClick={closeSidebar}>
+              Post a Job
+            </NavLink>
+          </li>
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">
               {" "}

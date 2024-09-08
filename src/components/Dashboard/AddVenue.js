@@ -3,24 +3,23 @@ import axios from 'axios';
 
 const AddVenue = () => {
   const [showAlert, setShowAlert] = useState(false);
-  
   const [venue, setVenue] = useState({
     title: '',
     description: '',
     location: '',
     featuredImage: '',
-    category: 'Hidden Gems'
+    category: 'Hidden Gems',
   });
-  
+
   const [gallery, setGallery] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setVenue(prevState => ({ ...prevState, [name]: value }));
+    setVenue((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setVenue(prevState => ({ ...prevState, featuredImage: e.target.files[0] }));
+    setVenue((prevState) => ({ ...prevState, featuredImage: e.target.files[0] }));
   };
 
   const handleGalleryChange = (e) => {
@@ -29,36 +28,34 @@ const AddVenue = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData();
     formData.append('title', venue.title);
     formData.append('description', venue.description);
     formData.append('location', venue.location);
     formData.append('category', venue.category);
-    
+
     if (venue.featuredImage) {
       formData.append('featuredImage', venue.featuredImage);
     }
-    
+
     for (let i = 0; i < gallery.length; i++) {
       formData.append('gallery', gallery[i]);
     }
 
-    console.log('Form Data:', ...formData); // Log form data for debugging
-  
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/venues`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
+
       console.log('Venue saved successfully:', response.data);
       setShowAlert(true); // Set showAlert to true on successful submission
-      
+
       // Redirect to the venues dashboard or any other route after successful submission
       setTimeout(() => {
         setShowAlert(false);
-        
+        // Navigate or reset form if needed
       }, 3000);
-
     } catch (error) {
       console.error('Error saving venue:', error);
       // Handle error state or display error message to user
@@ -68,7 +65,7 @@ const AddVenue = () => {
   return (
     <div className="add-venue">
       <h3>Add New Venue</h3>
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className='mt-3'>
+      <form onSubmit={handleSubmit} encType="multipart/form-data" className="mt-3">
         <div className="form-group">
           <label>Title</label>
           <input
@@ -77,7 +74,7 @@ const AddVenue = () => {
             value={venue.title}
             onChange={handleChange}
             required
-            className='form-control'
+            className="form-control"
           />
         </div>
         <div className="form-group">
@@ -87,7 +84,7 @@ const AddVenue = () => {
             value={venue.description}
             onChange={handleChange}
             required
-            className='form-control'
+            className="form-control"
           />
         </div>
         <div className="form-group">
@@ -98,7 +95,7 @@ const AddVenue = () => {
             value={venue.location}
             onChange={handleChange}
             required
-            className='form-control'
+            className="form-control"
           />
         </div>
         <div className="form-group">
@@ -108,7 +105,7 @@ const AddVenue = () => {
             value={venue.category}
             onChange={handleChange}
             required
-            className='form-control'
+            className="form-control"
           >
             <option value="Hidden Gems">Hidden Gems</option>
             <option value="Monday">Monday</option>
@@ -143,17 +140,13 @@ const AddVenue = () => {
         {showAlert && (
           <div className="alert alert-success alert-dismissible fade show" role="alert">
             Venue added successfully!
-            <button
-              type="button"
-              className="close"
-              onClick={() => setShowAlert(false)}
-            >
+            <button type="button" className="close" onClick={() => setShowAlert(false)}>
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         )}
 
-        <button type="submit" className='btn btn-lg btn-dark mt-5'>Add Venue</button>
+        <button type="submit" className="btn btn-lg btn-dark mt-5">Add Venue</button>
       </form>
     </div>
   );

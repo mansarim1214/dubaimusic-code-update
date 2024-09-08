@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import MultiCarousel from 'react-multi-carousel';
+import MultiCarousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
-// import { Link } from 'react-router-dom';
-// import { BsFillGeoAltFill } from "react-icons/bs";
+import { Link } from 'react-router-dom';
+import { BsFillGeoAltFill } from "react-icons/bs";
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
@@ -40,20 +40,20 @@ const Venues = () => {
   const groupedVenues = groupVenuesByCategory();
   console.log("Grouped Venues:", groupedVenues); // Debugging
 
-  // const responsive = {
-  //   desktop: { breakpoint: { max: 3000, min: 1024 }, items: 6 },
-  //   tablet: { breakpoint: { max: 1024, min: 464 }, items: 3 },
-  //   mobile: { breakpoint: { max: 464, min: 0 }, items: 2 },
-  // };
+  const responsive = {
+    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 6 },
+    tablet: { breakpoint: { max: 1024, min: 464 }, items: 3 },
+    mobile: { breakpoint: { max: 464, min: 0 }, items: 2 },
+  };
 
   return (
     <div className="bg-custom">
-      <div className="container">
+      <div className="container-fluid">
         {Object.keys(groupedVenues).map((category) => (
           <div key={category} className="category-wrapper">
-            {/* <h2 className="my-2 fav-title">{category}</h2> */}
+            <h2 className="my-2 fav-title">{category}</h2>
             <div className="row">
-              {/* <div className="col">
+              <div className="col">
                 <MultiCarousel responsive={responsive}
                 ssr={true}
 
@@ -87,9 +87,9 @@ const Venues = () => {
                     </div>
                   ))}
                 </MultiCarousel>
-              </div> */}
+              </div> 
 
-              <h1 style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign: "center" }}>Stay tuned!</h1>
+              {/* <h1 style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign: "center" }}>Stay tuned!</h1>
               <h5 className="mt-3" style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign:"center", lineHeight:"30px" }}>
                 Our Venues section is coming soon, where you’ll find the best
                 live music spots in Dubai, listed for every day of the week.
@@ -97,7 +97,7 @@ const Venues = () => {
                 performances or planning your next big event, we’ve got you
                 covered. Keep an eye out—this exciting feature is just around
                 the corner!
-              </h5>
+              </h5> */}
             </div>
           </div>
         ))}

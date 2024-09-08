@@ -158,7 +158,7 @@ const AddArtistForm = () => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
-            required
+            
           />
         </div>
         <div className="form-group">
