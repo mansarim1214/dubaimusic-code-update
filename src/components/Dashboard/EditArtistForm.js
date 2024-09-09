@@ -101,12 +101,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   
   
 
-  // const breakpointColumnsObj = {
-  //   default: 5,
-  //   1100: 2,
-  //   700: 1,
-  //   500: 1,
-  // };
+
 
   return (
     <>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
   const [title, setTitle] = useState(venue.title);
@@ -99,14 +101,16 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
         </div>
         <div className="form-group">
           <label>Description</label>
-          <textarea
-            name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-            className="form-control"
+          <CKEditor
+            editor={ClassicEditor}
+            data={description}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setDescription(data);
+            }}
           />
         </div>
+
         <div className="form-group">
           <label>Location</label>
           <input
@@ -127,7 +131,10 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             required
             className="form-control"
           >
-            <option value="">Select category</option>
+            <option value="" disabled>
+              Select category
+            </option>
+            <option value="Coca Cola Arena">Coca Cola Arena</option>
             <option value="Hidden Gems">Hidden Gems</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
@@ -174,7 +181,6 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             >
               Upload Photos
             </button>
-            
           </div>
           <div className="mt-2">
             {gallery.length > 0 && (

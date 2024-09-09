@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
-import MultiCarousel from 'react-multi-carousel';
-import "react-multi-carousel/lib/styles.css";
+import { gsap } from 'gsap';
+import { Draggable } from 'gsap/Draggable';
 import { Link } from 'react-router-dom';
 import { BsFillGeoAltFill } from "react-icons/bs";
+import { BsChevronCompactRight } from "react-icons/bs";
+import { BsChevronCompactLeft } from "react-icons/bs";
+
+gsap.registerPlugin(Draggable);
 
 const Venues = () => {
   const [venues, setVenues] = useState([]);
+  const carouselRefs = useRef([]);
+
+  const isMobile = () => window.innerWidth <= 500;
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -33,41 +40,97 @@ const Venues = () => {
       }
       groupedVenues[venue.category].push(venue);
     });
-    return groupedVenues;
+
+    // Reorder the grouped venues to ensure "Coca Cola Arena" is first
+    const orderedGroupedVenues = {};
+    if (groupedVenues["Coca Cola Arena"]) {
+      orderedGroupedVenues["Coca Cola Arena"] = groupedVenues["Coca Cola Arena"];
+      delete groupedVenues["Coca Cola Arena"];
+    }
+
+    // Add the remaining categories in their original order
+    Object.keys(groupedVenues).forEach((category) => {
+      orderedGroupedVenues[category] = groupedVenues[category];
+    });
+
+    return orderedGroupedVenues;
   };
 
   // Get grouped venues
   const groupedVenues = groupVenuesByCategory();
   console.log("Grouped Venues:", groupedVenues); // Debugging
 
-  const responsive = {
-    desktop: { breakpoint: { max: 3000, min: 1024 }, items: 6 },
-    tablet: { breakpoint: { max: 1024, min: 464 }, items: 3 },
-    mobile: { breakpoint: { max: 464, min: 0 }, items: 2 },
+  // Carousel Setting
+  const scrollCarousel = (direction, index) => {
+    const carousel = carouselRefs.current[index];
+    if (carousel) {
+      const item = carousel.querySelector('.venueImage');
+      if (!item) {
+        console.error('No items found in carousel');
+        return;
+      }
+
+      const itemWidth = item.clientWidth; // Width of one item
+      const scrollAmount = itemWidth * 3; // Scroll 3 items at a time
+
+      let newScrollPosition = carousel.scrollLeft + (scrollAmount * direction);
+      newScrollPosition = Math.max(0, Math.min(newScrollPosition, carousel.scrollWidth - carousel.clientWidth));
+
+      gsap.to(carousel, {
+        scrollLeft: newScrollPosition,
+        duration: 0.5,
+        ease: "power2.out",
+      });
+    }
   };
 
+  useEffect(() => {
+    if (isMobile()) {
+      carouselRefs.current.forEach((carousel) => {
+        if (carousel) {
+          gsap.killTweensOf(carousel);
+
+          Draggable.create(carousel, {
+            type: "x",
+            bounds: { minX: -carousel.scrollWidth + carousel.clientWidth, maxX: 0 },
+            inertia: true,
+            throwProps: true,
+            edgeResistance: 1,
+            onDrag: () => {
+              gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
+            },
+          });
+        }
+      });
+    }
+  }, [groupedVenues]);
+
+  //  Carousel Setting End
   return (
     <div className="bg-custom">
       <div className="container-fluid">
-        {Object.keys(groupedVenues).map((category) => (
+        {Object.keys(groupedVenues).map((category, index) => (
           <div key={category} className="category-wrapper">
             <h2 className="my-2 fav-title">{category}</h2>
             <div className="row">
-              <div className="col">
-                <MultiCarousel responsive={responsive}
-                ssr={true}
-
-                autoPlaySpeed={2000}
-
-                customTransition="all 1.2s"
-                transitionDuration={400}
-
-
-                slidesToSlide={3}
-                
+              <div className="col p-relative">
+                <button
+                  className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
+                  onClick={() => scrollCarousel(-1, index)}
+                >
+                  <BsChevronCompactLeft />
+                </button>
+                <div
+                  className="venueCarousel"
+                  ref={(el) => (carouselRefs.current[index] = el)}
+                  style={{
+                    display: "flex",
+                    overflow: "hidden",
+                    width: "100%",
+                  }}
                 >
                   {groupedVenues[category].map((venue) => (
-                    <div key={venue._id}>
+                    <div key={venue._id} className="venueImage" style={{ flex: "0 0 16.67%", padding: "0 5px" }}>
                       <Link to={`/venuedetail/${venue._id}`}>
                         <div className="artistImage">
                           {venue.featuredImage && (
@@ -80,24 +143,22 @@ const Venues = () => {
                           )}
                           <div className="artContent">
                             <h4 className="artTitle">{venue.title}</h4>
-                            <span className="location">{<BsFillGeoAltFill />} {venue.location}</span>
+                            <span className="location">
+                              <BsFillGeoAltFill /> {venue.location}
+                            </span>
                           </div>
                         </div>
                       </Link>
                     </div>
                   ))}
-                </MultiCarousel>
-              </div> 
-
-              {/* <h1 style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign: "center" }}>Stay tuned!</h1>
-              <h5 className="mt-3" style={{ fontFamily: "Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif", textAlign:"center", lineHeight:"30px" }}>
-                Our Venues section is coming soon, where you’ll find the best
-                live music spots in Dubai, listed for every day of the week.
-                Whether you're looking for the hottest spots to catch live
-                performances or planning your next big event, we’ve got you
-                covered. Keep an eye out—this exciting feature is just around
-                the corner!
-              </h5> */}
+                </div>
+                <button
+                  className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
+                  onClick={() => scrollCarousel(1, index)}
+                >
+                  <BsChevronCompactRight />
+                </button>
+              </div>
             </div>
           </div>
         ))}

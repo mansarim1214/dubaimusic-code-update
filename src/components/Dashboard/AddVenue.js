@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const AddVenue = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -24,6 +26,11 @@ const AddVenue = () => {
 
   const handleGalleryChange = (e) => {
     setGallery(e.target.files);
+  };
+
+  const handleDescriptionChange = (event, editor) => {
+    const data = editor.getData();
+    setVenue((prevState) => ({ ...prevState, description: data }));
   };
 
   const handleSubmit = async (e) => {
@@ -79,10 +86,10 @@ const AddVenue = () => {
         </div>
         <div className="form-group">
           <label>Description</label>
-          <textarea
-            name="description"
-            value={venue.description}
-            onChange={handleChange}
+          <CKEditor
+            editor={ClassicEditor}
+            data={venue.description}
+            onChange={handleDescriptionChange}
             required
             className="form-control"
           />
@@ -107,6 +114,8 @@ const AddVenue = () => {
             required
             className="form-control"
           >
+            <option value="" disabled>Select category</option>
+            <option value="Coca Cola Arena">Coca Cola Arena</option>
             <option value="Hidden Gems">Hidden Gems</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
