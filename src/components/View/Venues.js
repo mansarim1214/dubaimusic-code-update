@@ -89,16 +89,22 @@ const Venues = () => {
       carouselRefs.current.forEach((carousel) => {
         if (carousel) {
           gsap.killTweensOf(carousel);
-
+  
           Draggable.create(carousel, {
             type: "x",
-            bounds: { minX: -carousel.scrollWidth + carousel.clientWidth, maxX: 0 },
-            inertia: true,
-            throwProps: true,
-            edgeResistance: 1,
-            onDrag: () => {
+            bounds: {
+              minX: -carousel.scrollWidth + carousel.clientWidth,
+              maxX: 0,
+            },
+            inertia: true,  // Enable inertia for smoother dragging end
+            throwProps: true,  // Allow for smoother throw behavior
+            edgeResistance: 0.65,
+            onThrowUpdate: () => {
               gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
             },
+            snap: {
+              x: (value) => Math.round(value / 16.67) * 200, // Adjust based on item width
+            }
           });
         }
       });

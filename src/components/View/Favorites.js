@@ -12,7 +12,7 @@ gsap.registerPlugin(Draggable);
 
 const Favorites = () => {
   const [favoriteArtists, setFavoriteArtists] = useState([]);
-  const carouselRef = useRef(null);
+  const carouselRefs = useRef([]);
 
   const isMobile = () => window.innerWidth <= 500;
 
@@ -52,59 +52,64 @@ const Favorites = () => {
     localStorage.setItem("favoriteArtists", JSON.stringify(storedFavorites));
   };
 
-
-  // Carousel Setting
-
-  const scrollCarousel = (direction) => {
-    const carousel = carouselRef.current;
-    if (carousel) {
-      const item = carousel.querySelector(".artistImage");
-      if (!item) {
-        console.error("No items found in carousel");
-        return;
-      }
-
-      const itemWidth = item.clientWidth; // Width of one item
-      const scrollAmount = itemWidth * 3; // Scroll 3 items at a time
-
-      let newScrollPosition = carousel.scrollLeft + scrollAmount * direction;
-      newScrollPosition = Math.max(
-        0,
-        Math.min(newScrollPosition, carousel.scrollWidth - carousel.clientWidth)
-      );
-
-      gsap.to(carousel, {
-        scrollLeft: newScrollPosition,
-        duration: 0.5,
-        ease: "power2.out",
-      });
-    }
-  };
-
   useEffect(() => {
     if (isMobile()) {
-      const carousel = carouselRef.current;
-      if (carousel) {
-        gsap.killTweensOf(carousel);
+      carouselRefs.current.forEach((carousel) => {
+        if (carousel) {
+          gsap.killTweensOf(carousel);
 
-        Draggable.create(carousel, {
-          type: "x",
-          bounds: {
-            minX: -carousel.scrollWidth + carousel.clientWidth,
-            maxX: 0,
-          },
-          inertia: true,
-          throwProps: true,
-          edgeResistance: 1,
-          onDrag: () => {
-            gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
-          },
-        });
-      }
+          Draggable.create(carousel, {
+            type: "x",
+            bounds: {
+              minX: -carousel.scrollWidth + carousel.clientWidth,
+              maxX: 0,
+            },
+            inertia: true,
+            throwProps: true,
+            edgeResistance: 1,
+            onThrowUpdate: () => {
+              gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
+            },
+            snap: {
+              x: (value) => Math.round(value / 200) * 200, // Adjust based on item width
+            },
+          });
+        }
+      });
     }
   }, [favoriteArtists]);
 
-  // Carousel Setting Ends
+  const scrollCarousel = (direction, index) => {
+    if (!isMobile()) {
+      const carousel = carouselRefs.current[index];
+      if (carousel) {
+        const item = carousel.querySelector(".artistImage");
+        if (!item) {
+          console.error("No items found in carousel");
+          return;
+        }
+
+        const itemWidth = item.clientWidth;
+        const scrollAmount = itemWidth * 3;
+
+        let newScrollPosition =
+          carousel.scrollLeft + scrollAmount * direction;
+        newScrollPosition = Math.max(
+          0,
+          Math.min(
+            newScrollPosition,
+            carousel.scrollWidth - carousel.clientWidth
+          )
+        );
+
+        gsap.to(carousel, {
+          scrollLeft: newScrollPosition,
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+    }
+  };
 
   return (
     <div className="bg-custom">
@@ -117,18 +122,15 @@ const Favorites = () => {
         ) : (
           <div className="row">
             <div className="col no-gutter p-relative">
-             
-                <button
-                  className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
-                  onClick={() => scrollCarousel(-1)}
-                >
-                 <BsChevronCompactLeft/>
-                </button>
-            
+              <button
+                className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
+                onClick={() => scrollCarousel(-1, 0)}
+              >
+                <BsChevronCompactLeft />
+              </button>
               <div
-                    className="artistCarousel"
-                
-                ref={carouselRef}
+                className="artistCarousel"
+                ref={(el) => (carouselRefs.current[0] = el)}
                 style={{
                   display: "flex",
                   overflow: "hidden",
@@ -166,15 +168,12 @@ const Favorites = () => {
                   </div>
                 ))}
               </div>
-          
-                <button
-                  className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right "
-                  onClick={() => scrollCarousel(1)}
-                >
-                 <BsChevronCompactRight/>
-                  
-                </button>
-            
+              <button
+                className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
+                onClick={() => scrollCarousel(1, 0)}
+              >
+                <BsChevronCompactRight />
+              </button>
             </div>
           </div>
         )}
