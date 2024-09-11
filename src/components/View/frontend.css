@@ -258,10 +258,12 @@ overflow-x: hidden;
 
   .favorite{
     position: absolute;
-    z-index: 1;
+    display: block;
+    width: 100%;
     font-size: 23px;
-    left: 11px;
     cursor: pointer;
+    padding: 10px;
+    z-index: 99;
   }
 
   .favorite svg{
@@ -286,10 +288,6 @@ overflow-x: hidden;
     border: 0px !important;
     color: white !important;
   }
-
-
- 
-
   .venue-gallery {
     display: flex;
     flex-wrap: wrap;

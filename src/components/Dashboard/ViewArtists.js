@@ -25,12 +25,15 @@ const ViewArtists = () => {
 
   useEffect(() => {
     // Filter artists based on search term
-    const filtered = artists.filter(
-      (artist) =>
-        artist.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artist.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        artist.speciality.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filtered = artists.filter((artist) => {
+      const title = artist.title ? artist.title.toLowerCase() : '';
+      const category = artist.category ? artist.category.toLowerCase() : '';
+      const speciality = artist.speciality ? artist.speciality.toLowerCase() : '';
+      const search = searchTerm.toLowerCase();
+    
+      return title.includes(search) || category.includes(search) || speciality.includes(search);
+    });
+    
     setFilteredArtists(filtered);
   }, [searchTerm, artists]);
 

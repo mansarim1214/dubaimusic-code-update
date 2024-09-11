@@ -101,7 +101,7 @@ const AddVenue = () => {
             name="location"
             value={venue.location}
             onChange={handleChange}
-            required
+            
             className="form-control"
           />
         </div>

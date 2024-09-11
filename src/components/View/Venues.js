@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
-import { gsap } from 'gsap';
-import { Draggable } from 'gsap/Draggable';
-import { Link } from 'react-router-dom';
+import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { Link } from "react-router-dom";
 import { BsFillGeoAltFill } from "react-icons/bs";
 import { BsChevronCompactRight } from "react-icons/bs";
 import { BsChevronCompactLeft } from "react-icons/bs";
@@ -44,7 +44,8 @@ const Venues = () => {
     // Reorder the grouped venues to ensure "Coca Cola Arena" is first
     const orderedGroupedVenues = {};
     if (groupedVenues["Coca Cola Arena"]) {
-      orderedGroupedVenues["Coca Cola Arena"] = groupedVenues["Coca Cola Arena"];
+      orderedGroupedVenues["Coca Cola Arena"] =
+        groupedVenues["Coca Cola Arena"];
       delete groupedVenues["Coca Cola Arena"];
     }
 
@@ -64,17 +65,20 @@ const Venues = () => {
   const scrollCarousel = (direction, index) => {
     const carousel = carouselRefs.current[index];
     if (carousel) {
-      const item = carousel.querySelector('.venueImage');
+      const item = carousel.querySelector(".venueImage");
       if (!item) {
-        console.error('No items found in carousel');
+        console.error("No items found in carousel");
         return;
       }
 
       const itemWidth = item.clientWidth; // Width of one item
       const scrollAmount = itemWidth * 3; // Scroll 3 items at a time
 
-      let newScrollPosition = carousel.scrollLeft + (scrollAmount * direction);
-      newScrollPosition = Math.max(0, Math.min(newScrollPosition, carousel.scrollWidth - carousel.clientWidth));
+      let newScrollPosition = carousel.scrollLeft + scrollAmount * direction;
+      newScrollPosition = Math.max(
+        0,
+        Math.min(newScrollPosition, carousel.scrollWidth - carousel.clientWidth)
+      );
 
       gsap.to(carousel, {
         scrollLeft: newScrollPosition,
@@ -89,22 +93,22 @@ const Venues = () => {
       carouselRefs.current.forEach((carousel) => {
         if (carousel) {
           gsap.killTweensOf(carousel);
-  
+
           Draggable.create(carousel, {
             type: "x",
             bounds: {
               minX: -carousel.scrollWidth + carousel.clientWidth,
               maxX: 0,
             },
-            inertia: true,  // Enable inertia for smoother dragging end
-            throwProps: true,  // Allow for smoother throw behavior
+            inertia: true, // Enable inertia for smoother dragging end
+            throwProps: true, // Allow for smoother throw behavior
             edgeResistance: 0.65,
             onThrowUpdate: () => {
               gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
             },
             snap: {
               x: (value) => Math.round(value / 16.67) * 200, // Adjust based on item width
-            }
+            },
           });
         }
       });
@@ -136,7 +140,11 @@ const Venues = () => {
                   }}
                 >
                   {groupedVenues[category].map((venue) => (
-                    <div key={venue._id} className="venueImage" style={{ flex: "0 0 16.67%", padding: "0 5px" }}>
+                    <div
+                      key={venue._id}
+                      className="venueImage"
+                      style={{ flex: "0 0 16.67%", padding: "0 5px" }}
+                    >
                       <Link to={`/venuedetail/${venue._id}`}>
                         <div className="artistImage">
                           {venue.featuredImage && (
@@ -149,9 +157,11 @@ const Venues = () => {
                           )}
                           <div className="artContent">
                             <h4 className="artTitle">{venue.title}</h4>
-                            <span className="location">
-                              <BsFillGeoAltFill /> {venue.location}
-                            </span>
+                            {venue.location && (
+                              <span className="location">
+                                <BsFillGeoAltFill /> {venue.location}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </Link>

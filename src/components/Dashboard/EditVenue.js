@@ -118,7 +118,7 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             name="location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            required
+            
             className="form-control"
           />
         </div>

@@ -53,11 +53,13 @@ const Favorites = () => {
   };
 
   useEffect(() => {
-    if (isMobile()) {
+    console.log("Carousel Refs:", carouselRefs.current); // Debugging
+  
+  
       carouselRefs.current.forEach((carousel) => {
         if (carousel) {
-          gsap.killTweensOf(carousel);
-
+          gsap.killTweensOf(carousel); // Clean previous tweens
+  
           Draggable.create(carousel, {
             type: "x",
             bounds: {
@@ -76,8 +78,10 @@ const Favorites = () => {
           });
         }
       });
-    }
+    
   }, [favoriteArtists]);
+  
+  
 
   const scrollCarousel = (direction, index) => {
     if (!isMobile()) {

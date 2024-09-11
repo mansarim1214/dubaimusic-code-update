@@ -123,7 +123,7 @@ const Home = () => {
   }, []);
 
   const isMobile = () => {
-    return window.innerWidth <= 500; 
+    return window.innerWidth <= 500; // Adjust the width threshold as needed
   };
 
   useEffect(() => {
@@ -131,28 +131,24 @@ const Home = () => {
       carouselRefs.current.forEach((carousel) => {
         if (carousel) {
           gsap.killTweensOf(carousel);
-  
+
           Draggable.create(carousel, {
             type: "x",
             bounds: {
               minX: -carousel.scrollWidth + carousel.clientWidth,
               maxX: 0,
             },
-            inertia: true,  // Enable inertia for smoother dragging end
-            throwProps: true,  // Allow for smoother throw behavior
-            edgeResistance: 0.65,
-            onThrowUpdate: () => {
+            inertia: true,
+            throwProps: true,
+            edgeResistance: 1,
+            onDrag: () => {
               gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
             },
-            snap: {
-              x: (value) => Math.round(value / 200) * 200, // Adjust based on item width
-            }
           });
         }
       });
     }
   }, [artistsByCategory]);
-  
 
 
   const scrollCarousel = (direction, index) => {

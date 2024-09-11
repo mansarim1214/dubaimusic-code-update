@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import emailjs from "emailjs-com";
+// import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import "./frontend.css"; // Import the CSS file for styling
@@ -11,8 +11,8 @@ const VenueDetail = () => {
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
-  const [formMessage, setFormMessage] = useState("");
+  // const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
+  // const [formMessage, setFormMessage] = useState("");
   const [galleryImages, setGalleryImages] = useState([]); // Declare galleryImages here
 
   useEffect(() => {
@@ -47,35 +47,35 @@ const VenueDetail = () => {
     fetchVenue();
   }, [id]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const templateParams = {
-      name: formData.name,
-      phone: formData.phone,
-      email: formData.email,
-      venueName: venue?.title, // Ensure venue name is included
-    };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const templateParams = {
+  //     name: formData.name,
+  //     phone: formData.phone,
+  //     email: formData.email,
+  //     venueName: venue?.title, // Ensure venue name is included
+  //   };
 
-    emailjs
-      .send(
-        "service_3hkljmf",
-        "template_hg6yimn",
-        templateParams,
-        "q1l_DC7jwQvu80xJ5"
-      )
-      .then((response) => {
-        setFormMessage("Booking request sent successfully!");
-        setFormData({ name: "", phone: "", email: "" });
-      })
-      .catch((error) => {
-        setFormMessage("Failed to send booking request. Please try again.");
-        console.error("Error sending booking request:", error);
-      });
-  };
+  //   emailjs
+  //     .send(
+  //       "service_3hkljmf",
+  //       "template_hg6yimn",
+  //       templateParams,
+  //       "q1l_DC7jwQvu80xJ5"
+  //     )
+  //     .then((response) => {
+  //       setFormMessage("Booking request sent successfully!");
+  //       setFormData({ name: "", phone: "", email: "" });
+  //     })
+  //     .catch((error) => {
+  //       setFormMessage("Failed to send booking request. Please try again.");
+  //       console.error("Error sending booking request:", error);
+  //     });
+  // };
 
   if (loading) return <div>Loading...</div>;
 
@@ -91,7 +91,7 @@ const VenueDetail = () => {
           Location: <span>{venue.location}</span>
         </div>
         <div>
-          Category: <span>{venue.category}</span>
+          {/* Category: <span>{venue.category}</span> */}
         </div>
         <div id="description" className="mt-3">
           <div className="row">
@@ -148,7 +148,7 @@ const VenueDetail = () => {
             )}
           </div>
         </div>
-        <div className="venueForm mt-3">
+        {/* <div className="venueForm mt-3">
           <h1 className="mx-2 my-2">Book Now</h1>
           <form onSubmit={handleSubmit}>
             <div className="row">
@@ -204,7 +204,7 @@ const VenueDetail = () => {
             </div>
           </form>
           {formMessage && <p className="form-message">{formMessage}</p>}
-        </div>
+        </div> */}
       </div>
     </div>
   );
