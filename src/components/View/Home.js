@@ -138,11 +138,14 @@ const Home = () => {
               minX: -carousel.scrollWidth + carousel.clientWidth,
               maxX: 0,
             },
-            inertia: true,
-            throwProps: true,
-            edgeResistance: 1,
-            onDrag: () => {
+            inertia: true, // Enable inertia for smoother dragging end
+            throwProps: true, // Allow for smoother throw behavior
+            edgeResistance: 0.65,
+            onThrowUpdate: () => {
               gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
+            },
+            snap: {
+              x: (value) => Math.round(value / 16.67) * 200, // Adjust based on item width
             },
           });
         }
@@ -248,6 +251,7 @@ const Home = () => {
                           artist.isFavorite ? "favorited" : ""
                         }`}
                         onClick={() => toggleFavorite(artist._id)}
+                        onTouchStart={() => toggleFavorite(artist._id)}
                         style={{ color: artist.isFavorite ? "red" : "grey" }}
                       >
                         <BsHeartFill />

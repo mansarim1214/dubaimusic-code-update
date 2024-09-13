@@ -55,7 +55,7 @@ const Favorites = () => {
   useEffect(() => {
     console.log("Carousel Refs:", carouselRefs.current); // Debugging
   
-  
+    if (isMobile()) {
       carouselRefs.current.forEach((carousel) => {
         if (carousel) {
           gsap.killTweensOf(carousel); // Clean previous tweens
@@ -78,6 +78,8 @@ const Favorites = () => {
           });
         }
       });
+
+    }
     
   }, [favoriteArtists]);
   
