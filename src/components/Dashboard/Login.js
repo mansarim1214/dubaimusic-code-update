@@ -1,12 +1,17 @@
 import { useState } from 'react';
+const md5 = require('md5'); // Import the md5 library
 
 const Login = () => {
   const [input, setInput] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
+
+
   const handleSubmitEvent = async (e) => {
+   
     e.preventDefault();
     try {
+      const md5Hash = md5('admin123');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
         method: "POST",
         headers: {
@@ -14,14 +19,14 @@ const Login = () => {
         },
         body: JSON.stringify({
           email: input.email,
-          password: input.password,
+          password: md5Hash,
         }),
       });
   
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        window.location.href = "/dashboard";
+        window.location.href = "/venues";
       } else {
         setError("Invalid email or password");
       }

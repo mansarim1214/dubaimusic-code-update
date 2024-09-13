@@ -250,8 +250,12 @@ const Home = () => {
                         className={`favorite ${
                           artist.isFavorite ? "favorited" : ""
                         }`}
-                        onClick={() => toggleFavorite(artist._id)}
-                        onTouchStart={() => toggleFavorite(artist._id)}
+                        onClick={(e) => {
+                          e.preventDefault(); // Prevent any default behavior
+                          e.stopPropagation(); // Prevent event bubbling, just in case
+                          toggleFavorite(artist._id);
+                        }}
+                        
                         style={{ color: artist.isFavorite ? "red" : "grey" }}
                       >
                         <BsHeartFill />
