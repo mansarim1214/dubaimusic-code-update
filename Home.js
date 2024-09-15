@@ -224,7 +224,7 @@ const Home = () => {
               <section key={category._id} className="artSection">
                 <h2 className="my-2 artCat">{category.name}</h2>
                 <button
-                  className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left "
+                  className="arrow left react-multiple-carousel__arrow "
                   onClick={() => scrollCarousel(-1, index)}
                 ><BsChevronCompactLeft /></button>
                 <div
@@ -237,45 +237,89 @@ const Home = () => {
                   }}
                 >
                   {artistsByCategory[category.name]?.map((artist) => (
-                    <div
-                      className="artistImage"
-                      key={artist._id}
-                      style={{
-                        flex: "0 0 16.67%", // 6 items visible at a time
-                        boxSizing: "border-box",
-                        padding: "0 5px",
-                      }}
-                    >
-                      <span
+                    // <div
+                    //   className="artistImage"
+                    //   key={artist._id}
+                    //   style={{
+                    //     flex: "0 0 16.67%", // 6 items visible at a time
+                    //     boxSizing: "border-box",
+                    //     padding: "0 5px",
+                    //   }}
+                    // >
+                    //   <span
+                    //     className={`favorite ${
+                    //       artist.isFavorite ? "favorited" : ""
+                    //     }`}
+                    //     onClick={(e) => {
+                    //       e.preventDefault(); // Prevent any default behavior
+                    //       e.stopPropagation(); // Prevent event bubbling, just in case
+                    //       toggleFavorite(artist._id);
+                    //     }}
+                        
+                    //     style={{ color: artist.isFavorite ? "red" : "grey" }}
+                    //   >
+                    //     <BsHeartFill />
+                    //   </span>
+                    //   <Link to={`/artist/${artist._id}`}>
+                    //     <div className="artistImage">
+                    //       {artist.imageUrl && (
+                    //         <img
+                    //           src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                    //           alt={artist.title}
+                    //           width="100%"
+                    //           loading="lazy"
+                    //         />
+                    //       )}
+                    //       <div className="artContent">
+                    //         <h4 className="artTitle">{artist.title}</h4>
+                    //       </div>
+                    //     </div>
+                    //   </Link>
+                    // </div>
+
+                    <div key={artist._id} className="artistImage"
+                    style={{
+                          flex: "0 0 16.67%", // 6 items visible at a time
+                          boxSizing: "border-box",
+                          padding: "0 5px",
+                        }}
+                      >
+                   <span
                         className={`favorite ${
                           artist.isFavorite ? "favorited" : ""
                         }`}
-                        onClick={() => toggleFavorite(artist._id)}
+                        onClick={() => {
+                        
+                          toggleFavorite(artist._id);
+                        }}
+                        
                         style={{ color: artist.isFavorite ? "red" : "grey" }}
                       >
                         <BsHeartFill />
                       </span>
-                      <Link to={`/artist/${artist._id}`}>
-                        <div className="artistImage">
-                          {artist.imageUrl && (
-                            <img
-                              src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                              alt={artist.title}
-                              width="100%"
-                              loading="lazy"
-                            />
-                          )}
-                          <div className="artContent">
-                            <h4 className="artTitle">{artist.title}</h4>
-                          </div>
+                    <Link to={`/artist/${artist._id}`}>
+                      <div className="artistImage">
+                        {artist.imageUrl && (
+                          <img
+                            src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                            alt={artist.title}
+                            width="100%"
+                            loading="lazy"
+                          />
+                        )}
+                        <div className="artContent">
+                          <h4 className="artTitle">{artist.title}</h4>
+                          {/* <span className="speciality">{artist.speciality}</span> */}
                         </div>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
+                  </div>
+
                   ))}
                 </div>
                 
                 <button
-                  className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right "
+                  className="arrow right react-multiple-carousel__arrow"
                   onClick={() => scrollCarousel(1, index)}
                 ><BsChevronCompactRight /></button>
               </section>
