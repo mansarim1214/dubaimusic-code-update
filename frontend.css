@@ -122,6 +122,13 @@ overflow-x: hidden;
 .artistImage, .venueImage{
   flex: 0 0 50% !important;
 }
+
+.artistImage {
+  -webkit-user-select: none; /* iOS Safari */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* Adjust to prevent interference */
+}
+
 }
 
 @media only screen and (min-width: 500px)and (max-width: 1042px) {
@@ -263,9 +270,20 @@ overflow-x: hidden;
     font-size: 23px;
     cursor: pointer;
     padding: 10px;
-    z-index: 9999;
+    z-index: 99;
+    animation: heart-bounce 0.3s ease;
+    will-change: transform, opacity;
+    
   }
 
+
+  @keyframes heart-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  
   .favorite svg{
     fill: #ffffff80;
     stroke-width: 1px;
