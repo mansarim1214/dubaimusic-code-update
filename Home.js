@@ -51,79 +51,83 @@ const Home = () => {
     ],
   };
 
-  const fetchData = async () => {
-    try {
-      const categoriesResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/categories`
-      );
-      const fetchedCategories = categoriesResponse.data;
-  
-      const artistsResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/artists`
-      );
-      const fetchedArtists = artistsResponse.data;
-  
-      // Define the desired order for categories
-      const desiredOrder = [
-        "Trending",
-        "Singers",
-        "Solo Looping Artists",
-        "Band",
-        "DJ",
-        "Musicians",
-      ];
-  
-      // Sort the fetched categories based on the desired order
-      fetchedCategories.sort((a, b) => {
-        const aIndex = desiredOrder.indexOf(a.name);
-        const bIndex = desiredOrder.indexOf(b.name);
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;
-      });
-  
-      const storedFavorites =
-        JSON.parse(localStorage.getItem("favoriteArtists")) || {};
-      const groupedArtists = {};
-  
-      // Group artists by categories and sort them according to manualArtistOrder if available
-      fetchedCategories.forEach((category) => {
-        let sortedArtists = fetchedArtists
-          .filter((artist) => artist.category === category.name)
-          .map((artist) => ({
-            ...artist,
-            isFavorite: storedFavorites[artist._id] || false,
-          }));
-  
-        const order = manualArtistOrder[category.name];
-        if (order) {
-          // Sort artists according to the manualArtistOrder
-          const sortedByManualOrder = sortedArtists
-            .filter((artist) => order.includes(artist.title))
-            .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-  
-          // Add artists not in manualArtistOrder at the end
-          const remainingArtists = sortedArtists.filter(
-            (artist) => !order.includes(artist.title)
-          );
-  
-          sortedArtists = [...sortedByManualOrder, ...remainingArtists];
-        }
-  
-        groupedArtists[category.name] = sortedArtists;
-      });
-  
-      setCategories(fetchedCategories);
-      setArtistsByCategory(groupedArtists);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoriesResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/categories`
+        );
+        const fetchedCategories = categoriesResponse.data;
+  
+        const artistsResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/artists`
+        );
+        const fetchedArtists = artistsResponse.data;
+  
+        // Define the desired order
+        const desiredOrder = [
+          "Trending",
+          "Singers",
+          "Solo Looping Artists",
+          "Band",
+          "DJ",
+          "Musicians",
+        ];
+  
+        // Sort categories based on desiredOrder
+        const sortedCategories = fetchedCategories.sort((a, b) => {
+          const aIndex = desiredOrder.indexOf(a.name);
+          const bIndex = desiredOrder.indexOf(b.name);
+          if (aIndex === -1 && bIndex === -1) return 0;
+          if (aIndex === -1) return 1;
+          if (bIndex === -1) return -1;
+          return aIndex - bIndex;
+        });
+  
+        // Load favorites from localStorage
+        const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        
+        // Ensure favorites are marked correctly
+        const groupedArtists = {};
+  
+        sortedCategories.forEach((category) => {
+          let sortedArtists = fetchedArtists
+            .filter((artist) => artist.category === category.name)
+            .map((artist) => ({
+              ...artist,
+              isFavorite: storedFavorites.some((fav) => fav._id === artist._id),
+            }));
+  
+          const order = manualArtistOrder[category.name];
+          if (order) {
+            // Sort based on manualArtistOrder
+            const sortedByManualOrder = sortedArtists
+              .filter((artist) => order.includes(artist.title))
+              .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+  
+            // Add artists not in the manualArtistOrder at the end
+            const remainingArtists = sortedArtists.filter(
+              (artist) => !order.includes(artist.title)
+            );
+  
+            sortedArtists = [...sortedByManualOrder, ...remainingArtists];
+          }
+  
+          groupedArtists[category.name] = sortedArtists;
+        });
+  
+        // Update state with sorted categories and artists
+        setCategories(sortedCategories);
+        setArtistsByCategory(groupedArtists);
+        setFavorites(storedFavorites);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
     fetchData();
   }, []);
+  
   
   
 
@@ -182,15 +186,22 @@ const Home = () => {
   }, [artistsByCategory, favorites]);
 
   const toggleFavorite = (artist) => {
-    let updatedFavorites;
-    if (favorites.some((fav) => fav._id === artist._id)) {
-      updatedFavorites = favorites.filter((fav) => fav._id !== artist._id);
-    } else {
-      updatedFavorites = [...favorites, artist];
-    }
+    // Get the current favorites from localStorage
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  
+    // Check if the artist is already in favorites
+    const isAlreadyFavorite = savedFavorites.some((fav) => fav._id === artist._id);
+  
+    // Update favorites based on whether the artist is already a favorite
+    const updatedFavorites = isAlreadyFavorite
+      ? savedFavorites.filter((fav) => fav._id !== artist._id)
+      : [...savedFavorites, artist];
+  
+    // Update state and localStorage
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
+  
 
   const isFavorite = (artist) => {
     return favorites.some((fav) => fav._id === artist._id);
