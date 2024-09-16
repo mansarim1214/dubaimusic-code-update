@@ -123,11 +123,7 @@ overflow-x: hidden;
   flex: 0 0 50% !important;
 }
 
-.artistImage {
-  -webkit-user-select: none; /* iOS Safari */
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation; /* Adjust to prevent interference */
-}
+
 
 }
 
