@@ -1,187 +1,157 @@
-import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { FaHeart } from "react-icons/fa";
+import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
-import { Link } from "react-router-dom";
-import { BsHeartFill } from "react-icons/bs";
-import { BsChevronCompactRight } from "react-icons/bs";
-import { BsChevronCompactLeft } from "react-icons/bs";
 import "./frontend.css";
 
 gsap.registerPlugin(Draggable);
 
 const Favorites = () => {
-  const [favoriteArtists, setFavoriteArtists] = useState([]);
-  const carouselRefs = useRef([]);
-
-  const isMobile = () => window.innerWidth <= 500;
-
-  useEffect(() => {
-    const fetchFavoriteArtists = async () => {
-      const storedFavorites =
-        JSON.parse(localStorage.getItem("favoriteArtists")) || {};
-      const favoriteArtistIds = Object.keys(storedFavorites);
-
-      try {
-        const responses = await Promise.all(
-          favoriteArtistIds.map((artistId) =>
-            axios.get(
-              `${process.env.REACT_APP_API_URL}/api/artists/${artistId}`
-            )
-          )
-        );
-        const fetchedArtists = responses.map((response) => response.data);
-        setFavoriteArtists(fetchedArtists);
-      } catch (error) {
-        console.error("Error fetching favorite artists:", error);
-      }
-    };
-
-    fetchFavoriteArtists();
-  }, []);
-
-  const toggleFavorite = (artistId) => {
-    const updatedFavoriteArtists = favoriteArtists.filter(
-      (artist) => artist._id !== artistId
-    );
-    setFavoriteArtists(updatedFavoriteArtists);
-
-    const storedFavorites =
-      JSON.parse(localStorage.getItem("favoriteArtists")) || {};
-    delete storedFavorites[artistId];
-    localStorage.setItem("favoriteArtists", JSON.stringify(storedFavorites));
-  };
+  const [favorites, setFavorites] = useState([]);
+  const [showArrows, setShowArrows] = useState({ left: false, right: false });
+  const carouselRef = useRef(null);
 
   useEffect(() => {
-    console.log("Carousel Refs:", carouselRefs.current); // Debugging
-  
-    if (isMobile()) {
-      carouselRefs.current.forEach((carousel) => {
-        if (carousel) {
-          gsap.killTweensOf(carousel); // Clean previous tweens
-  
-          Draggable.create(carousel, {
-            type: "x",
-            bounds: {
-              minX: -carousel.scrollWidth + carousel.clientWidth,
-              maxX: 0,
-            },
-            inertia: true,
-            throwProps: true,
-            edgeResistance: 1,
-            onThrowUpdate: () => {
-              gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
-            },
-            snap: {
-              x: (value) => Math.round(value / 200) * 200, // Adjust based on item width
-            },
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFavorites);
+  }, []); // Empty dependency array to run only on component mount
+
+  useEffect(() => {
+    if (carouselRef.current) {
+      const updateArrowVisibility = () => {
+        if (carouselRef.current) {
+          const scrollWidth = carouselRef.current.scrollWidth;
+          const clientWidth = carouselRef.current.clientWidth;
+          const scrollLeft = carouselRef.current.scrollLeft;
+
+          setShowArrows({
+            left: scrollLeft > 0,
+            right: scrollLeft < scrollWidth - clientWidth,
           });
         }
-      });
+      };
 
+      updateArrowVisibility(); // Initial check
+
+      window.addEventListener("resize", updateArrowVisibility);
+      return () => window.removeEventListener("resize", updateArrowVisibility);
     }
-    
-  }, [favoriteArtists]);
-  
-  
+  }, [favorites]); // Dependency on favorites to recalculate arrow visibility when favorites change
 
-  const scrollCarousel = (direction, index) => {
-    if (!isMobile()) {
-      const carousel = carouselRefs.current[index];
-      if (carousel) {
-        const item = carousel.querySelector(".artistImage");
-        if (!item) {
-          console.error("No items found in carousel");
-          return;
-        }
+  useEffect(() => {
+    if (window.innerWidth <= 500 && carouselRef.current) {
+      gsap.killTweensOf(carouselRef.current);
+      
+      Draggable.create(carouselRef.current, {
+        type: "x",
+        bounds: {
+          minX: -carouselRef.current.scrollWidth + carouselRef.current.clientWidth,
+          maxX: 0,
+        },
+        inertia: true,
+        throwProps: true,
+        edgeResistance: 0.65,
+        onThrowUpdate: () => {
+          gsap.to(carouselRef.current, { x: carouselRef.current._gsap.x, ease: "power2.out" });
+        },
+        snap: {
+          x: (value) => Math.round(value / 16.67) * 200, // Adjust based on item width
+        },
+      });
+    }
+  }, [favorites]); // Ensure this runs when favorites change, but not continuously
 
-        const itemWidth = item.clientWidth;
-        const scrollAmount = itemWidth * 3;
+  const toggleFavorite = (artist) => {
+    const updatedFavorites = favorites.filter((fav) => fav._id !== artist._id);
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
 
-        let newScrollPosition =
-          carousel.scrollLeft + scrollAmount * direction;
-        newScrollPosition = Math.max(
-          0,
-          Math.min(
-            newScrollPosition,
-            carousel.scrollWidth - carousel.clientWidth
-          )
-        );
+  const scrollCarousel = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = 300 * direction; // Adjust the scroll amount as needed
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
 
-        gsap.to(carousel, {
-          scrollLeft: newScrollPosition,
-          duration: 0.5,
-          ease: "power2.out",
+      setTimeout(() => {
+        const scrollWidth = carouselRef.current.scrollWidth;
+        const clientWidth = carouselRef.current.clientWidth;
+        const scrollLeft = carouselRef.current.scrollLeft;
+
+        setShowArrows({
+          left: scrollLeft > 0,
+          right: scrollLeft < scrollWidth - clientWidth,
         });
-      }
+      }, 500); // Delay to allow smooth scrolling to update visibility
     }
   };
 
   return (
     <div className="bg-custom">
-      <div className="container-fluid">
-        <h2 className="mb-3 fav-title">
-          <strong>Artists You've Favorited</strong>
-        </h2>
-        {favoriteArtists.length === 0 ? (
-          <p>No favorite added yet!</p>
-        ) : (
-          <div className="row">
-            <div className="col no-gutter p-relative">
-              <button
-                className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
-                onClick={() => scrollCarousel(-1, 0)}
-              >
-                <BsChevronCompactLeft />
-              </button>
+      <div className="container-fluid" id="favorites">
+      <h2 className="mb-3 fav-title"><strong>Artists You've Favorited</strong></h2>
+        {showArrows.left && (
+          <button
+            className="arrow left react-multiple-carousel__arrow"
+            onClick={() => scrollCarousel(-1)} // Scroll left
+          >
+            <BsChevronCompactLeft />
+          </button>
+        )}
+        <div
+          className="artistCarousel"
+          ref={carouselRef}
+          style={{
+            display: "flex",
+            overflow: "hidden",
+            width: "100%",
+          }}
+        >
+          {favorites.length > 0 ? (
+            favorites.map((artist) => (
               <div
-                className="artistCarousel"
-                ref={(el) => (carouselRefs.current[0] = el)}
+                key={artist._id}
+                className="artistImage"
                 style={{
-                  display: "flex",
-                  overflow: "hidden",
-                  width: "100%",
+                  flex: "0 0 16.67%", // 6 items visible at a time
+                  boxSizing: "border-box",
+                  padding: "0 5px",
                 }}
               >
-                {favoriteArtists.map((artist) => (
-                  <div
-                    key={artist._id}
-                    className="artistImage"
-                    style={{ flex: "0 0 16.67%", padding: "0 5px" }}
-                  >
-                    <span
-                      className="favorite favorited"
-                      onClick={() => toggleFavorite(artist._id)}
-                      style={{ color: "red" }}
-                    >
-                      <BsHeartFill />
-                    </span>
-                    <Link to={`/artist/${artist._id}`}>
-                      <div className="artistImage">
-                        {artist.imageUrl && (
-                          <img
-                            src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                            alt={artist.title}
-                            width="100%"
-                            loading="lazy"
-                          />
-                        )}
-                        <div className="artContent">
-                          <h4 className="artTitle">{artist.title}</h4>
-                        </div>
-                      </div>
-                    </Link>
+                <Link to={`/artist/${artist._id}`}>
+                  <div className="artistImage">
+                    {artist.imageUrl && (
+                      <img
+                        src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                        alt={artist.title}
+                        width="100%"
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="artContent">
+                      <h4 className="artTitle">{artist.title}</h4>
+                    </div>
                   </div>
-                ))}
+                </Link>
+                <div className="favoriteIcon">
+                  <button onClick={() => toggleFavorite(artist)}>
+                    <FaHeart className="heartIcon" />
+                  </button>
+                </div>
               </div>
-              <button
-                className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
-                onClick={() => scrollCarousel(1, 0)}
-              >
-                <BsChevronCompactRight />
-              </button>
-            </div>
-          </div>
+            ))
+          ) : (
+            <p>No favorites yet!</p>
+          )}
+        </div>
+        {showArrows.right && (
+          <button
+            className="arrow right react-multiple-carousel__arrow"
+            onClick={() => scrollCarousel(1)} // Scroll right
+          >
+            <BsChevronCompactRight />
+          </button>
         )}
       </div>
     </div>

@@ -4,8 +4,7 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Link } from "react-router-dom";
 import { BsFillGeoAltFill } from "react-icons/bs";
-import { BsChevronCompactRight } from "react-icons/bs";
-import { BsChevronCompactLeft } from "react-icons/bs";
+import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 
 gsap.registerPlugin(Draggable);
 
@@ -21,7 +20,6 @@ const Venues = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/venues`
         );
-        console.log("Fetched Venues:", response.data); // Debugging
         setVenues(response.data);
       } catch (error) {
         console.error("Error fetching venues:", error);
@@ -44,8 +42,7 @@ const Venues = () => {
     // Reorder the grouped venues to ensure "Coca Cola Arena" is first
     const orderedGroupedVenues = {};
     if (groupedVenues["Coca Cola Arena"]) {
-      orderedGroupedVenues["Coca Cola Arena"] =
-        groupedVenues["Coca Cola Arena"];
+      orderedGroupedVenues["Coca Cola Arena"] = groupedVenues["Coca Cola Arena"];
       delete groupedVenues["Coca Cola Arena"];
     }
 
@@ -59,7 +56,6 @@ const Venues = () => {
 
   // Get grouped venues
   const groupedVenues = groupVenuesByCategory();
-  console.log("Grouped Venues:", groupedVenues); // Debugging
 
   // Carousel Setting
   const scrollCarousel = (direction, index) => {
@@ -88,6 +84,7 @@ const Venues = () => {
     }
   };
 
+  // Enable dragging on mobile
   useEffect(() => {
     if (isMobile()) {
       carouselRefs.current.forEach((carousel) => {
@@ -115,69 +112,79 @@ const Venues = () => {
     }
   }, [groupedVenues]);
 
-  //  Carousel Setting End
   return (
     <div className="bg-custom">
       <div className="container-fluid">
-        {Object.keys(groupedVenues).map((category, index) => (
-          <div key={category} className="category-wrapper">
-            <h2 className="my-2 fav-title">{category}</h2>
-            <div className="row">
-              <div className="col p-relative">
-                <button
-                  className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
-                  onClick={() => scrollCarousel(-1, index)}
-                >
-                  <BsChevronCompactLeft />
-                </button>
-                <div
-                  className="venueCarousel"
-                  ref={(el) => (carouselRefs.current[index] = el)}
-                  style={{
-                    display: "flex",
-                    overflow: "hidden",
-                    width: "100%",
-                  }}
-                >
-                  {groupedVenues[category].map((venue) => (
-                    <div
-                      key={venue._id}
-                      className="venueImage"
-                      style={{ flex: "0 0 16.67%", padding: "0 5px" }}
+        {Object.keys(groupedVenues).map((category, index) => {
+          const carousel = carouselRefs.current[index];
+          const isScrollable = carousel && carousel.scrollWidth > carousel.clientWidth;
+
+          return (
+            <div key={category} className="category-wrapper">
+              <h2 className="my-2 fav-title">{category}</h2>
+              <div className="row">
+                <div className="col p-relative">
+                  {/* Conditionally render the left arrow */}
+                  {isScrollable && (
+                    <button
+                      className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
+                      onClick={() => scrollCarousel(-1, index)}
                     >
-                      <Link to={`/venuedetail/${venue._id}`}>
-                        <div className="artistImage">
-                          {venue.featuredImage && (
-                            <img
-                              src={`${process.env.REACT_APP_API_URL}/${venue.featuredImage}`}
-                              alt={venue.title}
-                              width="100%"
-                              loading="lazy"
-                            />
-                          )}
-                          <div className="artContent">
-                            <h4 className="artTitle">{venue.title}</h4>
-                            {venue.location && (
-                              <span className="location">
-                                <BsFillGeoAltFill /> {venue.location}
-                              </span>
+                      <BsChevronCompactLeft />
+                    </button>
+                  )}
+                  <div
+                    className="venueCarousel"
+                    ref={(el) => (carouselRefs.current[index] = el)}
+                    style={{
+                      display: "flex",
+                      overflow: "hidden",
+                      width: "100%",
+                    }}
+                  >
+                    {groupedVenues[category].map((venue) => (
+                      <div
+                        key={venue._id}
+                        className="venueImage"
+                        style={{ flex: "0 0 16.67%", padding: "0 5px" }}
+                      >
+                        <Link to={`/venuedetail/${venue._id}`}>
+                          <div className="artistImage">
+                            {venue.featuredImage && (
+                              <img
+                                src={`${process.env.REACT_APP_API_URL}/${venue.featuredImage}`}
+                                alt={venue.title}
+                                width="100%"
+                                loading="lazy"
+                              />
                             )}
+                            <div className="artContent">
+                              <h4 className="artTitle">{venue.title}</h4>
+                              {venue.location && (
+                                <span className="location">
+                                  <BsFillGeoAltFill /> {venue.location}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Conditionally render the right arrow */}
+                  {isScrollable && (
+                    <button
+                      className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
+                      onClick={() => scrollCarousel(1, index)}
+                    >
+                      <BsChevronCompactRight />
+                    </button>
+                  )}
                 </div>
-                <button
-                  className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
-                  onClick={() => scrollCarousel(1, index)}
-                >
-                  <BsChevronCompactRight />
-                </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

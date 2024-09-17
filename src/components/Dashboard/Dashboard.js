@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import { useAuth } from '../../context/AuthContext';
 import "./Dashboard.css";
 import { AddArtistForm, AddCategoryForm } from "./addForms"; // Adjust the import path as needed
 import ViewArtists from "./ViewArtists";
@@ -8,8 +9,11 @@ import {Link}  from "react-router-dom";
 
 
 
+
 const Dashboard = () => {
- 
+
+  // const { user } = useAuth();
+
   const [selectedComponent, setSelectedComponent] = useState("addArtist");
   const handleComponentSelect = (componentName) => {
     setSelectedComponent(componentName);
@@ -134,6 +138,10 @@ const Dashboard = () => {
       </div>
     </div>
   );
+
+
 };
+
+
 
 export default Dashboard;

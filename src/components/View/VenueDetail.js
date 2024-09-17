@@ -88,7 +88,13 @@ const VenueDetail = () => {
       <div className="container">
         <h1>{venue.title}</h1>
         <div>
-          Location: <span>{venue.location}</span>
+        {venue.location && (
+    <>
+        Location: <span>{venue.location}</span>
+    </>
+)}
+
+
         </div>
         <div>
           {/* Category: <span>{venue.category}</span> */}
