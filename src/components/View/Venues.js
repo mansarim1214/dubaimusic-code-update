@@ -42,7 +42,8 @@ const Venues = () => {
     // Reorder the grouped venues to ensure "Coca Cola Arena" is first
     const orderedGroupedVenues = {};
     if (groupedVenues["Coca Cola Arena"]) {
-      orderedGroupedVenues["Coca Cola Arena"] = groupedVenues["Coca Cola Arena"];
+      orderedGroupedVenues["Coca Cola Arena"] =
+        groupedVenues["Coca Cola Arena"];
       delete groupedVenues["Coca Cola Arena"];
     }
 
@@ -117,7 +118,8 @@ const Venues = () => {
       <div className="container-fluid">
         {Object.keys(groupedVenues).map((category, index) => {
           const carousel = carouselRefs.current[index];
-          const isScrollable = carousel && carousel.scrollWidth > carousel.clientWidth;
+          const isScrollable =
+            carousel && carousel.scrollWidth > carousel.clientWidth;
 
           return (
             <div key={category} className="category-wrapper">
