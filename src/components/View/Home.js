@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { BsFillSuitHeartFill, BsSuitHeart  } from "react-icons/bs";
+import { BsHeartFill, BsHeart  } from "react-icons/bs";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
@@ -295,9 +295,9 @@ const Home = () => {
                     <div className="favoriteIcon">
                       <button onClick={() => toggleFavorite(artist)}>
                         {isFavorite(artist) ? (
-                          <BsFillSuitHeartFill  className=" favorited" />
+                          <BsHeartFill  className=" favorited" />
                         ) : (
-                          <BsSuitHeart className="heartIcon " />
+                          <BsHeart className="heartIcon " />
                         )}
                       </button>
                     </div>
