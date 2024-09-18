@@ -297,7 +297,7 @@ const Home = () => {
                         {isFavorite(artist) ? (
                           <BsHeartFill  className=" favorited" />
                         ) : (
-                          <BsHeart className="heartIcon " />
+                          <BsHeartFill className="heartIcon " />
                         )}
                       </button>
                     </div>

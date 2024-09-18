@@ -292,8 +292,10 @@ overflow-x: hidden;
 
 
   .heartIcon{
-    fill: #ff0000;
+    fill: #ffffff4f;
     overflow: visible;
+    stroke: #ff0000;
+    stroke-width: 1px;
     
   }
 

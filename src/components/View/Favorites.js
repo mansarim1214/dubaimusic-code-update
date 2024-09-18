@@ -136,7 +136,7 @@ const Favorites = () => {
                 </Link>
                 <div className="favoriteIcon">
                   <button onClick={() => toggleFavorite(artist)}>
-                    <BsHeartFill className="heartIcon" />
+                    <BsHeartFill className="favorited" />
                   </button>
                 </div>
               </div>
