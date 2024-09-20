@@ -9,6 +9,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [speciality, setSpeciality] = useState(artist.speciality);
   const [description, setDescription] = useState(artist.description);
   const [videoUrl, setVideoUrl] = useState(artist.videoUrl);
+  const [audioUrl, setAudioUrl] = useState(artist.audioUrl);
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [categories, setCategories] = useState([]);
@@ -69,6 +70,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     formData.append('speciality', speciality);
     formData.append('description', description);
     formData.append('videoUrl', videoUrl);
+    formData.append('audioUrl', audioUrl);
   
     if (image) {
       formData.append('image', image); // Field name 'image'
@@ -171,6 +173,18 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
+            
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="audioUrl">Audio URL</label>
+          <input
+            type="text"
+            className="form-control"
+            id="audioUrl"
+            value={audioUrl}
+            onChange={(e) => setAudioUrl(e.target.value)}
+            placeholder="Enter audio URL"
             
           />
         </div>

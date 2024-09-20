@@ -507,3 +507,7 @@ overflow-x: hidden;
 .arrow svg{
   stroke-width: 2px;
 }
+
+.artist-audio div{
+width: 100% !important;
+}

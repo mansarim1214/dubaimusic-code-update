@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import "./frontend.css"; // Import the CSS file for styling
+import "./frontend.css";
+import ReactPlayer from "react-player";
 
 const ArtistDetail = () => {
   const { id } = useParams();
@@ -14,7 +15,6 @@ const ArtistDetail = () => {
   const [formMessage, setFormMessage] = useState("");
   const [images, setImages] = useState([]);
 
-
   // Video URL Functions
 
   function getEmbedUrl(url) {
@@ -22,26 +22,24 @@ const ArtistDetail = () => {
       console.error("URL is null or undefined");
       return null; // Handle missing URL
     }
-  
+
     const extractVideoId = (url) => {
-      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+      const regex =
+        /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
       const match = url.match(regex);
       return match ? match[1] : null;
     };
-  
+
     const videoId = extractVideoId(url);
-  
+
     if (!videoId) {
       console.error("Invalid or unsupported YouTube URL:", url);
       return null; // Or return a placeholder URL
     }
-  
+
     // Return the embed URL format with the rel=0 parameter
     return `https://www.youtube.com/embed/${videoId}?rel=0`;
   }
-  
-  
-  
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -125,6 +123,12 @@ const ArtistDetail = () => {
               frameBorder="0"
               allowFullScreen
             ></iframe>
+          </div>
+        )}
+
+        {artist.audioUrl && (
+          <div className="artist-audio">
+            <ReactPlayer url={artist.audioUrl} />
           </div>
         )}
         <h1>{artist.title}</h1>

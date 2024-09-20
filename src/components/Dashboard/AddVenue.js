@@ -116,7 +116,7 @@ const AddVenue = () => {
           >
             <option value="" disabled>Select category</option>
             <option value="Coca Cola Arena">Coca Cola Arena</option>
-            <option value="Hidden Gems">Hidden Gems</option>
+            <option value="Hot Picks">Hot Picks</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>

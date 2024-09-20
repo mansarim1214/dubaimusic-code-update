@@ -10,6 +10,7 @@ const artistSchema = new mongoose.Schema({
   speciality: { type: String, required: true },
   description: { type: String },
   videoUrl: { type: String },
+  audioUrl: { type: String },
   imageUrl: { type: String, required: true },
   galleryImages: [{ type: String }] // Array to store multiple image paths
 });
@@ -31,13 +32,13 @@ const upload = multer({ storage });
 
 // POST route to add a new artist with a single image and multiple gallery images
 router.post('/', upload.fields([{ name: 'image', maxCount: 1 }, { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
-  const { title, category, speciality, description, videoUrl } = req.body;
+  const { title, category, speciality, description, videoUrl, audioUrl } = req.body;
 
   const imageUrl = req.files['image'] ? `uploads/${req.files['image'][0].filename}` : '';
   const galleryImages = req.files['galleryImages'] ? req.files['galleryImages'].map(file => `uploads/${file.filename}`) : [];
 
   try {
-    const newArtist = new Artist({ title, category, speciality, description, videoUrl, imageUrl, galleryImages });
+    const newArtist = new Artist({ title, category, speciality, description, videoUrl, audioUrl, imageUrl, galleryImages });
     await newArtist.save();
     res.status(201).json(newArtist);
   } catch (error) {
@@ -74,8 +75,8 @@ router.put('/:id', upload.fields([
   
   { name: 'image', maxCount: 1 }, 
   { name: 'galleryImages', maxCount: 10 }]), async (req, res) => {
-  const { title, category, speciality, description, videoUrl } = req.body;
-  const updateData = { title, category, speciality, description, videoUrl };
+  const { title, category, speciality, description, videoUrl, audioUrl } = req.body;
+  const updateData = { title, category, speciality, description, videoUrl, audioUrl };
 
   try {
     if (req.files['image']) {

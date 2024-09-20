@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { BsHeartFill, BsHeart  } from "react-icons/bs";
+import { BsHeartFill  } from "react-icons/bs";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";

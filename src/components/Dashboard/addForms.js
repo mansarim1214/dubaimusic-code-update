@@ -10,6 +10,7 @@ const AddArtistForm = () => {
   const [speciality, setSpeciality] = useState("");
   const [description, setDescription] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [audioUrl, setAudioUrl] = useState("");
   const [fileName, setFileName] = useState("No file chosen");
   const [categories, setCategories] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -31,6 +32,7 @@ const AddArtistForm = () => {
     setGalleryFileNames(files.map((file) => file.name));
   };
 
+  
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,6 +43,7 @@ const AddArtistForm = () => {
     formData.append("speciality", speciality);
     formData.append("description", description);
     formData.append("videoUrl", videoUrl);
+    formData.append("audioUrl", audioUrl);
     formData.append("image", mainImageFile); // Append main image file
 
     galleryImageFiles.forEach((file) => {
@@ -65,6 +68,7 @@ const AddArtistForm = () => {
       setSpeciality("");
       setDescription("");
       setVideoUrl("");
+      setAudioUrl("");
       setMainImageFile(null);
       setGalleryImageFiles([]);
       setFileName("No file chosen");
@@ -158,6 +162,18 @@ const AddArtistForm = () => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
+            
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="audioUrl">Audio URL</label>
+          <input
+            type="text"
+            className="form-control"
+            id="audioUrl"
+            value={audioUrl}
+            onChange={(e) => setAudioUrl(e.target.value)}
+            placeholder="Enter audio URL"
             
           />
         </div>
