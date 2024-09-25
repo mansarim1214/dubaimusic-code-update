@@ -39,7 +39,7 @@ const Venues = () => {
 
 
   const categoryOrder = [
-    "Coca Cola Arena",
+    // "Coca Cola Arena",
     "Hot Picks",
     "Monday",
     "Tuesday",

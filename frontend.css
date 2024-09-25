@@ -279,17 +279,36 @@ overflow-x: hidden;
     100% { transform: scale(1); }
   }
 
-  
-  .favorite svg{
-    fill: #ffffff80;
-    stroke-width: 1px;
-    stroke: #ff0000;
-    overflow: visible;
+  .favoriteIcon{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width:50%;
   }
 
-  .favorited svg{
+.favoriteIcon svg{
+  font-size: 26px;
+}
+
+
+  .heartIcon{
+    fill: #ffffff4f;
+    overflow: visible;
+    stroke: #ff0000;
+    stroke-width: 1px;
+    
+  }
+
+  .favorited{
     fill: red;
     stroke: #e60023;
+  }
+
+  .favoriteIcon button{
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    text-align: right;
   }
 
   .no-gutter{
@@ -462,7 +481,7 @@ overflow-x: hidden;
 
 .arrow {
   position: absolute;
-  top: 50%;
+  top: 56%;
   transform: translateY(-50%);
   background: rgb(0 0 0 / 18%);
   color: white;
@@ -487,4 +506,12 @@ overflow-x: hidden;
 }
 .arrow svg{
   stroke-width: 2px;
+}
+
+.artist-audio div{
+width: 100% !important;
+}
+
+#description .btn-success{
+  color: white !important;
 }
