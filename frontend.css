@@ -259,6 +259,7 @@ overflow-x: hidden;
   #description a{
     color: #d1b6fa !important;
     text-decoration: none;
+    word-wrap: break-word;
   }
 
   .favorite{
