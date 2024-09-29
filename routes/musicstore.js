@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); 
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); 
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
   }
 });
 
@@ -19,7 +19,7 @@ const upload = multer({ storage });
 
 // POST route to add a new music store
 router.post('/', upload.fields([{ name: 'logo' }, { name: 'featuredImage' }]), async (req, res) => {
- 
+  console.log('Received request to add music store:', req.body);
   const { name, bio, contact } = req.body;
 
   // Check if files were uploaded
