@@ -13,7 +13,7 @@ overflow-x: hidden;
 }
 .bg-custom{
     background-color: #333333 !important;
-    padding: 130px 0;
+    padding: 100px 0;
     color: white;
     min-height: 100vh;
 }
@@ -123,7 +123,9 @@ overflow-x: hidden;
   flex: 0 0 50% !important;
 }
 
-
+.storeImage img{
+  height: 200px;
+}
 
 }
 
