@@ -23,7 +23,7 @@ overflow-x: hidden;
     font-size: 22px;
 }
 
-.artistImage img{
+.artistImage img, .storeImage img{
     height: 320px;
     object-fit: cover;
     object-position: center center;
@@ -31,7 +31,7 @@ overflow-x: hidden;
     transition: 0.5s ease;
 }
 
-.artistImage img:hover{
+.artistImage img:hover, .storeImage img:hover{
     filter: brightness(70%);
     
 }
@@ -89,7 +89,7 @@ overflow-x: hidden;
 .artistImage img, .venueImage img{
     height: 238px !important;
 }
-.artContent{
+.artContent, .storeContent{
     padding-left: 10px !important;
 }
 .artTitle{
@@ -119,7 +119,7 @@ overflow-x: hidden;
   overflow: visible !important;
 }
 
-.artistImage, .venueImage{
+.artistImage, .venueImage, .storeImage{
   flex: 0 0 50% !important;
 }
 
@@ -128,7 +128,7 @@ overflow-x: hidden;
 }
 
 @media only screen and (min-width: 500px)and (max-width: 1042px) {
-  .artistImage, .venueImage{
+  .artistImage, .venueImage, .storeImage{
     flex: 0 0 25% !important;
   }
 }
@@ -158,7 +158,7 @@ overflow-x: hidden;
         
         gap: 50px;
     }
-    .artist-detail .container, .venue-detail .container{
+    .artist-detail .container, .venue-detail .container, .store-detail .container{
         max-width: 950px;
     }
 
@@ -179,11 +179,11 @@ overflow-x: hidden;
     left: 0;
 }
 
-.artistImage, .venueImage{
+.artistImage, .venueImage ,.storeImage{
     position: relative;
 }
 
-.artContent{
+.artContent, .storeContent{
     position: absolute;
     bottom: 0;
     padding: 8px 10px 8px 10px;
@@ -199,6 +199,7 @@ overflow-x: hidden;
     font-weight: 500;
     margin: 0;
     color: white;
+    text-align: left;
 }
 .speciality{
     font-size: 14px;
@@ -219,11 +220,11 @@ overflow-x: hidden;
    
   }
   
-  .artist-detail span, .venue-detail span{
+  .artist-detail span, .venue-detail span, .store-detail span{
     color: #9156e9;
   }
 
-  .artist-detail h1, .venue-detail h1{
+  .artist-detail h1, .venue-detail h1, .store-detail h1{
     font-size: 26px;
     position: relative;
     z-index: 999;
@@ -257,6 +258,7 @@ overflow-x: hidden;
 
   #description a{
     color: #d1b6fa !important;
+    text-decoration: none;
   }
 
   .favorite{
@@ -510,4 +512,17 @@ overflow-x: hidden;
 
 .artist-audio div{
 width: 100% !important;
+}
+
+#description .btn-success{
+  color: white !important;
+}
+
+.store-image{
+  border-radius: 20px;
+}
+
+.btn-call{
+  color: white !important;
+  background-color: #693dab !important;
 }

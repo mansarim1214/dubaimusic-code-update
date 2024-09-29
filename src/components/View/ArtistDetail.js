@@ -6,6 +6,7 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import "./frontend.css";
 import ReactPlayer from "react-player";
+import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const ArtistDetail = () => {
   const { id } = useParams();
@@ -110,6 +111,8 @@ const ArtistDetail = () => {
   const hiddenCategories = ["Wedding Packages", "VIP"];
   const shouldHideDetails = hiddenCategories.includes(artist.category);
 
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this artist: ${window.location.href}`;
+
   return (
     <div className="artist-detail bg-custom">
       <div className="container">
@@ -160,6 +163,17 @@ const ArtistDetail = () => {
                     "<em>Description not available yet</em>",
                 }}
               />
+              {/* WhatsApp Share Button */}
+              <div className="whatsapp-share mt-5">
+                <a
+                  href={whatsappShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-success"
+                >
+                  <FaWhatsapp /> Share the Artist
+                </a>
+              </div>
             </div>
 
             {(artist.galleryImages.length || artist.imageUrl) && (
@@ -258,7 +272,7 @@ const ArtistDetail = () => {
               </div>
               <div className="col-md-6">
                 <button type="submit" className="btn enquirybtn">
-                  Enquire Now
+                  Book Now
                 </button>
               </div>
             </div>

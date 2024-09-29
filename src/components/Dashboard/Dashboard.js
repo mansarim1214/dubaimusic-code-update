@@ -6,6 +6,8 @@ import ViewArtists from "./ViewArtists";
 import AddVenue from "./AddVenue";
 import ManageVenue from "./ManageVenue";
 import {Link}  from "react-router-dom";
+import AddMusicStore from "./AddMusicStore";
+import ManageMusicStore from "./ManageStore";
 
 
 
@@ -118,6 +120,47 @@ const Dashboard = () => {
                   </div>
                 </li>
 
+                <li className="nav-item">
+                  <div className="accordion" id="accordionStore">
+                    <div className="accordion-item">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseStore"
+                        aria-expanded="true"
+                        aria-controls="collapseStore"
+                      >
+                        Music Store
+                      </button>
+
+                      <div
+                        id="collapseStore"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingOne"
+                        data-bs-parent="#accordionStore"
+                      >
+                        <div className="accordion-body">
+                          <Link
+                            className="nav-link"
+                            onClick={() => handleComponentSelect("addStore")}
+                          >
+                            Add Store
+                          </Link>
+                          <Link
+                            className="nav-link"
+                            onClick={() => handleComponentSelect("manageMusicStore")}
+                          >
+                            Manage Stores
+                          </Link>
+
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
 
                 {/* Add more links as needed */}
               </ul>
@@ -132,6 +175,8 @@ const Dashboard = () => {
             {selectedComponent === "editArtist" && <ViewArtists />}
             {selectedComponent === "addVenue" && <AddVenue />}
             {selectedComponent === "manageVenue" && <ManageVenue />}
+            {selectedComponent === "addStore" && <AddMusicStore />}
+            {selectedComponent === "manageMusicStore" && <ManageMusicStore />}
 
           </main>
         </div>

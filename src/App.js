@@ -15,9 +15,10 @@ import Unauthorized from './components/Dashboard/Unauthorized';
 import { AuthProvider } from './context/AuthContext';
 import Jobs from './components/View/Jobs';
 import About from "./components/View/About";
-
-
 import Login from "./components/Dashboard/Login";
+import MusicStore from "./components/View/MusicStore";
+import StoreDetail from "./components/View/StoreDetail";
+
 
 
 const App = () => {
@@ -42,8 +43,10 @@ const App = () => {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/venues" element={<Venues />} />
           <Route path="/venuedetail/:id" element={<VenueDetail />} />
+          <Route path="/music-store/:id" element={<StoreDetail />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/about" element={<About />} />
+          <Route path="/music-store" element={<MusicStore />} />
         </Routes>
         
         <Footer />

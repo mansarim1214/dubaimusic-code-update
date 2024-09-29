@@ -145,6 +145,11 @@ const Navbar = ({ handleShow }) => {
               Post a Job
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/music-store" className="nav-link"  onClick={closeSidebar}>
+            Music Store
+            </NavLink>
+          </li>
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">
               {" "}
@@ -153,8 +158,10 @@ const Navbar = ({ handleShow }) => {
             <Link to="https://www.facebook.com/dubaimusic.comm" target="_blank">
               <BsFacebook />
             </Link>
-            {/* <Link to=""><BsYoutube /></Link> */}
+            
           </div>
+          
+
         </ul>
       </div>
     </>

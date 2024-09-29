@@ -71,3 +71,9 @@
   .nav-link{
     cursor: pointer;
   }
+
+  .sidebar-sticky .nav-item a{
+    margin: 8px 1rem;
+    font-weight: 400;
+    font-size: 14px !important;
+  }

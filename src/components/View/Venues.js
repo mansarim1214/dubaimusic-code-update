@@ -29,31 +29,52 @@ const Venues = () => {
     fetchVenues();
   }, []);
 
-  // Function to group venues by category
+  // Helper function to shuffle an array
+  const shuffleArray = (array) => {
+    return array
+      .map((item) => ({ item, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ item }) => item);
+  };
+
+
+  const categoryOrder = [
+    // "Coca Cola Arena",
+    "Hot Picks",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  
+  // Function to group venues by category and shuffle the venues in each category
   const groupVenuesByCategory = () => {
     const groupedVenues = {};
+    
+    // Group the venues by category
     venues.forEach((venue) => {
       if (!groupedVenues[venue.category]) {
         groupedVenues[venue.category] = [];
       }
       groupedVenues[venue.category].push(venue);
     });
-
-    // Reorder the grouped venues to ensure "Coca Cola Arena" is first
+  
     const orderedGroupedVenues = {};
-    if (groupedVenues["Coca Cola Arena"]) {
-      orderedGroupedVenues["Coca Cola Arena"] =
-        groupedVenues["Coca Cola Arena"];
-      delete groupedVenues["Coca Cola Arena"];
-    }
-
-    // Add the remaining categories in their original order
-    Object.keys(groupedVenues).forEach((category) => {
-      orderedGroupedVenues[category] = groupedVenues[category];
+  
+    // Ensure categories appear in the order defined in categoryOrder
+    categoryOrder.forEach((category) => {
+      if (groupedVenues[category]) {
+        orderedGroupedVenues[category] = shuffleArray(groupedVenues[category]); // Shuffle the venues within the category
+      }
     });
-
+  
     return orderedGroupedVenues;
   };
+  
 
   // Get grouped venues
   const groupedVenues = groupVenuesByCategory();

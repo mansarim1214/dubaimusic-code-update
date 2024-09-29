@@ -1,5 +1,4 @@
 import { useState } from 'react';
-const md5 = require('md5'); // Import the md5 library
 
 const Login = () => {
   const [input, setInput] = useState({ email: '', password: '' });
