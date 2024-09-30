@@ -19,7 +19,7 @@ const ManageMusicStore = () => {
         ); // Update endpoint
         setStores(response.data); // Update state
       } catch (error) {
-        
+        console.error("Error fetching music stores:", error);
       }
     };
 
@@ -32,6 +32,7 @@ const ManageMusicStore = () => {
       return (
         (store.name &&
           store.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+
         (store.contact &&
           store.contact.toLowerCase().includes(searchTerm.toLowerCase()))
       );
@@ -61,7 +62,7 @@ const ManageMusicStore = () => {
       setStores(stores.filter((store) => store._id !== id)); // Update state
       setShowAlert(true);
     } catch (error) {
-     
+      console.error("Error deleting store:", error);
     }
   };
 

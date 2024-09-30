@@ -78,7 +78,6 @@ const AddMusicStore = () => {
             className="form-control"
           />
         </div>
-        
         <div className="form-group">
           <label>Store Bio</label>
           <CKEditor

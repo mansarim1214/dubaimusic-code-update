@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 // import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
+import { BsArrowLeftSquareFill  } from "react-icons/bs";
 import "./frontend.css"; // Import the CSS file for styling
+
+
 
 const VenueDetail = () => {
   const { id } = useParams();
@@ -14,8 +18,16 @@ const VenueDetail = () => {
   // const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   // const [formMessage, setFormMessage] = useState("");
   const [galleryImages, setGalleryImages] = useState([]); // Declare galleryImages here
+  
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1); // This will take the user to the previous page in the history stack
+  };
+  
 
   useEffect(() => {
+    
     const fetchVenue = async () => {
       try {
         const response = await axios.get(
@@ -39,13 +51,23 @@ const VenueDetail = () => {
         setGalleryImages(loadedImages); // Set the galleryImages state
       } catch (error) {
         console.error("Error fetching venue:", error);
-        setError('Failed to fetch venue. Please try again later.');
+        setError("Failed to fetch venue. Please try again later.");
         setLoading(false);
       }
     };
 
     fetchVenue();
   }, [id]);
+
+
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this: ${window.location.href}`;
+
+  const addTargetToLinks = (html) => {
+    return html.replace(
+      /<a /g,
+      '<a target="_blank" rel="noopener noreferrer" '
+    );
+  };
 
   // const handleChange = (e) => {
   //   setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,33 +105,53 @@ const VenueDetail = () => {
 
   if (!venue) return <div>No venue found.</div>;
 
+  
+
   return (
     <div className="venue-detail bg-custom">
       <div className="container">
+
+      <span onClick={handleBack} className="back-btn d-md-none">
+      <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
+    </span>
+
         <h1>{venue.title}</h1>
         <div>
-        {venue.location && (
-    <>
-        Location: <span>{venue.location}</span>
-    </>
-)}
-
-
+          {venue.location && (
+            <>
+              Location: <span>{venue.location}</span>
+            </>
+          )}
         </div>
-        <div>
-          {/* Category: <span>{venue.category}</span> */}
-        </div>
+        <div>{/* Category: <span>{venue.category}</span> */}</div>
         <div id="description" className="mt-3">
           <div className="row">
             <div
-              className={`col-md-${galleryImages.length || venue.featuredImage ? "6" : "12"}`}
+              className={`col-md-${
+                galleryImages.length || venue.featuredImage ? "6" : "12"
+              }`}
             >
               <h4>About</h4>
+
               <div
                 dangerouslySetInnerHTML={{
-                  __html: venue.description || "<em>Description not available yet</em>",
+                  __html:
+                    addTargetToLinks(venue.description) ||
+                    "<em>Description not available yet</em>",
                 }}
               />
+
+              {/* WhatsApp Share Button */}
+              <div className="whatsapp-share my-5">
+                <a
+                  href={whatsappShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-success"
+                >
+                  <FaWhatsapp /> Share with Friends
+                </a>
+              </div>
             </div>
             {(galleryImages.length || venue.featuredImage) && (
               <div className={`col-md-${venue.featuredImage ? "6" : "12"}`}>
@@ -141,7 +183,7 @@ const VenueDetail = () => {
                                 src={img.src}
                                 alt={`galleryimg ${index + 1}`}
                                 className="grid-item"
-                                style={{ cursor: "pointer", width: "100%", height: "auto" }}
+                                style={{ cursor: "pointer" }}
                               />
                             )}
                           </Item>

@@ -27,11 +27,7 @@ const MusicStore = () => {
         <h2 className="my-2 fav-title">Music Stores</h2>
         <div
           className="storeGrid" // Grid layout
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)", // 6 items per row
-           
-          }}
+          
         >
           {stores.map((store) => (
             <div

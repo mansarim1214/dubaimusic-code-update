@@ -13,7 +13,7 @@ overflow-x: hidden;
 }
 .bg-custom{
     background-color: #333333 !important;
-    padding: 130px 0;
+    padding: 100px 0;
     color: white;
     min-height: 100vh;
 }
@@ -83,7 +83,7 @@ overflow-x: hidden;
 .react-multiple-carousel__arrow{
  display: none;
 }
-.artCat{
+.artCat, .fav-title{
     font-size: 20px !important;
 }
 .artistImage img, .venueImage img{
@@ -123,7 +123,9 @@ overflow-x: hidden;
   flex: 0 0 50% !important;
 }
 
-
+.storeImage img{
+  height: 200px;
+}
 
 }
 
@@ -144,7 +146,7 @@ overflow-x: hidden;
 
 }
 
-.artist-video iframe, .artist-image, .venue-image img{
+.artist-video iframe, .artist-image, .venue-image{
     border-radius: 15px;
 }
 
@@ -216,7 +218,9 @@ overflow-x: hidden;
 
   
   .artist-detail img, .venue-detail img {
-    width: 100%;
+    /* width: 100%;
+    height: auto; */
+    object-fit: cover;
    
   }
   
@@ -259,6 +263,7 @@ overflow-x: hidden;
   #description a{
     color: #d1b6fa !important;
     text-decoration: none;
+    word-wrap: break-word;
   }
 
   .favorite{
@@ -372,7 +377,7 @@ overflow-x: hidden;
 }
   .grid-item {
     width: 100%;
-    height: auto;
+    height: 100px;
     object-fit: cover;
     border-radius: 8px;
   }
@@ -525,4 +530,15 @@ width: 100% !important;
 .btn-call{
   color: white !important;
   background-color: #693dab !important;
+}
+
+.storeGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 items per row */
+}
+
+@media (max-width: 768px) {
+  .storeGrid {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row on mobile */
+  }
 }

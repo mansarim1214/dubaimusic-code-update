@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import "./frontend.css";
 import ReactPlayer from "react-player";
+import { BsArrowLeftSquareFill  } from "react-icons/bs";
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const ArtistDetail = () => {
@@ -14,7 +15,14 @@ const ArtistDetail = () => {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [formMessage, setFormMessage] = useState("");
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([]);  
+  
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1); // This will take the user to the previous page in the history stack
+  };
+  
 
   // Video URL Functions
 
@@ -41,6 +49,13 @@ const ArtistDetail = () => {
     // Return the embed URL format with the rel=0 parameter
     return `https://www.youtube.com/embed/${videoId}?rel=0`;
   }
+
+  const addTargetToLinks = (html) => {
+    return html.replace(
+      /<a /g,
+      '<a target="_blank" rel="noopener noreferrer" '
+    );
+  };
 
   useEffect(() => {
     const fetchArtist = async () => {
@@ -111,11 +126,16 @@ const ArtistDetail = () => {
   const hiddenCategories = ["Wedding Packages", "VIP"];
   const shouldHideDetails = hiddenCategories.includes(artist.category);
 
-  const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this artist: ${window.location.href}`;
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this: ${window.location.href}`;
 
   return (
     <div className="artist-detail bg-custom">
       <div className="container">
+
+      <span onClick={handleBack} className="back-btn d-md-none">
+      <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
+    </span>
+
         {artist.videoUrl && (
           <div className="artist-video">
             <iframe
@@ -159,19 +179,20 @@ const ArtistDetail = () => {
               <div
                 dangerouslySetInnerHTML={{
                   __html:
-                    artist.description ||
+                    addTargetToLinks(artist.description) ||
                     "<em>Description not available yet</em>",
                 }}
               />
+
               {/* WhatsApp Share Button */}
-              <div className="whatsapp-share mt-5">
+              <div className="whatsapp-share my-5">
                 <a
                   href={whatsappShareUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-success"
                 >
-                  <FaWhatsapp /> Share the Artist
+                  <FaWhatsapp /> Share with Friends
                 </a>
               </div>
             </div>

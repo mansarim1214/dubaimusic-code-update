@@ -47,7 +47,7 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
       setShowAlert(true); // Show success alert
       setEditStore(null); // Close the edit form
     } catch (error) {
-    
+      console.error("Error updating music store:", error);
       setErrorMessage("Error updating the store. Please try again.");
     }
   };
@@ -82,6 +82,8 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
             required
           />
         </div>
+
+
 
         <div className="form-group">
           <label>Contact</label>
