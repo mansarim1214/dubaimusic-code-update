@@ -9,7 +9,7 @@ overflow-x: hidden;
     min-height: 100vh;
     background-color: rgb(51, 51, 51) !important;
     padding-bottom: 50px;
-    padding-top: 100px;
+    padding-top: 83px;
 }
 .bg-custom{
     background-color: #333333 !important;
@@ -83,7 +83,7 @@ overflow-x: hidden;
 .react-multiple-carousel__arrow{
  display: none;
 }
-.artCat{
+.artCat, .fav-title{
     font-size: 20px !important;
 }
 .artistImage img, .venueImage img{
@@ -127,6 +127,14 @@ overflow-x: hidden;
   height: 200px;
 }
 
+.mainFront{
+  padding-top: 65px;
+}
+
+.mainsection img{
+  width: 60% !important;
+}
+
 }
 
 @media only screen and (min-width: 500px)and (max-width: 1042px) {
@@ -146,7 +154,7 @@ overflow-x: hidden;
 
 }
 
-.artist-video iframe, .artist-image, .venue-image img{
+.artist-video iframe, .artist-image, .venue-image{
     border-radius: 15px;
 }
 
@@ -218,7 +226,9 @@ overflow-x: hidden;
 
   
   .artist-detail img, .venue-detail img {
-    width: 100%;
+    /* width: 100%;
+    height: auto; */
+    object-fit: cover;
    
   }
   
@@ -299,14 +309,14 @@ overflow-x: hidden;
   .heartIcon{
     fill: #ffffff4f;
     overflow: visible;
-    stroke: #ff0000;
-    stroke-width: 1px;
+    stroke: #693dab;
+    stroke-width: 2px;
     
   }
 
   .favorited{
-    fill: red;
-    stroke: #e60023;
+    fill: #693dab;
+    stroke: #693dab;
   }
 
   .favoriteIcon button{
@@ -375,7 +385,7 @@ overflow-x: hidden;
 }
   .grid-item {
     width: 100%;
-    height: auto;
+    height: 100px;
     object-fit: cover;
     border-radius: 8px;
   }
@@ -539,4 +549,57 @@ width: 100% !important;
   .storeGrid {
     grid-template-columns: repeat(2, 1fr); /* 2 items per row on mobile */
   }
+}
+
+
+.mainsection img{
+  width: 27%;
+}
+
+.mainsection h4{
+  
+  text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: .5px;
+    font-weight: 600;
+
+}
+
+.mainsection{
+  position: relative;
+  background: rgb(67,42,106);
+  background: -moz-linear-gradient(90deg, rgba(67,42,106,1) 15%, rgba(101,59,163,1) 50%, rgba(70,45,107,1) 86%);
+  background: -webkit-linear-gradient(90deg, rgba(67,42,106,1) 15%, rgba(101,59,163,1) 50%, rgba(70,45,107,1) 86%);
+  background: linear-gradient(90deg, rgba(67,42,106,1) 15%, rgba(101,59,163,1) 50%, rgba(70,45,107,1) 86%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#432a6a",endColorstr="#462d6b",GradientType=1);
+  
+  background-size: cover;
+  padding: 85px 30px;
+  filter: url();
+}
+
+.mainsection::before{
+  content: '';
+  background-image: url(http://localhost:3000/gradient-bg.jpg);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  background-size: cover;
+  top: 0;
+  left: 0;
+  filter: brightness(0.4);
+}
+
+
+
+
+
+.artCat{
+  background-color: #693dab;
+  font-size: 18px !important;
+  padding-left: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
 }

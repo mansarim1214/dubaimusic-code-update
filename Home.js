@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { BsHeartFill } from "react-icons/bs";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
@@ -58,12 +58,12 @@ const Home = () => {
           `${process.env.REACT_APP_API_URL}/api/categories`
         );
         const fetchedCategories = categoriesResponse.data;
-  
+
         const artistsResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/artists`
         );
         const fetchedArtists = artistsResponse.data;
-  
+
         // Define the desired order
         const desiredOrder = [
           "Trending",
@@ -73,7 +73,7 @@ const Home = () => {
           "DJ",
           "Musicians",
         ];
-  
+
         // Sort categories based on desiredOrder
         const sortedCategories = fetchedCategories.sort((a, b) => {
           const aIndex = desiredOrder.indexOf(a.name);
@@ -83,13 +83,14 @@ const Home = () => {
           if (bIndex === -1) return -1;
           return aIndex - bIndex;
         });
-  
+
         // Load favorites from localStorage
-        const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-        
+        const storedFavorites =
+          JSON.parse(localStorage.getItem("favorites")) || [];
+
         // Ensure favorites are marked correctly
         const groupedArtists = {};
-  
+
         sortedCategories.forEach((category) => {
           let sortedArtists = fetchedArtists
             .filter((artist) => artist.category === category.name)
@@ -97,25 +98,25 @@ const Home = () => {
               ...artist,
               isFavorite: storedFavorites.some((fav) => fav._id === artist._id),
             }));
-  
+
           const order = manualArtistOrder[category.name];
           if (order) {
             // Sort based on manualArtistOrder
             const sortedByManualOrder = sortedArtists
               .filter((artist) => order.includes(artist.title))
               .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-  
+
             // Add artists not in the manualArtistOrder at the end
             const remainingArtists = sortedArtists.filter(
               (artist) => !order.includes(artist.title)
             );
-  
+
             sortedArtists = [...sortedByManualOrder, ...remainingArtists];
           }
-  
+
           groupedArtists[category.name] = sortedArtists;
         });
-  
+
         // Update state with sorted categories and artists
         setCategories(sortedCategories);
         setArtistsByCategory(groupedArtists);
@@ -124,12 +125,9 @@ const Home = () => {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
-  
-  
 
   useEffect(() => {
     if (carouselRefs.current.length > 0) {
@@ -145,7 +143,7 @@ const Home = () => {
               [index]: {
                 left: scrollLeft > 0,
                 right: scrollLeft < scrollWidth - clientWidth,
-              }
+              },
             }));
           }
         });
@@ -188,20 +186,21 @@ const Home = () => {
   const toggleFavorite = (artist) => {
     // Get the current favorites from localStorage
     const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-  
+
     // Check if the artist is already in favorites
-    const isAlreadyFavorite = savedFavorites.some((fav) => fav._id === artist._id);
-  
+    const isAlreadyFavorite = savedFavorites.some(
+      (fav) => fav._id === artist._id
+    );
+
     // Update favorites based on whether the artist is already a favorite
     const updatedFavorites = isAlreadyFavorite
       ? savedFavorites.filter((fav) => fav._id !== artist._id)
       : [...savedFavorites, artist];
-  
+
     // Update state and localStorage
     setFavorites(updatedFavorites);
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
-  
 
   const isFavorite = (artist) => {
     return favorites.some((fav) => fav._id === artist._id);
@@ -213,17 +212,17 @@ const Home = () => {
       // Assuming each slide is 16.67% of the carousel width
       const slideWidth = carousel.clientWidth / 6; // Adjust the denominator based on the number of visible slides
       const scrollAmount = slideWidth * 3 * direction; // Scroll by 3 slides
-  
+
       carousel.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
       });
-  
+
       setTimeout(() => {
         const scrollWidth = carousel.scrollWidth;
         const clientWidth = carousel.clientWidth;
         const scrollLeft = carousel.scrollLeft;
-  
+
         setShowArrows((prev) => ({
           ...prev,
           [index]: {
@@ -234,11 +233,32 @@ const Home = () => {
       }, 500); // Delay to allow smooth scrolling to update visibility
     }
   };
-  
 
   return (
     <div className="mainFront">
-      <div className="container-fluid" id="explore">
+
+
+      {/* Hero Section */}
+
+
+
+      <div className="mainsection text-center">
+        <img
+          src="/dubai-music-white-logo.webp"
+          
+          className="d-inline-block align-top"
+          alt="Logo"
+        />
+
+<h4>The Premium Guide to live music in the city</h4>
+
+      </div>
+
+
+ {/* Hero Section */}
+
+
+      <div className="container-fluid p-0" id="explore">
         {categories
           .filter(
             (category) =>
@@ -247,7 +267,7 @@ const Home = () => {
           )
           .map((category, index) => (
             <section key={category._id} className="artSection">
-              <h2 className="my-2 artCat">{category.name}</h2>
+              <h2 className="mb-3 artCat">{category.name}</h2>
               {showArrows[index]?.left && (
                 <button
                   className="arrow left react-multiple-carousel__arrow"
@@ -257,7 +277,7 @@ const Home = () => {
                 </button>
               )}
               <div
-                className="artistCarousel"
+                className="artistCarousel px-3 mb-3"
                 ref={(el) => (carouselRefs.current[index] = el)}
                 style={{
                   display: "flex",
@@ -295,9 +315,9 @@ const Home = () => {
                     <div className="favoriteIcon">
                       <button onClick={() => toggleFavorite(artist)}>
                         {isFavorite(artist) ? (
-                          <FaHeart className="heartIcon" />
+                          <BsHeartFill className=" favorited" />
                         ) : (
-                          <FaRegHeart className="heartIcon" />
+                          <BsHeartFill className="heartIcon " />
                         )}
                       </button>
                     </div>
