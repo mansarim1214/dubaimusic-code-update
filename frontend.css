@@ -9,7 +9,7 @@ overflow-x: hidden;
     min-height: 100vh;
     background-color: rgb(51, 51, 51) !important;
     padding-bottom: 50px;
-    padding-top: 83px;
+    padding-top: 100px;
 }
 .bg-custom{
     background-color: #333333 !important;
@@ -39,12 +39,14 @@ overflow-x: hidden;
 
 
 .artCat, .fav-title{
-    /* background-color: #E60023;
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 62%); */
-    color: white !important;
+  /* background-color: #000000; */
+  font-size: 18px !important;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
     z-index: 999;
-    padding: 6px 0px;
-    font-size: 24px !important;
+    padding: 6px 20px;
+    
     position: relative;
     margin-bottom: 0;
     font-weight: 600;
@@ -135,6 +137,11 @@ overflow-x: hidden;
   width: 60% !important;
 }
 
+#WelcomeModal h4{
+  font-size: 17px;
+  line-height: 24px;
+}
+
 }
 
 @media only screen and (min-width: 500px)and (max-width: 1042px) {
@@ -142,6 +149,14 @@ overflow-x: hidden;
     flex: 0 0 25% !important;
   }
 }
+
+@media only screen and (min-width: 1920px){
+  .artistImage img, .storeImage img{
+    height: 480px;
+  }
+
+}
+
 #description h4{
     color: #955FE6;
     font-weight: bold;
@@ -575,31 +590,59 @@ width: 100% !important;
   
   background-size: cover;
   padding: 85px 30px;
-  filter: url();
+  
 }
 
-.mainsection::before{
-  content: '';
-  background-image: url(http://localhost:3000/gradient-bg.jpg);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: -1;
-  background-size: cover;
+
+.div hr{
+  color: #b7b7b7 !important;
+  width: 50%;
+  margin: 28px auto 0;
+}
+
+
+
+/* .modal {
+  position: fixed;
   top: 0;
   left: 0;
-  filter: brightness(0.4);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); 
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.modal-dialog {
+  max-width: 600px; 
+  width: 100%;
+}
 
+.modal-content {
+  background: white; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
+.close {
+  background: transparent; 
+  border: none; 
+  font-size: 24px; 
+  cursor: pointer; 
+} */
 
+.welcomemodal{
+  background: rgb(37,37,37);
+  background: radial-gradient(circle, rgba(37, 37, 37, 0.675) 25%, rgb(82 81 81 / 48%) 89%);
+  
+  filter: drop-shadow(2px 4px 6px black);
+  background-position: center;
+  background-color: #00000000 !important;
+}
 
-.artCat{
-  background-color: #693dab;
-  font-size: 18px !important;
-  padding-left: 20px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-
+#WelcomeModal{
+  top: 20%;
+  padding-right: 0 !important;
 }

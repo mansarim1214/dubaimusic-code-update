@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import axios from "axios";
 import "./frontend.css";
+import WelcomeModal from "./WelcomeModal";
 
 gsap.registerPlugin(Draggable);
 
@@ -237,10 +238,10 @@ const Home = () => {
   return (
     <div className="mainFront">
 
-
+      <WelcomeModal />
       {/* Hero Section */}
 
-
+      {/* 
 
       <div className="mainsection text-center">
         <img
@@ -252,11 +253,9 @@ const Home = () => {
 
 <h4>The Premium Guide to live music in the city</h4>
 
-      </div>
+      </div> */}
 
-
- {/* Hero Section */}
-
+      {/* Hero Section */}
 
       <div className="container-fluid p-0" id="explore">
         {categories
@@ -267,7 +266,7 @@ const Home = () => {
           )
           .map((category, index) => (
             <section key={category._id} className="artSection">
-              <h2 className="mb-3 artCat">{category.name}</h2>
+              <h2 className="mb-2 artCat">{category.name}</h2>
               {showArrows[index]?.left && (
                 <button
                   className="arrow left react-multiple-carousel__arrow"
@@ -277,7 +276,7 @@ const Home = () => {
                 </button>
               )}
               <div
-                className="artistCarousel px-3 mb-3"
+                className="artistCarousel px-3 mb-2"
                 ref={(el) => (carouselRefs.current[index] = el)}
                 style={{
                   display: "flex",
@@ -332,6 +331,11 @@ const Home = () => {
                   <BsChevronCompactRight />
                 </button>
               )}
+
+              <div className="div text-center">
+                <hr></hr>
+              </div>
+
             </section>
           ))}
       </div>
