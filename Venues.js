@@ -136,7 +136,7 @@ const Venues = () => {
 
   return (
     <div className="bg-custom">
-      <div className="container-fluid">
+      <div className="container-fluid p-0">
         {Object.keys(groupedVenues).map((category, index) => {
           const carousel = carouselRefs.current[index];
           const isScrollable =
@@ -144,7 +144,15 @@ const Venues = () => {
 
           return (
             <div key={category} className="category-wrapper">
+            
+
+              <div className="div mb-2 ">
               <h2 className="my-2 fav-title">{category}</h2>
+
+
+                <hr></hr>
+              </div>
+
               <div className="row">
                 <div className="col p-relative">
                   {/* Conditionally render the left arrow */}

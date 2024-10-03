@@ -237,7 +237,6 @@ const Home = () => {
 
   return (
     <div className="mainFront">
-
       <WelcomeModal />
       {/* Hero Section */}
 
@@ -266,7 +265,11 @@ const Home = () => {
           )
           .map((category, index) => (
             <section key={category._id} className="artSection">
-              <h2 className="mb-2 artCat">{category.name}</h2>
+              <div className="div mb-2 ">
+                <h2 className="artCat">{category.name}</h2>
+
+                <hr></hr>
+              </div>
               {showArrows[index]?.left && (
                 <button
                   className="arrow left react-multiple-carousel__arrow"
@@ -331,11 +334,6 @@ const Home = () => {
                   <BsChevronCompactRight />
                 </button>
               )}
-
-              <div className="div text-center">
-                <hr></hr>
-              </div>
-
             </section>
           ))}
       </div>
