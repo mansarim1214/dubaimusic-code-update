@@ -113,11 +113,11 @@ const Navbar = ({ handleShow }) => {
           <li className="nav-item">
             <NavLink
               exact="true"
-              to="/venues"
+              to="/musicians"
               className="nav-link"
               onClick={closeSidebar}
             >
-              Venues
+              Musicians
             </NavLink>
           </li>
           <li className="nav-item">
@@ -146,7 +146,7 @@ const Navbar = ({ handleShow }) => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="https://www.melodyhousemi.com/?srsltid=AfmBOopaD6HxDv6YM8XM-2R3fHFGOAfS1H-fIqxxzHPxvKuGhlPBoh7y" className="nav-link" target="_blank" onClick={closeSidebar}>
+            <NavLink to="/music-store" className="nav-link"  onClick={closeSidebar}>
             Music Store
             </NavLink>
           </li>
