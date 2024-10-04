@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { Link } from "react-router-dom";
 import { BsFillGeoAltFill } from "react-icons/bs";
+import WelcomeModal from "./WelcomeModal";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 
 gsap.registerPlugin(Draggable);
@@ -136,6 +137,9 @@ const Venues = () => {
 
   return (
     <div className="bg-custom">
+
+<WelcomeModal />
+
       <div className="container-fluid p-0">
         {Object.keys(groupedVenues).map((category, index) => {
           const carousel = carouselRefs.current[index];

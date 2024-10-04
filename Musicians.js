@@ -6,7 +6,6 @@ import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import axios from "axios";
 import "./frontend.css";
-import WelcomeModal from "./WelcomeModal";
 
 gsap.registerPlugin(Draggable);
 
@@ -237,7 +236,6 @@ const Musicians = () => {
 
   return (
     <div className="mainFront">
-      <WelcomeModal />
       {/* Hero Section */}
 
       {/* 
