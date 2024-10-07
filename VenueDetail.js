@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import emailjs from "emailjs-com";
+// import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import "./frontend.css";
-import ReactPlayer from "react-player";
-import { BsArrowLeftSquareFill  } from "react-icons/bs";
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
+import { BsArrowLeftSquareFill  } from "react-icons/bs";
+import "./frontend.css"; // Import the CSS file for styling
 
-const ArtistDetail = () => {
+
+
+const VenueDetail = () => {
   const { id } = useParams();
-  const [artist, setArtist] = useState(null);
+  const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
-  const [formMessage, setFormMessage] = useState("");
-  const [images, setImages] = useState([]);  
+  const [error, setError] = useState(null);
+  // const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
+  // const [formMessage, setFormMessage] = useState("");
+  const [galleryImages, setGalleryImages] = useState([]); // Declare galleryImages here
   
   const navigate = useNavigate();
 
@@ -24,50 +26,18 @@ const ArtistDetail = () => {
   };
   
 
-  // Video URL Functions
-
-  function getEmbedUrl(url) {
-    if (!url) {
-      console.error("URL is null or undefined");
-      return null; // Handle missing URL
-    }
-
-    const extractVideoId = (url) => {
-      const regex =
-        /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-      const match = url.match(regex);
-      return match ? match[1] : null;
-    };
-
-    const videoId = extractVideoId(url);
-
-    if (!videoId) {
-      console.error("Invalid or unsupported YouTube URL:", url);
-      return null; // Or return a placeholder URL
-    }
-
-    // Return the embed URL format with the rel=0 parameter
-    return `https://www.youtube.com/embed/${videoId}?rel=0`;
-  }
-
-  const addTargetToLinks = (html) => {
-    return html.replace(
-      /<a /g,
-      '<a target="_blank" rel="noopener noreferrer" '
-    );
-  };
-
   useEffect(() => {
-    const fetchArtist = async () => {
+    
+    const fetchVenue = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/artists/${id}`
+          `${process.env.REACT_APP_API_URL}/api/venues/${id}`
         );
-        setArtist(response.data);
+        setVenue(response.data);
         setLoading(false);
 
         // Load images to get their dimensions
-        const imagePromises = response.data.galleryImages.map(async (img) => {
+        const imagePromises = response.data.gallery.map(async (img) => {
           const src = `${process.env.REACT_APP_API_URL}/${img}`;
           return new Promise((resolve) => {
             const image = new Image();
@@ -78,108 +48,95 @@ const ArtistDetail = () => {
         });
 
         const loadedImages = await Promise.all(imagePromises);
-        setImages(loadedImages);
+        setGalleryImages(loadedImages); // Set the galleryImages state
       } catch (error) {
-        console.error("Error fetching artist:", error);
+        console.error("Error fetching venue:", error);
+        setError("Failed to fetch venue. Please try again later.");
         setLoading(false);
       }
     };
 
-    fetchArtist();
+    fetchVenue();
   }, [id]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const templateParams = {
-      name: formData.name,
-      phone: formData.phone,
-      email: formData.email,
-      artistName: artist?.title,
-    };
-
-    emailjs
-      .send(
-        "service_3hkljmf",
-        "template_tg0y1rn",
-        templateParams,
-        "q1l_DC7jwQvu80xJ5"
-      )
-      .then((response) => {
-        setFormMessage("Booking request sent successfully!");
-        setFormData({ name: "", phone: "", email: "" });
-      })
-      .catch((error) => {
-        setFormMessage("Failed to send booking request. Please try again.");
-        console.error("Error sending booking request:", error);
-      });
-  };
-
-  if (loading) return <div>Loading...</div>;
-
-  if (!artist) return <div>Artist not found.</div>;
-
-  // Categories that should hide Category and Speciality fields
-  const hiddenCategories = ["Wedding Packages", "VIP"];
-  const shouldHideDetails = hiddenCategories.includes(artist.category);
 
   const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this: ${window.location.href}`;
 
+  const addTargetToLinks = (html) => {
+    return html.replace(
+      /<a /g,
+      '<a target="_blank" rel="noopener noreferrer" '
+    );
+  };
+
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const templateParams = {
+  //     name: formData.name,
+  //     phone: formData.phone,
+  //     email: formData.email,
+  //     venueName: venue?.title, // Ensure venue name is included
+  //   };
+
+  //   emailjs
+  //     .send(
+  //       "service_3hkljmf",
+  //       "template_hg6yimn",
+  //       templateParams,
+  //       "q1l_DC7jwQvu80xJ5"
+  //     )
+  //     .then((response) => {
+  //       setFormMessage("Booking request sent successfully!");
+  //       setFormData({ name: "", phone: "", email: "" });
+  //     })
+  //     .catch((error) => {
+  //       setFormMessage("Failed to send booking request. Please try again.");
+  //       console.error("Error sending booking request:", error);
+  //     });
+  // };
+
+  if (loading) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {error}</div>;
+
+  if (!venue) return <div>No venue found.</div>;
+
+  
+
   return (
-    <div className="artist-detail bg-custom">
+    <div className="venue-detail bg-custom">
       <div className="container">
 
       <span onClick={handleBack} className="back-btn">
       <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
     </span>
 
-        {artist.videoUrl && (
-          <div className="artist-video">
-            <iframe
-              width="100%"
-              height="500"
-              src={getEmbedUrl(artist.videoUrl)}
-              title={artist.title}
-              frameBorder="0"
-              allowFullScreen
-            ></iframe>
-          </div>
-        )}
-
-        {artist.audioUrl && (
-          <div className="artist-audio">
-            <ReactPlayer url={artist.audioUrl} />
-          </div>
-        )}
-        <h1>{artist.title}</h1>
-
-        {/* Conditionally show Category and Speciality */}
-        {!shouldHideDetails && (
-          <>
-            <div>
-              Category: <span>{artist.category}</span>
-            </div>
-            <div>
-              Music Style: <span>{artist.speciality}</span>
-            </div>
-          </>
-        )}
-
+        <h1>{venue.title}</h1>
+        <div>
+          {venue.location && (
+            <>
+              Location: <span>{venue.location}</span>
+            </>
+          )}
+        </div>
+        <div>{/* Category: <span>{venue.category}</span> */}</div>
         <div id="description" className="mt-3">
           <div className="row">
             <div
               className={`col-md-${
-                artist.galleryImages.length || artist.imageUrl ? "6" : "12"
+                galleryImages.length || venue.featuredImage ? "6" : "12"
               }`}
             >
               <h4>About</h4>
+
               <div
                 dangerouslySetInnerHTML={{
                   __html:
-                    addTargetToLinks(artist.description) ||
+                    addTargetToLinks(venue.description) ||
                     "<em>Description not available yet</em>",
                 }}
               />
@@ -196,24 +153,22 @@ const ArtistDetail = () => {
                 </a>
               </div>
             </div>
-
-            {(artist.galleryImages.length || artist.imageUrl) && (
-              <div className={`col-md-${artist.imageUrl ? "6" : "12"}`}>
-                {artist.imageUrl && (
+            {(galleryImages.length || venue.featuredImage) && (
+              <div className={`col-md-${venue.featuredImage ? "6" : "12"}`}>
+                {venue.featuredImage && (
                   <img
-                    src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                    alt={artist.title}
-                    className="artist-image mb-2"
+                    src={`${process.env.REACT_APP_API_URL}/${venue.featuredImage}`}
+                    alt={venue.title}
+                    className="venue-image mb-2"
                     style={{ width: "100%", height: "auto" }}
                   />
                 )}
-
-                {artist.galleryImages.length > 0 && (
+                {galleryImages.length > 0 && (
                   <div className="gallery-container">
                     <h4>Gallery</h4>
                     <Gallery>
                       <div className="grid-container">
-                        {images.map((img, index) => (
+                        {galleryImages.map((img, index) => (
                           <Item
                             key={index}
                             original={img.src}
@@ -226,7 +181,7 @@ const ArtistDetail = () => {
                                 ref={ref}
                                 onClick={open}
                                 src={img.src}
-                                alt={`Galleryimage ${index + 1}`}
+                                alt={`galleryimg ${index + 1}`}
                                 className="grid-item"
                                 style={{ cursor: "pointer" }}
                               />
@@ -241,8 +196,7 @@ const ArtistDetail = () => {
             )}
           </div>
         </div>
-
-        <div className="artistForm mt-3">
+        {/* <div className="venueForm mt-3">
           <h1 className="mx-2 my-2">Book Now</h1>
           <form onSubmit={handleSubmit}>
             <div className="row">
@@ -275,7 +229,6 @@ const ArtistDetail = () => {
                 </div>
               </div>
             </div>
-
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
@@ -293,16 +246,16 @@ const ArtistDetail = () => {
               </div>
               <div className="col-md-6">
                 <button type="submit" className="btn enquirybtn">
-                  Book Now
+                  Enquire Now
                 </button>
               </div>
             </div>
           </form>
           {formMessage && <p className="form-message">{formMessage}</p>}
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default ArtistDetail;
+export default VenueDetail;

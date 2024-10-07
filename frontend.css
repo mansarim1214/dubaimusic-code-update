@@ -603,3 +603,8 @@ width: 100% !important;
 .category-wrapper:first-of-type hr {
   display: none;
 }
+
+
+.back-btn{
+  cursor: pointer;
+}
