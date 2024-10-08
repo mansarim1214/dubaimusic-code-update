@@ -120,21 +120,7 @@ const Navbar = ({ handleShow }) => {
               Musicians
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink
-              to="/favorites"
-              className="nav-link"
-              onClick={closeSidebar}
-            >
-              Favorites
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink to="/about" className="nav-link" >
-              About
-            </NavLink>
-          </li>
+          
           <li className="nav-item">
             <NavLink to="https://jobs.dubaimusic.com" className="nav-link" onClick={closeSidebar}>
               Jobs
@@ -150,6 +136,23 @@ const Navbar = ({ handleShow }) => {
             Music Store
             </NavLink>
           </li>
+
+          <li className="nav-item">
+            <NavLink
+              to="/favorites"
+              className="nav-link"
+              onClick={closeSidebar}
+            >
+              Favorites
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink to="/about" className="nav-link" >
+              About
+            </NavLink>
+          </li>
+          
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">
               {" "}
