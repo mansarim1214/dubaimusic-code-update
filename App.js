@@ -18,6 +18,8 @@ import About from "./components/View/About";
 import Login from "./components/Dashboard/Login";
 import MusicStore from "./components/View/MusicStore";
 import StoreDetail from "./components/View/StoreDetail";
+import WeddingVIP from "./components/View/WeddingVIP";
+import WeddingVIPDetail from "./components/View/WeddingVipDetail";
 
 
 
@@ -46,8 +48,10 @@ const App = () => {
           <Route path="/artist/:id" element={<ArtistDetail />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/musicians" element={<Musicians />} />
+          <Route path="/wedding-vip-packages" element={<WeddingVIP />} />
           <Route path="/venuedetail/:id" element={<VenueDetail />} />
           <Route path="/music-store/:id" element={<StoreDetail />} />
+          <Route path="/wedding-vip-packages/:id" element={<WeddingVIPDetail />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/about" element={<About />} />
           <Route path="/music-store" element={<MusicStore />} />

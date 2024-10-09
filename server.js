@@ -14,6 +14,7 @@ const categoriesRoute = require('./routes/categories');
 const artistsRoute = require('./routes/artists');
 const venuesRoute = require('./routes/venues');
 const musicStore = require('./routes/musicstore');
+const weddingvip = require('./routes/weddingvip')
 
 
 // Use routes
@@ -21,6 +22,7 @@ app.use('/api/categories', categoriesRoute);
 app.use('/api/artists', artistsRoute);
 app.use('/api/venues', venuesRoute);
 app.use('/api/musicstore', musicStore);
+app.use('/api/weddingvip', weddingvip);
 app.use('/api', userRoute); 
 
 mongoose.connect('mongodb+srv://mansarim:4TCOflsMWdI9CCkt@cluster0.fawjsqk.mongodb.net/dubaimusic', {
