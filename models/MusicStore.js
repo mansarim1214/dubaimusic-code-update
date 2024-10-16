@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
 const MusicStoreSchema = new mongoose.Schema({
-  name: { type: String, required: true }, // Store name
-  bio: { type: String }, // Description or bio of the store
-  contact: { type: String }, // Contact information
-  logo: { type: String }, // Logo image path
-  featuredImage: { type: String }, // Featured image path
+  name: { type: String, required: true }, 
+  bio: { type: String }, 
+  contact: { type: String }, 
+  logo: { type: String }, 
+  featuredImage: { type: String }, 
+  status: { type: String, default: 'published' }, 
+
 });
 
 module.exports = mongoose.model('MusicStore', MusicStoreSchema);

@@ -11,6 +11,7 @@ const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [galleryImages, setGalleryImages] = useState(weddingVip.galleryImages || []);
+  const [isPublished, setIsPublished] = useState(weddingVip.status); 
   const [newGalleryImages, setNewGalleryImages] = useState([]);
 
   const handleFileChange = (e) => {
@@ -41,6 +42,17 @@ const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
     setNewGalleryImages(newGalleryImages.filter((_, i) => i !== index));
   };
 
+
+
+  const handleStatusToggle = () => {
+    setIsPublished((prevStatus) => {
+      const newStatus = prevStatus === 'published' ? 'draft' : 'published' // Toggle published status
+
+    return newStatus;
+  });
+  };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -51,6 +63,8 @@ const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
     formData.append('description', description);
     formData.append('videoUrl', videoUrl);
     formData.append('category', category); // Append category
+    formData.append('isPublished', isPublished); // Add published status
+
 
     if (image) {
       formData.append('image', image); // Append main image file
@@ -69,6 +83,8 @@ const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
+
+
 
       console.log('Wedding VIP updated successfully:', response.data);
       setShowAlert({ type: 'success', message: 'Wedding VIP updated successfully!' });
@@ -209,7 +225,29 @@ const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
               </>
             )}
           </div>
+
+          
         </div>
+
+
+          {/* Toggle for Publish/Draft */}
+          <div className="form-group">
+          <label>Status</label>
+          <div className="custom-switch">
+            <input
+              type="checkbox"
+              id="statusSwitch"
+              checked = {isPublished === "published"}
+              name={isPublished}
+              onChange={handleStatusToggle} // Update on change
+            />
+            <label className="slider" htmlFor="statusSwitch"></label>
+            <span className="custom-switch-label">
+              {isPublished ? 'Published' : 'Draft'}
+            </span>
+          </div>
+        </div>
+        
 
         <button type="submit" className="btn btn-lg btn-dark mt-5">
           Update Wedding VIP

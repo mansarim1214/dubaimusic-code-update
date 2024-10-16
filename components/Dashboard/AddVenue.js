@@ -11,6 +11,7 @@ const AddVenue = () => {
     location: '',
     featuredImage: '',
     category: 'Hidden Gems',
+    status: 'draft', // Default to draft
   });
 
   const [gallery, setGallery] = useState([]);
@@ -33,6 +34,13 @@ const AddVenue = () => {
     setVenue((prevState) => ({ ...prevState, description: data }));
   };
 
+  const handleStatusToggle = () => {
+    setVenue((prevState) => ({
+      ...prevState,
+      status: prevState.status === 'publish' ? 'draft' : 'publish',
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,6 +49,7 @@ const AddVenue = () => {
     formData.append('description', venue.description);
     formData.append('location', venue.location);
     formData.append('category', venue.category);
+    formData.append('status', venue.status); // Send status field
 
     if (venue.featuredImage) {
       formData.append('featuredImage', venue.featuredImage);
@@ -56,16 +65,13 @@ const AddVenue = () => {
       });
 
       console.log('Venue saved successfully:', response.data);
-      setShowAlert(true); // Set showAlert to true on successful submission
+      setShowAlert(true);
 
-      // Redirect to the venues dashboard or any other route after successful submission
       setTimeout(() => {
         setShowAlert(false);
-        // Navigate or reset form if needed
       }, 3000);
     } catch (error) {
       console.error('Error saving venue:', error);
-      // Handle error state or display error message to user
     }
   };
 
@@ -101,7 +107,6 @@ const AddVenue = () => {
             name="location"
             value={venue.location}
             onChange={handleChange}
-            
             className="form-control"
           />
         </div>
@@ -145,6 +150,23 @@ const AddVenue = () => {
             className="form-control"
           />
         </div>
+
+        <div className="form-group">
+  <label>Status</label>
+  <div className="custom-switch">
+    <input
+      type="checkbox"
+      id="statusSwitch"
+      checked={venue.status === 'publish'}
+      onChange={handleStatusToggle} // Update on change
+    />
+    <label className="slider" htmlFor="statusSwitch"></label>
+    <span className="custom-switch-label">
+      {venue.status === 'publish' ? 'Published' : 'Draft'}
+    </span>
+  </div>
+</div>
+
 
         {showAlert && (
           <div className="alert alert-success alert-dismissible fade show" role="alert">

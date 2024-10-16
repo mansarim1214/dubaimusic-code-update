@@ -13,6 +13,8 @@ const AddWeddingVip = () => {
   const [galleryFileNames, setGalleryFileNames] = useState([]);
   const [mainImageFile, setMainImageFile] = useState(null); // State for main image
   const [galleryImageFiles, setGalleryImageFiles] = useState([]); // State for gallery images
+  const [isPublished, setIsPublished] = useState(false);
+
 
   // Handle main image file change
   const handleFileChange = (e) => {
@@ -28,6 +30,13 @@ const AddWeddingVip = () => {
     setGalleryFileNames(files.map((file) => file.name));
   };
 
+
+  const handleStatusToggle = () => {
+    setIsPublished((prev) => !prev);
+  };
+
+
+  
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,6 +47,8 @@ const AddWeddingVip = () => {
     formData.append("videoUrl", videoUrl);
     formData.append("category", category); // Append selected category
     formData.append("image", mainImageFile); // Append main image file
+    formData.append("isPublished", isPublished ? "published" : "draft"); // Set published status
+
 
     galleryImageFiles.forEach((file) => {
       formData.append("galleryImages", file);
@@ -64,6 +75,8 @@ const AddWeddingVip = () => {
       setGalleryImageFiles([]);
       setFileName("No file chosen");
       setGalleryFileNames([]);
+      setIsPublished(false); // Reset published status
+
     } catch (error) {
       console.error("Error creating wedding-vip:", error);
     }
@@ -167,6 +180,22 @@ const AddWeddingVip = () => {
             </button>
             <span id="file-name">
               {galleryFileNames.join(", ") || "No files chosen"}
+            </span>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label>Status</label>
+          <div className="custom-switch">
+            <input
+              type="checkbox"
+              id="statusSwitch"
+              checked={isPublished}
+              onChange={handleStatusToggle}
+            />
+            <label className="slider" htmlFor="statusSwitch"></label>
+            <span className="custom-switch-label">
+              {isPublished ? 'Published' : 'Draft'}
             </span>
           </div>
         </div>

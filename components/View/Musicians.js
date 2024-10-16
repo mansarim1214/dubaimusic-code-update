@@ -58,12 +58,15 @@ const Musicians = () => {
           `${process.env.REACT_APP_API_URL}/api/categories`
         );
         const fetchedCategories = categoriesResponse.data;
-
+  
         const artistsResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/artists`
         );
-        const fetchedArtists = artistsResponse.data;
-
+        let fetchedArtists = artistsResponse.data;
+  
+        // Filter only published artists
+        fetchedArtists = fetchedArtists.filter(artist => artist.isPublished === 'published');
+  
         // Define the desired order
         const desiredOrder = [
           "Trending",
@@ -73,7 +76,7 @@ const Musicians = () => {
           "DJ",
           "Musicians",
         ];
-
+  
         // Sort categories based on desiredOrder
         const sortedCategories = fetchedCategories.sort((a, b) => {
           const aIndex = desiredOrder.indexOf(a.name);
@@ -83,14 +86,14 @@ const Musicians = () => {
           if (bIndex === -1) return -1;
           return aIndex - bIndex;
         });
-
+  
         // Load favorites from localStorage
         const storedFavorites =
           JSON.parse(localStorage.getItem("favorites")) || [];
-
+  
         // Ensure favorites are marked correctly
         const groupedArtists = {};
-
+  
         sortedCategories.forEach((category) => {
           let sortedArtists = fetchedArtists
             .filter((artist) => artist.category === category.name)
@@ -98,36 +101,38 @@ const Musicians = () => {
               ...artist,
               isFavorite: storedFavorites.some((fav) => fav._id === artist._id),
             }));
-
+  
           const order = manualArtistOrder[category.name];
           if (order) {
             // Sort based on manualArtistOrder
             const sortedByManualOrder = sortedArtists
               .filter((artist) => order.includes(artist.title))
               .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-
+  
             // Add artists not in the manualArtistOrder at the end
             const remainingArtists = sortedArtists.filter(
               (artist) => !order.includes(artist.title)
             );
-
+  
             sortedArtists = [...sortedByManualOrder, ...remainingArtists];
           }
-
+  
           groupedArtists[category.name] = sortedArtists;
         });
-
+  
         // Update state with sorted categories and artists
         setCategories(sortedCategories);
         setArtistsByCategory(groupedArtists);
         setFavorites(storedFavorites);
+  
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (carouselRefs.current.length > 0) {

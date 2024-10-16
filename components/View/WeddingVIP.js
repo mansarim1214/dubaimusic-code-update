@@ -13,21 +13,26 @@ const WeddingVIP = () => {
 
   const isMobile = () => window.innerWidth <= 500;
 
-  // Fetch Wedding VIP items
-  useEffect(() => {
-    const fetchWeddingVIPItems = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/weddingvip`
-        );
-        setWeddingVIPItems(response.data);
-      } catch (error) {
-        console.error("Error fetching wedding VIP items:", error);
-      }
-    };
+// Fetch Wedding VIP items with filter for published status
+useEffect(() => {
+  const fetchWeddingVIPItems = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/weddingvip`
+      );
+      
+      // Filter only published items
+      const publishedItems = response.data.filter(item => item.isPublished === 'published');
+      
+      setWeddingVIPItems(publishedItems);
+    } catch (error) {
+      console.error("Error fetching wedding VIP items:", error);
+    }
+  };
 
-    fetchWeddingVIPItems();
-  }, []);
+  fetchWeddingVIPItems();
+}, []);
+
 
   // Shuffle items if necessary
   const shuffleArray = (array) => {

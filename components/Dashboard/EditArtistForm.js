@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [title, setTitle] = useState(artist.title);
@@ -13,16 +13,21 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
   const [categories, setCategories] = useState([]);
-  const [galleryImages, setGalleryImages] = useState(artist.galleryImages || []);
+  const [galleryImages, setGalleryImages] = useState(
+    artist.galleryImages || []
+  );
   const [newGalleryImages, setNewGalleryImages] = useState([]);
+  const [isPublished, setIsPublished] = useState(artist.status); // Added published status
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/categories`
+        );
         setCategories(response.data);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
       }
     };
 
@@ -35,23 +40,24 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setFileName(file ? file.name : "No file chosen");
   };
 
-
   const handleGalleryImagesChange = (e) => {
     setNewGalleryImages([...newGalleryImages, ...Array.from(e.target.files)]);
   };
-  
 
   const removeGalleryImage = async (index) => {
     const imageToRemove = galleryImages[index];
 
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`, {
-        data: { image: imageToRemove },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
+        {
+          data: { image: imageToRemove },
+        }
+      );
 
       setGalleryImages(galleryImages.filter((_, i) => i !== index));
     } catch (error) {
-      console.error('Error removing gallery image:', error);
+      console.error("Error removing gallery image:", error);
     }
   };
 
@@ -59,51 +65,59 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setNewGalleryImages(newGalleryImages.filter((_, i) => i !== index));
   };
 
+  const handleStatusToggle = () => {
+    setIsPublished((prevStatus) =>
+      prevStatus === "published" ? "draft" : "published"
+    );
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const artistId = artist._id; // Use the artist's ID from the props
-  
+
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('category', category);
-    formData.append('speciality', speciality);
-    formData.append('description', description);
-    formData.append('videoUrl', videoUrl);
-    formData.append('audioUrl', audioUrl);
-  
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("speciality", speciality);
+    formData.append("description", description);
+    formData.append("videoUrl", videoUrl);
+    formData.append("audioUrl", audioUrl);
+
     if (image) {
-      formData.append('image', image); // Field name 'image'
+      formData.append("image", image); // Field name 'image'
     }
-  
+
+    formData.append("isPublished", isPublished); // Add published status
+
     // Append new gallery images
     newGalleryImages.forEach((img) => {
-      formData.append('galleryImages', img); // Field name 'galleryImages'
+      formData.append("galleryImages", img); // Field name 'galleryImages'
     });
-  
+
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/api/artists/${artistId}`,
         formData,
         {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-  
-      console.log('Artist updated successfully:', response.data);
-      setShowAlert({ type: 'success', message: 'Artist updated successfully!' });
+
+      console.log("Artist updated successfully:", response.data);
+      setShowAlert({
+        type: "success",
+        message: "Artist updated successfully!",
+      });
       setEditArtist(null);
     } catch (error) {
-      console.error('Error updating artist:', error.response ? error.response.data : error.message);
-      setShowAlert({ type: 'danger', message: 'Failed to update artist.' });
+      console.error(
+        "Error updating artist:",
+        error.response ? error.response.data : error.message
+      );
+      setShowAlert({ type: "danger", message: "Failed to update artist." });
     }
   };
-  
-  
-  
-  
-
-
 
   return (
     <>
@@ -173,7 +187,6 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
-            
           />
         </div>
         <div className="form-group">
@@ -185,7 +198,6 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             value={audioUrl}
             onChange={(e) => setAudioUrl(e.target.value)}
             placeholder="Enter audio URL"
-            
           />
         </div>
         <div className="form-group">
@@ -219,57 +231,77 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
             />
           </div>
           <div className="gallery-container mt-3">
-  <h5>Existing Gallery Images</h5>
-  <div className="grid-container">
-    {galleryImages.map((img, index) => (
-      <div key={index} className="gallery-item">
-        <img
-          src={`${process.env.REACT_APP_API_URL}/${img}`}
-          alt={`Galleryimg ${index + 1}`}
-          className="img-fluid"
-        />
-        <button
-          type="button"
-          className="btn btn-danger btn-sm mt-2"
-          onClick={() => removeGalleryImage(index)}
-        >
-          Remove
-        </button>
-      </div>
-    ))}
-  </div>
+            <h5>Existing Gallery Images</h5>
+            <div className="grid-container">
+              {galleryImages.map((img, index) => (
+                <div key={index} className="gallery-item">
+                  <img
+                    src={`${process.env.REACT_APP_API_URL}/${img}`}
+                    alt={`Galleryimg ${index + 1}`}
+                    className="img-fluid"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm mt-2"
+                    onClick={() => removeGalleryImage(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
 
-  {newGalleryImages.length > 0 && (
-    <>
-      <h5 className="mt-4">New Gallery Images</h5>
-      <div className="grid-container">
-        {newGalleryImages.map((img, index) => (
-          <div key={index} className="gallery-item">
-            <img
-              src={URL.createObjectURL(img)}
-              alt={`New Galleryimg ${index + 1}`}
-              className="img-fluid"
-            />
-            <button
-              type="button"
-              className="btn btn-danger btn-sm mt-2"
-              onClick={() => removeNewGalleryImage(index)}
-            >
-              Remove
-            </button>
+            {newGalleryImages.length > 0 && (
+              <>
+                <h5 className="mt-4">New Gallery Images</h5>
+                <div className="grid-container">
+                  {newGalleryImages.map((img, index) => (
+                    <div key={index} className="gallery-item">
+                      <img
+                        src={URL.createObjectURL(img)}
+                        alt={`New Galleryimg ${index + 1}`}
+                        className="img-fluid"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm mt-2"
+                        onClick={() => removeNewGalleryImage(index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-        ))}
-      </div>
-    </>
-  )}
-</div>
+        </div>
 
+        <div className="form-group">
+          <label>Status</label>
+          <div className="custom-switch">
+            <input
+              type="checkbox"
+              id="statusSwitch"
+              checked={isPublished === "published"} 
+              onChange={handleStatusToggle} 
+            />
+            <label className="slider" htmlFor="statusSwitch"></label>
+            <span className="custom-switch-label">
+              {isPublished === "published" ? "Published" : "Draft"}{" "}
+             
+            </span>
+          </div>
         </div>
 
         <button type="submit" className="btn btn-lg btn-dark mt-5">
           Update Artist
         </button>
-        <button type="button" className="btn btn-secondary ml-3 mt-5" onClick={() => setEditArtist(null)}>
+        <button
+          type="button"
+          className="btn btn-secondary ml-3 mt-5"
+          onClick={() => setEditArtist(null)}
+        >
           Cancel
         </button>
       </form>

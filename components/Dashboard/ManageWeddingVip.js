@@ -105,6 +105,7 @@ const ManageWeddingVip = () => {
                 <th>Title</th>
                 <th>Category</th>
                 <th>Description</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -114,6 +115,8 @@ const ManageWeddingVip = () => {
                   <td>{vip.title}</td>
                   <td>{vip.category}</td>
                   <td>{vip.description}</td>
+                  <td>{vip.isPublished}</td>
+
                   <td>
                     <button
                       className="btn btn-warning mr-2"

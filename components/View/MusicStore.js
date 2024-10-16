@@ -12,7 +12,11 @@ const MusicStore = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/musicstore`
         );
-        setStores(response.data);
+        
+        // Filter only published stores
+        const publishedStores = response.data.filter(store => store.status === 'published');
+        
+        setStores(publishedStores);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

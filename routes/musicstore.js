@@ -4,11 +4,12 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const MusicStore = require('../models/MusicStore'); 
+const MusicStore = require('../models/MusicStore'); // Ensure the correct path for MusicStore model
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/'); // Ensure 'uploads' directory exists
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
@@ -20,14 +21,14 @@ const upload = multer({ storage });
 // POST route to add a new music store
 router.post('/', upload.fields([{ name: 'logo' }, { name: 'featuredImage' }]), async (req, res) => {
   console.log('Received request to add music store:', req.body);
-  const { name, bio, contact } = req.body;
+  const { name, bio, contact, status } = req.body;
 
   // Check if files were uploaded
   const logo = req.files['logo'] ? `uploads/${req.files['logo'][0].filename}` : null;
   const featuredImage = req.files['featuredImage'] ? `uploads/${req.files['featuredImage'][0].filename}` : null;
 
   try {
-      const newMusicStore = new MusicStore({ name, bio, contact, logo, featuredImage });
+      const newMusicStore = new MusicStore({ name, bio, contact, logo, featuredImage, status });
       await newMusicStore.save();
       res.status(201).json(newMusicStore);
   } catch (error) {
@@ -66,8 +67,8 @@ router.put('/:id', upload.fields([
   { name: 'logo', maxCount: 1 },
   { name: 'featuredImage', maxCount: 1 }
 ]), async (req, res) => {
-  const { name, bio, contact } = req.body;
-  const updateData = { name, bio, contact };
+  const { name, bio, contact, status } = req.body;
+  const updateData = { name, bio, contact, status };
 
   try {
     const musicStore = await MusicStore.findById(req.params.id);

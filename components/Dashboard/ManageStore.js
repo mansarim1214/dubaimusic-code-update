@@ -1,13 +1,12 @@
 // src/components/ManageMusicStore.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import EditMusicStore from "./EditMusicStore"; // Create/Edit component for Music Store
-
+import EditMusicStore from "./EditMusicStore"; 
 const ManageMusicStore = () => {
-  const [stores, setStores] = useState([]); // Renamed venues to stores
+  const [stores, setStores] = useState([]); 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredStores, setFilteredStores] = useState([]); // Renamed
-  const [editStore, setEditStore] = useState(null); // Renamed
+  const [filteredStores, setFilteredStores] = useState([]); 
+  const [editStore, setEditStore] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
 
   // Fetch music stores
@@ -115,6 +114,7 @@ const ManageMusicStore = () => {
               <tr>
                 <th>Name</th>
                 <th>Contact</th>
+                <th>Status</th>
                 <th>Logo</th>
                 <th>Actions</th>
               </tr>
@@ -124,6 +124,7 @@ const ManageMusicStore = () => {
                 <tr key={store._id}>
                   <td>{store.name || "No Name"}</td>
                   <td>{store.contact || "No Contact"}</td>
+                  <td>{store.status || "No Status"}</td>
                   <td>
                     {store.logo ? (
                       <img

@@ -3,7 +3,6 @@ import axios from "axios";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-
 const AddArtistForm = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -15,25 +14,26 @@ const AddArtistForm = () => {
   const [categories, setCategories] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [galleryFileNames, setGalleryFileNames] = useState([]);
-  const [mainImageFile, setMainImageFile] = useState(null); // State for main image
-  const [galleryImageFiles, setGalleryImageFiles] = useState([]); // State for gallery images
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [galleryImageFiles, setGalleryImageFiles] = useState([]);
+  const [isPublished, setIsPublished] = useState(false);
 
-  // Handle main image file change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setMainImageFile(file);
     setFileName(file ? file.name : "No file chosen");
   };
 
-  // Handle gallery images file change
   const handleGalleryChange = (e) => {
     const files = Array.from(e.target.files);
     setGalleryImageFiles(files);
     setGalleryFileNames(files.map((file) => file.name));
   };
 
-  
-  // Handle form submission
+  const handleStatusToggle = () => {
+    setIsPublished((prev) => !prev);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -44,7 +44,8 @@ const AddArtistForm = () => {
     formData.append("description", description);
     formData.append("videoUrl", videoUrl);
     formData.append("audioUrl", audioUrl);
-    formData.append("image", mainImageFile); // Append main image file
+    formData.append("image", mainImageFile);
+    formData.append("isPublished", isPublished ? "published" : "draft"); // Set published status
 
     galleryImageFiles.forEach((file) => {
       formData.append("galleryImages", file);
@@ -73,12 +74,12 @@ const AddArtistForm = () => {
       setGalleryImageFiles([]);
       setFileName("No file chosen");
       setGalleryFileNames([]);
+      setIsPublished(false); // Reset published status
     } catch (error) {
       console.error("Error creating artist:", error);
     }
   };
 
-  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -162,7 +163,6 @@ const AddArtistForm = () => {
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
             placeholder="Enter video URL"
-            
           />
         </div>
         <div className="form-group">
@@ -174,7 +174,6 @@ const AddArtistForm = () => {
             value={audioUrl}
             onChange={(e) => setAudioUrl(e.target.value)}
             placeholder="Enter audio URL"
-            
           />
         </div>
         <div className="form-group">
@@ -220,6 +219,22 @@ const AddArtistForm = () => {
           </div>
         </div>
 
+        <div className="form-group">
+          <label>Status</label>
+          <div className="custom-switch">
+            <input
+              type="checkbox"
+              id="statusSwitch"
+              checked={isPublished}
+              onChange={handleStatusToggle}
+            />
+            <label className="slider" htmlFor="statusSwitch"></label>
+            <span className="custom-switch-label">
+              {isPublished ? 'Published' : 'Draft'}
+            </span>
+          </div>
+        </div>
+
         {showAlert && (
           <div
             className="alert alert-success alert-dismissible fade show"
@@ -242,6 +257,9 @@ const AddArtistForm = () => {
     </>
   );
 };
+
+export default AddArtistForm;
+
 
 const AddCategoryForm = () => {
   const [categoryName, setCategoryName] = useState("");
