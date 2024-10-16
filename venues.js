@@ -20,12 +20,12 @@ const upload = multer({ storage });
 
 // POST route to add a new venue
 router.post('/', upload.fields([{ name: 'featuredImage' }, { name: 'gallery' }]), async (req, res) => {
-  const { title, description, location, category } = req.body;
+  const { title, description, location, category, status } = req.body; 
   const featuredImage = `uploads/${req.files['featuredImage'][0].filename}`;
   const gallery = req.files['gallery']?.map(file => `uploads/${file.filename}`) || [];
 
   try {
-    const newVenue = new Venue({ title, description, location, category, featuredImage, gallery });
+    const newVenue = new Venue({ title, description, location, category, featuredImage, gallery, status, createdAt: new Date(), }); 
     await newVenue.save();
     res.status(201).json(newVenue);
   } catch (error) {
@@ -34,11 +34,22 @@ router.post('/', upload.fields([{ name: 'featuredImage' }, { name: 'gallery' }])
 });
 
 
+
 // GET route to fetch all venues
 router.get('/', async (req, res) => {
   try {
     const venues = await Venue.find();
-    res.json(venues);
+    
+    // Define "new" as added within the last 7 days
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const updatedVenues = venues.map(venue => {
+      const isNew = new Date(venue.createdAt) >= sevenDaysAgo;
+      return { ...venue._doc, isNew }; // Spread the original venue object and add isNew
+    });
+
+    res.json(updatedVenues);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -46,12 +57,14 @@ router.get('/', async (req, res) => {
 
 
 
+//Update Venues Route
+// PUT route to update a venue
 router.put('/:id', upload.fields([
   { name: 'featuredImage', maxCount: 1 },
   { name: 'galleryImages', maxCount: 10 }
 ]), async (req, res) => {
-  const { title, description, location, category } = req.body;
-  const updateData = { title, description, location, category };
+  const { title, description, location, category, status } = req.body; 
+  const updateData = { title, description, location, category, status };
 
   try {
     if (req.files['featuredImage']) {
@@ -75,6 +88,7 @@ router.put('/:id', upload.fields([
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
+
 
 
 
