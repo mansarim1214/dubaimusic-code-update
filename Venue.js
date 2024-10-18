@@ -7,6 +7,7 @@ const VenueSchema = new mongoose.Schema({
   category: { type: String },
   featuredImage: { type: String },
   gallery: { type: [String], default: [] },
+  contact: { type: String },
   status: { type: String, default: 'published' },
   createdAt: {type: Date}
 }, { Timestamp: true }); // This enables the `createdAt` and `updatedAt` fields

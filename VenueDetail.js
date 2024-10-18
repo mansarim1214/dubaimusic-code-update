@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 // import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
+import { BsTelephone  } from "react-icons/bs";
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 import { BsArrowLeftSquareFill  } from "react-icons/bs";
 import "./frontend.css"; // Import the CSS file for styling
@@ -196,63 +197,19 @@ const VenueDetail = () => {
             )}
           </div>
         </div>
-        {/* <div className="venueForm mt-3">
-          <h1 className="mx-2 my-2">Book Now</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-control"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your Name"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="form-control"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    placeholder="Phone Number"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="form-control"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your Email"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <button type="submit" className="btn enquirybtn">
-                  Enquire Now
-                </button>
-              </div>
-            </div>
-          </form>
-          {formMessage && <p className="form-message">{formMessage}</p>}
-        </div> */}
+
+        {venue.contact> 0 && (
+        <div className="venueForm mt-3">
+        <div className="my-2">
+         
+            <h1>Contact Venue</h1>
+            <a href={`tel:${venue.contact}`} target="_blank"  rel="noreferrer" className="btn btn-call"><BsTelephone /> Call Now</a>
+          </div>
+
+         
+        
+      </div>
+         )}
       </div>
     </div>
   );
