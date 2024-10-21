@@ -83,7 +83,7 @@ const Navbar = ({ handleShow }) => {
       <div className={`mobile-offcanvas ${isSidebarOpen ? "show" : ""}`}>
         <div className="offcanvas-header">
           <button
-            className="btn-close"
+            className="close"
             onClick={closeSidebar}
             aria-label="Close sidebar"
             aria-expanded={isSidebarOpen}
@@ -120,8 +120,19 @@ const Navbar = ({ handleShow }) => {
               Musicians
             </NavLink>
           </li>
-          
+
           <li className="nav-item">
+            <NavLink
+              exact="true"
+              to="/wedding-vip-packages"
+              className="nav-link"
+              onClick={closeSidebar}
+            >
+              Wedding-VIP Packages
+            </NavLink>
+          </li>
+          
+          {/* <li className="nav-item">
             <NavLink to="https://jobs.dubaimusic.com" className="nav-link" onClick={closeSidebar}>
               Jobs
             </NavLink>
@@ -130,7 +141,7 @@ const Navbar = ({ handleShow }) => {
             <NavLink to="https://jobs.dubaimusic.com/submit-job/" className="nav-link" onClick={closeSidebar}>
               Post a Job
             </NavLink>
-          </li>
+          </li> */}
           <li className="nav-item">
             <NavLink to="/music-store" className="nav-link"  onClick={closeSidebar}>
             Music Store
@@ -152,7 +163,7 @@ const Navbar = ({ handleShow }) => {
               About
             </NavLink>
           </li>
-          
+
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">
               {" "}
