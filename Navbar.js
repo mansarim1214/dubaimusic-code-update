@@ -113,11 +113,11 @@ const Navbar = ({ handleShow }) => {
           <li className="nav-item">
             <NavLink
               exact="true"
-              to="/musicians"
+              to="/venues"
               className="nav-link"
               onClick={closeSidebar}
             >
-              Musicians
+              Venues
             </NavLink>
           </li>
 

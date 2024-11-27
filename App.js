@@ -35,19 +35,19 @@ const App = () => {
     
         <Navbar />
         <Routes>
-          <Route path="/" element={<Venues />} /> 
+          <Route path="/" element={<Musicians />} /> 
           
           <Route path="/login" element={<Login />} />
 
        
           
               {/* <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/db-sarim-shehran1214" element={<Dashboard />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
            
           <Route path="/artist/:id" element={<ArtistDetail />} />
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/musicians" element={<Musicians />} />
+          <Route path="/venues" element={<Venues />} />
           <Route path="/wedding-vip-packages" element={<WeddingVIP />} />
           <Route path="/venuedetail/:id" element={<VenueDetail />} />
           <Route path="/music-store/:id" element={<StoreDetail />} />
