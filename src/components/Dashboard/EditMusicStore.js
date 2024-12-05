@@ -9,14 +9,18 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
   const [bio, setBio] = useState(store.bio || ""); // Added bio state
   const [logo, setLogo] = useState(store.logo || "");
   const [featuredImage, setFeaturedImage] = useState(null);
-  const [newLogo, setNewLogo] = useState(null); // For new logo uploads
+  const [newLogo, setNewLogo] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [status, setStatus] = useState(store.status || ""); 
+
 
   useEffect(() => {
     setName(store.name || "");
     setContact(store.contact || "");
     setBio(store.bio || "");
     setLogo(store.logo || "");
+    setStatus(store.status || ""); 
+
     setFeaturedImage(store.featuredImage || ""); // Ensure featuredImage is set here
   }, [store]);
   
@@ -27,7 +31,9 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("contact", contact);
-    formData.append("bio", bio); // Append bio
+    formData.append("bio", bio);
+    formData.append("status", status); 
+
     if (newLogo) {
       formData.append("logo", newLogo); // Append the new logo if uploaded
     }
@@ -50,6 +56,14 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
       console.error("Error updating music store:", error);
       setErrorMessage("Error updating the store. Please try again.");
     }
+  };
+
+  const handleStatusToggle = () => {
+    setStatus((prevStatus) => {
+      const newStatus = prevStatus === "published" ? "draft" : "published";
+      console.log("Toggled Status:", newStatus); // Debugging log
+      return newStatus;
+    });
   };
 
   const handleLogoChange = (e) => {
@@ -175,6 +189,24 @@ const EditMusicStore = ({ store, setEditStore, setShowAlert }) => {
             
           />
         </div>
+
+        <div className="form-group">
+            <label>Status</label>
+            <div className="custom-switch">
+              <input
+                type="checkbox"
+                id="statusCont"
+                checked={status === "published"} // Check if local status is 'publish'
+                onChange={handleStatusToggle} // Call the toggle function
+              />
+              <label className="slider" htmlFor="statusCont">
+                {" "}
+              </label>
+              <span className="custom-switch-label">
+                {status === "published" ? "Published" : "Draft"}
+              </span>
+            </div>
+          </div>
 
         <div className="form-group d-flex">
           <button type="submit" className="btn btn-primary">

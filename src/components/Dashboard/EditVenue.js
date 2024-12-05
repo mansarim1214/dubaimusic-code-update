@@ -8,17 +8,26 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
   const [description, setDescription] = useState(venue.description);
   const [location, setLocation] = useState(venue.location);
   const [category, setCategory] = useState(venue.category);
+  const [status, setStatus] = useState(venue.status); 
+  const [contact, setContact] = useState(venue.contact); 
   const [featuredImage, setFeaturedImage] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [fileName, setFileName] = useState("No file chosen");
   const [newGalleryImages, setNewGalleryImages] = useState([]);
 
+  // Update states when the venue prop changes
   useEffect(() => {
-    // Initialize gallery images from existing gallery
+    console.log("Initial Venue Status:", venue.status); // Debugging log
+    setTitle(venue.title);
+    setDescription(venue.description);
+    setLocation(venue.location);
+    setCategory(venue.category);
+    setStatus(venue.status); 
+    setContact(venue.contact); 
     if (venue.gallery) {
       setGallery(venue.gallery);
     }
-  }, [venue.gallery]);
+  }, [venue]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -51,6 +60,14 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
     setNewGalleryImages(newGalleryImages.filter((_, i) => i !== index));
   };
 
+  const handleStatusToggle = () => {
+    setStatus((prevStatus) => {
+      const newStatus = prevStatus === "published" ? "draft" : "published";
+      console.log("Toggled Status:", newStatus); // Debugging log
+      return newStatus;
+    });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -59,6 +76,8 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
     formData.append("description", description);
     formData.append("location", location);
     formData.append("category", category);
+    formData.append("status", status); 
+    formData.append("contact", contact); 
     if (featuredImage) formData.append("featuredImage", featuredImage);
     newGalleryImages.forEach((file) => formData.append("galleryImages", file));
 
@@ -95,7 +114,7 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            required
+            
             className="form-control"
           />
         </div>
@@ -112,13 +131,23 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
         </div>
 
         <div className="form-group">
+          <label>Contact</label>
+          <input
+            type="text"
+            name="contact"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            className="form-control"
+          />
+        </div>
+
+        <div className="form-group">
           <label>Location</label>
           <input
             type="text"
             name="location"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            
             className="form-control"
           />
         </div>
@@ -145,6 +174,7 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             <option value="Sunday">Sunday</option>
           </select>
         </div>
+
         <div className="form-group">
           <label>Featured Image</label>
           <div className="custom-file-input-wrapper">
@@ -164,6 +194,7 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             <span id="file-name">{fileName}</span>
           </div>
         </div>
+
         <div className="form-group">
           <label>Gallery</label>
           <div className="custom-file-input-wrapper">
@@ -230,6 +261,28 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
               </>
             )}
           </div>
+
+          {/* Toggle for Publish/Draft */}
+          <div className="form-group">
+            <label>Status</label>
+            <div className="custom-switch">
+              <input
+                type="checkbox"
+                id="statusCont"
+                checked={status === "published"} // Check if local status is 'publish'
+                onChange={handleStatusToggle} // Call the toggle function
+              />
+              <label className="slider" htmlFor="statusCont">
+                {" "}
+              </label>
+              <span className="custom-switch-label">
+                {status === "published" ? "Published" : "Draft"}
+              </span>
+            </div>
+          </div>
+
+
+          
         </div>
         <button type="submit" className="btn btn-lg btn-dark mt-5">
           Update Venue

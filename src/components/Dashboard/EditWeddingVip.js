@@ -1,38 +1,18 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
-  const [title, setTitle] = useState(artist.title);
-  const [category, setCategory] = useState(artist.category);
-  const [speciality, setSpeciality] = useState(artist.speciality);
-  const [description, setDescription] = useState(artist.description);
-  const [videoUrl, setVideoUrl] = useState(artist.videoUrl);
-  const [audioUrl, setAudioUrl] = useState(artist.audioUrl);
+const EditWeddingVip = ({ weddingVip, setEditWeddingVip, setShowAlert }) => {
+  const [title, setTitle] = useState(weddingVip.title);
+  const [description, setDescription] = useState(weddingVip.description);
+  const [videoUrl, setVideoUrl] = useState(weddingVip.videoUrl);
+  const [category, setCategory] = useState(weddingVip.category || ""); // State for category
   const [image, setImage] = useState(null);
   const [fileName, setFileName] = useState("No file chosen");
-  const [categories, setCategories] = useState([]);
-  const [galleryImages, setGalleryImages] = useState(
-    artist.galleryImages || []
-  );
+  const [galleryImages, setGalleryImages] = useState(weddingVip.galleryImages || []);
+  const [isPublished, setIsPublished] = useState(weddingVip.status); 
   const [newGalleryImages, setNewGalleryImages] = useState([]);
-  const [isPublished, setIsPublished] = useState(artist.status); // Added published status
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/categories`
-        );
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -48,16 +28,13 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     const imageToRemove = galleryImages[index];
 
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/artists/${artist._id}/gallery`,
-        {
-          data: { image: imageToRemove },
-        }
-      );
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/weddingvip/${weddingVip._id}/gallery`, {
+        data: { image: imageToRemove },
+      });
 
       setGalleryImages(galleryImages.filter((_, i) => i !== index));
     } catch (error) {
-      console.error("Error removing gallery image:", error);
+      console.error('Error removing gallery image:', error);
     }
   };
 
@@ -65,63 +42,62 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
     setNewGalleryImages(newGalleryImages.filter((_, i) => i !== index));
   };
 
+
+
   const handleStatusToggle = () => {
-    setIsPublished((prevStatus) =>
-      prevStatus === "published" ? "draft" : "published"
-    );
+    setIsPublished((prevStatus) => {
+      const newStatus = prevStatus === 'published' ? 'draft' : 'published' // Toggle published status
+
+    return newStatus;
+  });
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const artistId = artist._id; // Use the artist's ID from the props
+    const weddingVipId = weddingVip._id;
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("category", category);
-    formData.append("speciality", speciality);
-    formData.append("description", description);
-    formData.append("videoUrl", videoUrl);
-    formData.append("audioUrl", audioUrl);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('videoUrl', videoUrl);
+    formData.append('category', category); // Append category
+    formData.append('isPublished', isPublished); // Add published status
+
 
     if (image) {
-      formData.append("image", image); // Field name 'image'
+      formData.append('image', image); // Append main image file
     }
-
-    formData.append("isPublished", isPublished); // Add published status
 
     // Append new gallery images
     newGalleryImages.forEach((img) => {
-      formData.append("galleryImages", img); // Field name 'galleryImages'
+      formData.append('galleryImages', img);
     });
 
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/artists/${artistId}`,
+        `${process.env.REACT_APP_API_URL}/api/weddingvip/${weddingVipId}`,
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 'Content-Type': 'multipart/form-data' },
         }
       );
 
-      console.log("Artist updated successfully:", response.data);
-      setShowAlert({
-        type: "success",
-        message: "Artist updated successfully!",
-      });
-      setEditArtist(null);
+
+
+      console.log('Wedding VIP updated successfully:', response.data);
+      setShowAlert({ type: 'success', message: 'Wedding VIP updated successfully!' });
+      setEditWeddingVip(null);
     } catch (error) {
-      console.error(
-        "Error updating artist:",
-        error.response ? error.response.data : error.message
-      );
-      setShowAlert({ type: "danger", message: "Failed to update artist." });
+      console.error('Error updating wedding VIP:', error.response ? error.response.data : error.message);
+      setShowAlert({ type: 'danger', message: 'Failed to update wedding VIP.' });
     }
   };
 
   return (
     <>
-      <h3>Edit Artist</h3>
+      <h3>Edit Wedding VIP</h3>
       <form onSubmit={handleSubmit} className="mt-4">
         <div className="form-group">
           <label htmlFor="name">Name</label>
@@ -136,35 +112,6 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="category">Category</label>
-          <select
-            className="form-control"
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">Select category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat.name}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="speciality">Speciality</label>
-          <input
-            type="text"
-            className="form-control"
-            id="speciality"
-            value={speciality}
-            onChange={(e) => setSpeciality(e.target.value)}
-            placeholder="Artist Speciality"
-            required
-          />
-        </div>
-        <div className="form-group">
           <label htmlFor="bio">Bio</label>
           <CKEditor
             editor={ClassicEditor}
@@ -174,9 +121,23 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
               setDescription(data);
             }}
             config={{
-              placeholder: "Enter artist bio",
+              placeholder: "Enter wedding VIP bio",
             }}
           />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <select
+            className="form-control"
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select a category</option>
+            <option value="Wedding/Engagement Packages">Wedding/Engagement Packages</option>
+            <option value="VIP Bookings">VIP Bookings</option>
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="videoUrl">Video URL</label>
@@ -190,18 +151,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="audioUrl">Audio URL</label>
-          <input
-            type="text"
-            className="form-control"
-            id="audioUrl"
-            value={audioUrl}
-            onChange={(e) => setAudioUrl(e.target.value)}
-            placeholder="Enter audio URL"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="image">Artist Photo</label>
+          <label htmlFor="image">Wedding VIP Photo</label>
           <div className="custom-file-input-wrapper">
             <input
               type="file"
@@ -237,7 +187,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
                 <div key={index} className="gallery-item">
                   <img
                     src={`${process.env.REACT_APP_API_URL}/${img}`}
-                    alt={`Galleryimg ${index + 1}`}
+                    alt={`Gallery img ${index + 1}`}
                     className="img-fluid"
                   />
                   <button
@@ -259,7 +209,7 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
                     <div key={index} className="gallery-item">
                       <img
                         src={URL.createObjectURL(img)}
-                        alt={`New Galleryimg ${index + 1}`}
+                        alt={`New Gallery img ${index + 1}`}
                         className="img-fluid"
                       />
                       <button
@@ -275,32 +225,37 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
               </>
             )}
           </div>
+
+          
         </div>
 
-        <div className="form-group">
+
+          {/* Toggle for Publish/Draft */}
+          <div className="form-group">
           <label>Status</label>
           <div className="custom-switch">
             <input
               type="checkbox"
               id="statusSwitch"
-              checked={isPublished === "published"} 
-              onChange={handleStatusToggle} 
+              checked = {isPublished === "published"}
+              name={isPublished}
+              onChange={handleStatusToggle} // Update on change
             />
             <label className="slider" htmlFor="statusSwitch"></label>
             <span className="custom-switch-label">
-              {isPublished === "published" ? "Published" : "Draft"}{" "}
-             
+              {isPublished ? 'Published' : 'Draft'}
             </span>
           </div>
         </div>
+        
 
         <button type="submit" className="btn btn-lg btn-dark mt-5">
-          Update Artist
+          Update Wedding VIP
         </button>
         <button
           type="button"
           className="btn btn-secondary ml-3 mt-5"
-          onClick={() => setEditArtist(null)}
+          onClick={() => setEditWeddingVip(null)}
         >
           Cancel
         </button>
@@ -309,4 +264,4 @@ const EditArtist = ({ artist, setEditArtist, setShowAlert }) => {
   );
 };
 
-export default EditArtist;
+export default EditWeddingVip;

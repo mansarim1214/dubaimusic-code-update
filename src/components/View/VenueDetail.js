@@ -1,34 +1,42 @@
-import React, { useEffect, useState  } from "react";
+import React, { useEffect, useState, Suspense  } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-// import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
-import { BsArrowLeftSquareFill  } from "react-icons/bs";
+import { FaWhatsapp } from "react-icons/fa"; 
 import "./frontend.css"; // Import the CSS file for styling
 
+const BsArrowLeftSquareFill = React.lazy(() =>
+  import("react-icons/bs").then((module) => ({ default: module.BsArrowLeftSquareFill }))
+);
+const BsTelephone = React.lazy(() =>
+  import("react-icons/bs").then((module) => ({ default: module.BsTelephone }))
+);
 
-
-const VenueDetail = () => {
+const VenueDetail = ({onNavigate}) => {
   const { id } = useParams();
   const [venue, setVenue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
-  // const [formMessage, setFormMessage] = useState("");
-  const [galleryImages, setGalleryImages] = useState([]); // Declare galleryImages here
+  const [galleryImages, setGalleryImages] = useState([]); 
+  const [progress, setProgress] = useState(0);  
+
   
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate(-1); // This will take the user to the previous page in the history stack
+    setProgress(50); 
+
+    if (onNavigate) {
+      onNavigate(`/venues`);
+    }
   };
   
 
   useEffect(() => {
     
     const fetchVenue = async () => {
+      setProgress(30);  
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/venues/${id}`
@@ -52,6 +60,9 @@ const VenueDetail = () => {
       } catch (error) {
         console.error("Error fetching venue:", error);
         setError("Failed to fetch venue. Please try again later.");
+       
+      } finally {
+        setProgress(100);  
         setLoading(false);
       }
     };
@@ -69,37 +80,10 @@ const VenueDetail = () => {
     );
   };
 
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
-  // };
+  
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const templateParams = {
-  //     name: formData.name,
-  //     phone: formData.phone,
-  //     email: formData.email,
-  //     venueName: venue?.title, // Ensure venue name is included
-  //   };
+  // if (loading) return <Preloader />;
 
-  //   emailjs
-  //     .send(
-  //       "service_3hkljmf",
-  //       "template_hg6yimn",
-  //       templateParams,
-  //       "q1l_DC7jwQvu80xJ5"
-  //     )
-  //     .then((response) => {
-  //       setFormMessage("Booking request sent successfully!");
-  //       setFormData({ name: "", phone: "", email: "" });
-  //     })
-  //     .catch((error) => {
-  //       setFormMessage("Failed to send booking request. Please try again.");
-  //       console.error("Error sending booking request:", error);
-  //     });
-  // };
-
-  if (loading) return <div>Loading...</div>;
 
   if (error) return <div>Error: {error}</div>;
 
@@ -111,9 +95,11 @@ const VenueDetail = () => {
     <div className="venue-detail bg-custom">
       <div className="container">
 
-      <span onClick={handleBack} className="back-btn d-md-none">
+        <Suspense fallback={<div>Loading Back Button...</div>}>
+      <span onClick={handleBack} className="back-btn">
       <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
     </span>
+    </Suspense>
 
         <h1>{venue.title}</h1>
         <div>
@@ -161,6 +147,7 @@ const VenueDetail = () => {
                     alt={venue.title}
                     className="venue-image mb-2"
                     style={{ width: "100%", height: "auto" }}
+                    loading="lazy"
                   />
                 )}
                 {galleryImages.length > 0 && (
@@ -184,6 +171,7 @@ const VenueDetail = () => {
                                 alt={`galleryimg ${index + 1}`}
                                 className="grid-item"
                                 style={{ cursor: "pointer" }}
+                                loading="lazy"
                               />
                             )}
                           </Item>
@@ -196,63 +184,19 @@ const VenueDetail = () => {
             )}
           </div>
         </div>
-        {/* <div className="venueForm mt-3">
-          <h1 className="mx-2 my-2">Book Now</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="form-control"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your Name"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    className="form-control"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    placeholder="Phone Number"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="form-control"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your Email"
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <button type="submit" className="btn enquirybtn">
-                  Enquire Now
-                </button>
-              </div>
-            </div>
-          </form>
-          {formMessage && <p className="form-message">{formMessage}</p>}
-        </div> */}
+
+        {venue.contact> 0 && (
+        <div className="venueForm mt-3">
+        <div className="my-2">
+         
+            <h1>Contact Venue</h1>
+            <a href={`tel:${venue.contact}`} target="_blank"  rel="noreferrer" className="btn btn-call"><BsTelephone /> Call Now</a>
+          </div>
+
+         
+        
+      </div>
+         )}
       </div>
     </div>
   );

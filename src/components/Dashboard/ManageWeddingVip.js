@@ -1,42 +1,37 @@
-// src/components/Venues.js
+// src/components/ManageWeddingVip.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
-// import { CKEditor } from "@ckeditor/ckeditor5-react";
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import EditVenue from './EditVenue';
+import EditWeddingVip from './EditWeddingVip';
 
-const ManageVenue = () => {
-  const [venues, setVenues] = useState([]);
+const ManageWeddingVip = () => {
+  const [weddingVips, setWeddingVips] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredVenues, setFilteredVenues] = useState([]);
-  const [editVenue, setEditVenue] = useState(null);
+  const [filteredWeddingVips, setFilteredWeddingVips] = useState([]);
+  const [editWeddingVip, setEditWeddingVip] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
-  // const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchVenues = async () => {
+    const fetchWeddingVips = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/venues`);
-        setVenues(response.data);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/weddingvip`);
+        setWeddingVips(response.data);
       } catch (error) {
-        console.error('Error fetching venues:', error);
+        console.error('Error fetching Wedding VIPs:', error);
       }
     };
 
-    fetchVenues();
+    fetchWeddingVips();
   }, []);
 
   useEffect(() => {
-    const filtered = venues.filter((venue) => {
+    const filtered = weddingVips.filter((vip) => {
       return (
-        (venue.title && venue.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (venue.category && venue.category.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (venue.location && venue.location.toLowerCase().includes(searchTerm.toLowerCase()))
+        (vip.title && vip.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (vip.description && vip.description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     });
-    setFilteredVenues(filtered);
-  }, [searchTerm, venues]);
+    setFilteredWeddingVips(filtered);
+  }, [searchTerm, weddingVips]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -47,24 +42,24 @@ const ManageVenue = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this venue?");
+    const confirmed = window.confirm("Are you sure you want to delete this Wedding VIP?");
     if (!confirmed) return;
 
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/venues/${id}`);
-      setVenues(venues.filter((venue) => venue._id !== id));
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/weddingvip/${id}`);
+      setWeddingVips(weddingVips.filter((vip) => vip._id !== id));
       setShowAlert(true);
     } catch (error) {
-      console.error('Error deleting venue:', error);
+      console.error('Error deleting Wedding VIP:', error);
     }
   };
 
-  const handleEdit = (venue) => {
-    setEditVenue(venue);
+  const handleEdit = (vip) => {
+    setEditWeddingVip(vip);
   };
 
   return (
-    <div className="venues">
+    <div className="weddingvips">
       {showAlert && (
         <div
           className="alert alert-success alert-dismissible fade show"
@@ -81,23 +76,23 @@ const ManageVenue = () => {
         </div>
       )}
 
-      {editVenue ? (
-        <EditVenue
-          venue={editVenue}
-          setEditVenue={setEditVenue}
+      {editWeddingVip ? (
+        <EditWeddingVip
+          weddingVip={editWeddingVip}
+          setEditWeddingVip={setEditWeddingVip}
           setShowAlert={setShowAlert}
         />
       ) : (
         <>
-          <h3>Manage Venues</h3>
-          <p>Total Entries: {venues.length}</p>
+          <h3>Manage Wedding VIPs</h3>
+          <p>Total Entries: {weddingVips.length}</p>
 
           <form onSubmit={handleSubmit} className="mb-3">
             <div className="form-group d-flex">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search by name, category, or location"
+                placeholder="Search by title or description"
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
@@ -109,28 +104,29 @@ const ManageVenue = () => {
               <tr>
                 <th>Title</th>
                 <th>Category</th>
-                <th>Location</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredVenues.map((venue) => (
-                <tr key={venue._id}>
-                  <td>{venue.title}</td>
-                  <td>{venue.category}</td>
-                  <td>{venue.location}</td>
-                  <td>{venue.status}</td>
+              {filteredWeddingVips.map((vip) => (
+                <tr key={vip._id}>
+                  <td>{vip.title}</td>
+                  <td>{vip.category}</td>
+                  <td>{vip.description}</td>
+                  <td>{vip.isPublished}</td>
+
                   <td>
                     <button
                       className="btn btn-warning mr-2"
-                      onClick={() => handleEdit(venue)}
+                      onClick={() => handleEdit(vip)}
                     >
                       Edit
                     </button>
                     <button
                       className="btn btn-danger"
-                      onClick={() => handleDelete(venue._id)}
+                      onClick={() => handleDelete(vip._id)}
                     >
                       Delete
                     </button>
@@ -145,4 +141,4 @@ const ManageVenue = () => {
   );
 };
 
-export default ManageVenue;
+export default ManageWeddingVip;

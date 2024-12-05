@@ -7,7 +7,7 @@ body.offcanvas-active {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 2rem !important;
+    padding: 0.5rem 1rem !important;
     background-color: #333;
   }
   #navbarNav{
@@ -60,60 +60,9 @@ body.offcanvas-active {
   }
 
 
-  /* .offcanvas-header {
-    display: none;
-  }
-  
-  .screen-overlay {
-    width: 0%;
-    height: 100%;
-    z-index: 30;
-    position: fixed;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    visibility: hidden;
-    background-color: rgba(34, 34, 34, 0.6);
-    transition: opacity 0.2s linear, visibility 0.1s, width 1s ease-in;
-  } */
-  /* .screen-overlay.show {
-    transition: opacity 0.5s ease, width 0s;
-    opacity: 1;
-    width: 100%;
-    visibility: visible;
-  }
-   */
+
   @media all and (max-width: 992px) {
-    /* .offcanvas-header {
-      display: block;
-    }
-  
-    .mobile-offcanvas {
-      visibility: hidden;
-      transform: translateX(-100%);
-      border-radius: 0;
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      z-index: 1200;
-      width: 80%;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      transition: visibility 0.2s ease-in-out, transform 0.2s ease-in-out;
-      background-color:#000000 !important;
-    }
-  
-    html:lang(ar) .mobile-offcanvas {
-      transform: translateX(100%);
-    }
-  
-    .mobile-offcanvas.show {
-      visibility: visible;
-      transform: translateX(0);
-    }
-   */
+    
     .nav-cont {
       display: block !important;
       padding-right: auto !important;
@@ -135,7 +84,7 @@ body.offcanvas-active {
     }
 
     .navbar{
-      padding: 0 !important;
+      padding: 0 12px !important;
     }
     .nav-link{
       font-size: 14px !important;
@@ -301,7 +250,7 @@ input[type="checkbox"] {
   position: fixed;
   top: 0;
   left: 0;
-  width: 270px;
+  width: 340px;
   height: 100%;
   background-color: #111;
   z-index: 9999;
@@ -315,6 +264,7 @@ input[type="checkbox"] {
 
 .btn-close {
   font-size: 24px;
+  z-index: 1;
 
 }
 .instant-btn{
@@ -451,4 +401,16 @@ input[type="checkbox"] {
 
 .modal-header .btn-close::before {
   color: white; /* Color of the close icon */
+}
+
+.offcanvas-header{
+  justify-content: flex-end;
+}
+
+.close{
+  color: white;
+  background-color: transparent;
+  border: none;
+  font-size: 40px;
+  padding: 0 10px;
 }

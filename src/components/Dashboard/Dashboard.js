@@ -8,6 +8,8 @@ import ManageVenue from "./ManageVenue";
 import {Link}  from "react-router-dom";
 import AddMusicStore from "./AddMusicStore";
 import ManageMusicStore from "./ManageStore";
+import ManageWeddingVip from "./ManageWeddingVip";
+import AddWeddingVip from "./AddWeddingVip";
 
 
 
@@ -121,6 +123,47 @@ const Dashboard = () => {
                 </li>
 
                 <li className="nav-item">
+                  <div className="accordion" id="accordionWedding">
+                    <div className="accordion-item">
+                      <button
+                        className="accordion-button"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseWedding"
+                        aria-expanded="true"
+                        aria-controls="collapseWedding"
+                      >
+                        Wedding-VIP
+                      </button>
+
+                      <div
+                        id="collapseWedding"
+                        className="accordion-collapse collapse"
+                        aria-labelledby="headingTwo"
+                        data-bs-parent="#accordionWedding"
+                      >
+                        <div className="accordion-body">
+                          <Link
+                            className="nav-link"
+                            onClick={() => handleComponentSelect("addWeddingVip")}
+                          >
+                            Add Wedding-VIP
+                          </Link>
+                          <Link
+                            className="nav-link"
+                            onClick={() => handleComponentSelect("manageWeddingVip")}
+                          >
+                            Manage Wedding-VIP
+                          </Link>
+
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li className="nav-item">
                   <div className="accordion" id="accordionStore">
                     <div className="accordion-item">
                       <button
@@ -174,9 +217,11 @@ const Dashboard = () => {
             {selectedComponent === "addCategory" && <AddCategoryForm />}
             {selectedComponent === "editArtist" && <ViewArtists />}
             {selectedComponent === "addVenue" && <AddVenue />}
+            {selectedComponent === "addWeddingVip" && <AddWeddingVip />}
             {selectedComponent === "manageVenue" && <ManageVenue />}
             {selectedComponent === "addStore" && <AddMusicStore />}
             {selectedComponent === "manageMusicStore" && <ManageMusicStore />}
+            {selectedComponent === "manageWeddingVip" && <ManageWeddingVip/>}
 
           </main>
         </div>

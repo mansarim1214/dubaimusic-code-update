@@ -111,10 +111,11 @@ const ViewArtists = () => {
         </div>
       </form>
         
-        <table className="table">
+        <table className="table table-responsive" width={'100%'}>
           <thead>
             <tr>
               <th>Name</th>
+              <th>Status</th>
               <th>Category</th>
               <th>Speciality</th>
               <th>Description</th>
@@ -127,6 +128,7 @@ const ViewArtists = () => {
             {filteredArtists.map((artist) => (
               <tr key={artist._id}>
                 <td>{artist.title}</td>
+                <td>{artist.isPublished}</td>
                 <td>{artist.category}</td>
                 <td>{artist.speciality}</td>
                 <td>{artist.description}</td>

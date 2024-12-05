@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import React, { useState } from "react";
+import axios from "axios";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const AddVenue = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [venue, setVenue] = useState({
-    title: '',
-    description: '',
-    location: '',
-    featuredImage: '',
-    category: 'Hidden Gems',
+    title: "",
+    description: "",
+    location: "",
+    featuredImage: "",
+    contact: "",
+    category: "Hidden Gems",
+    status: "draft", // Default to draft
   });
 
   const [gallery, setGallery] = useState([]);
@@ -21,7 +23,10 @@ const AddVenue = () => {
   };
 
   const handleFileChange = (e) => {
-    setVenue((prevState) => ({ ...prevState, featuredImage: e.target.files[0] }));
+    setVenue((prevState) => ({
+      ...prevState,
+      featuredImage: e.target.files[0],
+    }));
   };
 
   const handleGalleryChange = (e) => {
@@ -33,46 +38,60 @@ const AddVenue = () => {
     setVenue((prevState) => ({ ...prevState, description: data }));
   };
 
+  const handleStatusToggle = () => {
+    setVenue((prevState) => ({
+      ...prevState,
+      status: prevState.status === "publish" ? "draft" : "publish",
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', venue.title);
-    formData.append('description', venue.description);
-    formData.append('location', venue.location);
-    formData.append('category', venue.category);
+    formData.append("title", venue.title);
+    formData.append("description", venue.description);
+    formData.append("location", venue.location);
+    formData.append("category", venue.category);
+    formData.append("contact", venue.contact);
+    formData.append("status", venue.status); // Send status field
 
     if (venue.featuredImage) {
-      formData.append('featuredImage', venue.featuredImage);
+      formData.append("featuredImage", venue.featuredImage);
     }
 
     for (let i = 0; i < gallery.length; i++) {
-      formData.append('gallery', gallery[i]);
+      formData.append("gallery", gallery[i]);
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/venues`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/venues`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-      console.log('Venue saved successfully:', response.data);
-      setShowAlert(true); // Set showAlert to true on successful submission
+      console.log("Venue saved successfully:", response.data);
+      setShowAlert(true);
 
-      // Redirect to the venues dashboard or any other route after successful submission
       setTimeout(() => {
         setShowAlert(false);
-        // Navigate or reset form if needed
       }, 3000);
     } catch (error) {
-      console.error('Error saving venue:', error);
-      // Handle error state or display error message to user
+      console.error("Error saving venue:", error);
     }
   };
 
   return (
     <div className="add-venue">
       <h3>Add New Venue</h3>
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className="mt-3">
+      <form
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="mt-3"
+      >
         <div className="form-group">
           <label>Title</label>
           <input
@@ -80,7 +99,6 @@ const AddVenue = () => {
             name="title"
             value={venue.title}
             onChange={handleChange}
-            required
             className="form-control"
           />
         </div>
@@ -94,6 +112,18 @@ const AddVenue = () => {
             className="form-control"
           />
         </div>
+
+        <div className="form-group">
+          <label>Contact</label>
+          <input
+            type="text"
+            name="contact"
+            value={venue.contact}
+            onChange={handleChange}
+            className="form-control"
+          />
+        </div>
+
         <div className="form-group">
           <label>Location</label>
           <input
@@ -101,7 +131,6 @@ const AddVenue = () => {
             name="location"
             value={venue.location}
             onChange={handleChange}
-            
             className="form-control"
           />
         </div>
@@ -114,7 +143,9 @@ const AddVenue = () => {
             required
             className="form-control"
           >
-            <option value="" disabled>Select category</option>
+            <option value="" disabled>
+              Select category
+            </option>
             <option value="Coca Cola Arena">Coca Cola Arena</option>
             <option value="Hot Picks">Hot Picks</option>
             <option value="Monday">Monday</option>
@@ -146,16 +177,41 @@ const AddVenue = () => {
           />
         </div>
 
+        <div className="form-group">
+          <label>Status</label>
+          <div className="custom-switch">
+            <input
+              type="checkbox"
+              id="statusSwitch"
+              checked={venue.status === "publish"}
+              onChange={handleStatusToggle} // Update on change
+            />
+            <label className="slider" htmlFor="statusSwitch"></label>
+            <span className="custom-switch-label">
+              {venue.status === "publish" ? "Published" : "Draft"}
+            </span>
+          </div>
+        </div>
+
         {showAlert && (
-          <div className="alert alert-success alert-dismissible fade show" role="alert">
+          <div
+            className="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
             Venue added successfully!
-            <button type="button" className="close" onClick={() => setShowAlert(false)}>
+            <button
+              type="button"
+              className="close"
+              onClick={() => setShowAlert(false)}
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         )}
 
-        <button type="submit" className="btn btn-lg btn-dark mt-5">Add Venue</button>
+        <button type="submit" className="btn btn-lg btn-dark mt-5">
+          Add Venue
+        </button>
       </form>
     </div>
   );

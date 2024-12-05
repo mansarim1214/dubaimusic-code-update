@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "./frontend.css";
 
-const MusicStore = () => {
+const MusicStore = ({ onNavigate }) => {
   const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,23 +13,39 @@ const MusicStore = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/musicstore`
         );
-        setStores(response.data);
+
+        // Filter only published stores
+        const publishedStores = response.data.filter(
+          (store) => store.status === "published"
+        );
+
+        setStores(publishedStores);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setError("Failed to fetch stores. Please try again later.");
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
+
+  const handleClick = (store) => {
+    if (onNavigate) {
+      onNavigate(`/music-store/${store._id}`);
+    }
+  };
+
+ 
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
     <div className="bg-custom">
+      <h2 className="my-2 fav-title">Music Stores</h2>
       <div className="container-fluid">
-        <h2 className="my-2 fav-title">Music Stores</h2>
-        <div
-          className="storeGrid" // Grid layout
-          
-        >
+        <div className="storeGrid">
           {stores.map((store) => (
             <div
               key={store._id}
@@ -37,22 +54,23 @@ const MusicStore = () => {
                 textAlign: "center",
                 padding: "10px",
               }}
+              onClick={() => handleClick(store)} 
             >
-              <Link to={`/music-store/${store._id}`}>
-                <div className="storeImage">
-                  {store.featuredImage && (
-                    <img
-                      src={`${process.env.REACT_APP_API_URL}/${store.featuredImage}`}
-                      alt={store.name}
-                      width="100%"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="storeContent">
-                    <h4 className="artTitle">{store.name}</h4>
-                  </div>
+              <div className="storeImage">
+                <img
+                  src={
+                    store.featuredImage
+                      ? `${process.env.REACT_APP_API_URL}/${store.featuredImage}`
+                      : "/placeholder.png"
+                  }
+                  alt={store.name}
+                  width="100%"
+                  loading="lazy"
+                />
+                <div className="storeContent">
+                  <h4 className="artTitle">{store.name}</h4>
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
         </div>

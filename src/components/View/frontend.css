@@ -1,5 +1,7 @@
 html, body{
 overflow-x: hidden;
+background-color: rgb(51, 51, 51) !important;
+
 }
 
 .mainFront{
@@ -39,17 +41,22 @@ overflow-x: hidden;
 
 
 .artCat, .fav-title{
-    /* background-color: #E60023;
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 62%); */
-    color: white !important;
+  /* background-color: #000000; */
+  font-size: 24px !important;
+
+
     z-index: 999;
-    padding: 6px 0px;
-    font-size: 24px !important;
+    padding: 6px 20px;
+    
     position: relative;
     margin-bottom: 0;
     font-weight: 600;
 }
 
+
+.form-group {
+  margin-bottom: 10px;
+}
 
 
 .location{
@@ -127,6 +134,20 @@ overflow-x: hidden;
   height: 200px;
 }
 
+
+.mainsection img{
+  width: 60% !important;
+}
+
+#WelcomeModal h4{
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.div hr{
+  display: none;
+}
+
 }
 
 @media only screen and (min-width: 500px)and (max-width: 1042px) {
@@ -134,6 +155,14 @@ overflow-x: hidden;
     flex: 0 0 25% !important;
   }
 }
+
+@media only screen and (min-width: 1920px){
+  .artistImage img, .storeImage img{
+    height: 480px;
+  }
+
+}
+
 #description h4{
     color: #955FE6;
     font-weight: bold;
@@ -301,14 +330,14 @@ overflow-x: hidden;
   .heartIcon{
     fill: #ffffff4f;
     overflow: visible;
-    stroke: #ff0000;
-    stroke-width: 1px;
+    stroke: #693dab;
+    stroke-width: 2px;
     
   }
 
   .favorited{
-    fill: red;
-    stroke: #e60023;
+    fill: #693dab;
+    stroke: #693dab;
   }
 
   .favoriteIcon button{
@@ -542,3 +571,61 @@ width: 100% !important;
     grid-template-columns: repeat(2, 1fr); /* 2 items per row on mobile */
   }
 }
+
+
+
+.div{
+  display: flex;
+  align-items: center;
+
+}
+
+
+.div hr{
+  color: #b7b7b7 !important;
+  width: 60%;
+  margin: 0 auto ;
+}
+
+
+.welcomemodal{
+  background: rgb(37,37,37);
+  background: radial-gradient(circle, rgba(37, 37, 37, 0.675) 25%, rgb(82 81 81 / 48%) 89%);
+  
+  filter: drop-shadow(2px 4px 6px black);
+  background-position: center;
+  background-color: #00000000 !important;
+}
+
+#WelcomeModal{
+  top: 20%;
+  padding-right: 0 !important;
+}
+
+.artSection:first-of-type hr {
+  display: none;
+}
+
+.category-wrapper:first-of-type hr {
+  display: none;
+}
+
+
+.back-btn{
+  cursor: pointer;
+}
+
+.newLabel {
+  background-color: #ff0000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border-radius: 5px;
+}
+
+
+

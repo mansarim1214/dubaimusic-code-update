@@ -1,44 +1,44 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
-import { BsFillGeoAltFill } from "react-icons/bs";
-import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import "./frontend.css";
+import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
 
 gsap.registerPlugin(Draggable);
 
-const Venues = ({ onNavigate }) => {
-  const [venues, setVenues] = useState([]);
+const WeddingVIP = ({ onNavigate }) => {
+  const [weddingVIPItems, setWeddingVIPItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const carouselRefs = useRef([]);
 
+  const isMobile = () => window.innerWidth <= 500;
+
+  // Fetch Wedding VIP items with filter for published status
   useEffect(() => {
-    const fetchVenues = async () => {
+    const fetchWeddingVIPItems = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/venues`
+          `${process.env.REACT_APP_API_URL}/api/weddingvip`
         );
-        const publishedVenues = response.data.filter(
-          (venue) => venue.status === "published"
-        );
-        setVenues(publishedVenues);
+        
+        // Filter only published items
+        const publishedItems = response.data.filter(item => item.isPublished === 'published');
+        
+        setWeddingVIPItems(publishedItems);
       } catch (error) {
-        setError("Failed to fetch venues. Please try again later.");
-        console.error("Error fetching venues:", error);
+        console.error("Error fetching wedding VIP items:", error);
+        setError("Failed to fetch Wedding VIP items. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVenues();
+    fetchWeddingVIPItems();
   }, []);
 
-  const isMobile = () => window.innerWidth <= 500;
-
-  // Helper function to shuffle an array
+  // Shuffle items if necessary
   const shuffleArray = (array) => {
     return array
       .map((item) => ({ item, sort: Math.random() }))
@@ -46,45 +46,39 @@ const Venues = ({ onNavigate }) => {
       .map(({ item }) => item);
   };
 
-  const categoryOrder = [
-    "Hot Picks",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  // Function to group items by category
+  const groupItemsByCategory = () => {
+    const groupedItems = {};
 
-  // Function to group venues by category and shuffle the venues in each category
-  const groupVenuesByCategory = () => {
-    const groupedVenues = {};
-
-    venues.forEach((venue) => {
-      if (!groupedVenues[venue.category]) {
-        groupedVenues[venue.category] = [];
+    weddingVIPItems.forEach((item) => {
+      if (!groupedItems[item.category]) {
+        groupedItems[item.category] = [];
       }
-      groupedVenues[venue.category].push(venue);
+      groupedItems[item.category].push(item);
     });
 
-    const orderedGroupedVenues = {};
-    categoryOrder.forEach((category) => {
-      if (groupedVenues[category]) {
-        orderedGroupedVenues[category] = shuffleArray(groupedVenues[category]);
-      }
+    const shuffledGroupedItems = {};
+    Object.keys(groupedItems).forEach((category) => {
+      shuffledGroupedItems[category] = shuffleArray(groupedItems[category]);
     });
 
-    return orderedGroupedVenues;
+    return shuffledGroupedItems;
   };
 
-  const groupedVenues = groupVenuesByCategory();
+  // Get grouped wedding VIP items
+  const groupedWeddingVIPItems = groupItemsByCategory();
 
+  // Carousel scroll functionality
   const scrollCarousel = (direction, index) => {
     const carousel = carouselRefs.current[index];
     if (carousel) {
       const item = carousel.querySelector(".venueImage");
-      const itemWidth = item ? item.clientWidth : 0;
+      if (!item) {
+        console.error("No items found in carousel");
+        return;
+      }
+
+      const itemWidth = item.clientWidth;
       const scrollAmount = itemWidth * 3;
 
       let newScrollPosition = carousel.scrollLeft + scrollAmount * direction;
@@ -101,6 +95,7 @@ const Venues = ({ onNavigate }) => {
     }
   };
 
+  // Enable dragging on mobile
   useEffect(() => {
     if (isMobile()) {
       carouselRefs.current.forEach((carousel) => {
@@ -126,20 +121,20 @@ const Venues = ({ onNavigate }) => {
         }
       });
     }
-  }, [groupedVenues]);
+  }, [groupedWeddingVIPItems]);
 
-  const handleClick = (venue) => {
+  const handleClick = (item) => {
     if (onNavigate) {
-      onNavigate(`/venuedetail/${venue._id}`);
+      onNavigate(`/wedding-vip-packages/${item._id}`);
     }
   };
 
-
+  
 
   return (
     <div className="bg-custom">
       <div className="container-fluid p-0">
-        {Object.keys(groupedVenues).map((category, index) => {
+        {Object.keys(groupedWeddingVIPItems).map((category, index) => {
           const carousel = carouselRefs.current[index];
           const isScrollable =
             carousel && carousel.scrollWidth > carousel.clientWidth;
@@ -161,6 +156,7 @@ const Venues = ({ onNavigate }) => {
                       <BsChevronCompactLeft />
                     </button>
                   )}
+
                   <div
                     className="venueCarousel"
                     ref={(el) => (carouselRefs.current[index] = el)}
@@ -170,40 +166,30 @@ const Venues = ({ onNavigate }) => {
                       width: "100%",
                     }}
                   >
-                    {groupedVenues[category].map((venue) => (
+                    {groupedWeddingVIPItems[category].map((item) => (
                       <div
-                        key={venue._id}
+                        key={item._id}
                         className="venueImage"
                         style={{ flex: "0 0 16.67%", padding: "0 5px" }}
+                        onClick={() => handleClick(item)}
                       >
-                        <div onClick={() => handleClick(venue)}>
-                          <div className="artistImage">
-                            {venue.featuredImage ? (
-                              <img
-                                src={`${process.env.REACT_APP_API_URL}/${venue.featuredImage}`}
-                                alt={venue.title}
-                                width="100%"
-                                loading="lazy"
-                              />
-                            ) : (
-                              <div className="image-placeholder"></div>
-                            )}
-                            {venue.isNew && (
-                              <span className="newLabel">Recently Added</span>
-                            )}
-                            <div className="artContent">
-                              <h4 className="artTitle">{venue.title}</h4>
-                              {venue.location && (
-                                <span className="location">
-                                  <BsFillGeoAltFill /> {venue.location}
-                                </span>
-                              )}
-                            </div>
+                        <div className="artistImage">
+                          {item.imageUrl && (
+                            <img
+                              src={`${process.env.REACT_APP_API_URL}/${item.imageUrl}`}
+                              alt={item.title}
+                              width="100%"
+                              loading="lazy"
+                            />
+                          )}
+                          <div className="artContent">
+                            <h4 className="artTitle">{item.title}</h4>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
+
                   {isScrollable && (
                     <button
                       className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
@@ -222,4 +208,4 @@ const Venues = ({ onNavigate }) => {
   );
 };
 
-export default Venues;
+export default WeddingVIP;

@@ -4,38 +4,32 @@ import { useParams, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
-import ReactPlayer from "react-player";
-import { FaWhatsapp } from "react-icons/fa"; 
 import "./frontend.css";
+import ReactPlayer from "react-player";
+import { BsArrowLeftSquareFill } from "react-icons/bs";
+import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
-const BsArrowLeftSquareFill = React.lazy(() =>
-  import("react-icons/bs").then((module) => ({ default: module.BsArrowLeftSquareFill }))
-);
-
-
-const ArtistDetail = ({onNavigate}) => {
+const WeddingVIPDetail = ({onNavigate}) => {
   const { id } = useParams();
-  const [artist, setArtist] = useState(null);
+  const [weddingVIP, setWeddingVIP] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [formMessage, setFormMessage] = useState("");
   const [images, setImages] = useState([]);
   const [progress, setProgress] = useState(0);  
-
   
   const navigate = useNavigate();
 
   const handleBack = () => {
     setProgress(50); 
-    
     if (onNavigate) {
-      onNavigate(`/`);
+      onNavigate(`/wedding-vip-packages`);
     }
+
+
   };
-  
 
   // Video URL Functions
-
   function getEmbedUrl(url) {
     if (!url) {
       console.error("URL is null or undefined");
@@ -68,13 +62,13 @@ const ArtistDetail = ({onNavigate}) => {
   };
 
   useEffect(() => {
-    const fetchArtist = async () => {
-      setProgress(30); 
+    const fetchWeddingVIP = async () => {
+      setProgress(30);  
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/artists/${id}`
+          `${process.env.REACT_APP_API_URL}/api/weddingvip/${id}`
         );
-        setArtist(response.data);
+        setWeddingVIP(response.data);
         setLoading(false);
 
         // Load images to get their dimensions
@@ -91,15 +85,15 @@ const ArtistDetail = ({onNavigate}) => {
         const loadedImages = await Promise.all(imagePromises);
         setImages(loadedImages);
       } catch (error) {
-        console.error("Error fetching artist:", error);
-        
+        console.error("Error fetching wedding VIP details:", error);
+        setLoading(false);
       }finally {
         setProgress(100);  
         setLoading(false);
       }
     };
 
-    fetchArtist();
+    fetchWeddingVIP();
   }, [id]);
 
   const handleChange = (e) => {
@@ -112,7 +106,7 @@ const ArtistDetail = ({onNavigate}) => {
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
-      artistName: artist?.title,
+      vipTitle: weddingVIP?.title,
     };
 
     emailjs
@@ -133,68 +127,55 @@ const ArtistDetail = ({onNavigate}) => {
   };
 
 
+  
 
-  if (!artist) return <div></div>;
-
-  // Categories that should hide Category and Speciality fields
-  const hiddenCategories = ["Wedding Packages", "VIP"];
-  const shouldHideDetails = hiddenCategories.includes(artist.category);
+  if (!weddingVIP) return <div className="store-detail bg-custom"></div>;
 
   const whatsappShareUrl = `https://api.whatsapp.com/send?text=Check out this: ${window.location.href}`;
 
   return (
     <div className="artist-detail bg-custom">
       <div className="container">
-      <Suspense fallback={<div>Loading Back Button...</div>}>
-      <span onClick={handleBack} className="back-btn">
-      <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
-    </span>
-  </Suspense>
 
-        {artist.videoUrl && (
+      <Suspense fallback={<div>Loading Back Button...</div>}>
+        <span onClick={handleBack} className="back-btn">
+          <BsArrowLeftSquareFill size={30} className="my-2" />
+        </span>
+
+        </Suspense>
+
+        {weddingVIP.videoUrl && (
           <div className="artist-video">
             <iframe
               width="100%"
               height="500"
-              src={getEmbedUrl(artist.videoUrl)}
-              title={artist.title}
+              src={getEmbedUrl(weddingVIP.videoUrl)}
+              title={weddingVIP.title}
               frameBorder="0"
               allowFullScreen
             ></iframe>
           </div>
         )}
 
-        {artist.audioUrl && (
+        {weddingVIP.audioUrl && (
           <div className="artist-audio">
-            <ReactPlayer url={artist.audioUrl} />
+            <ReactPlayer url={weddingVIP.audioUrl} />
           </div>
         )}
-        <h1>{artist.title}</h1>
-
-        {/* Conditionally show Category and Speciality */}
-        {!shouldHideDetails && (
-          <>
-            <div>
-              Category: <span>{artist.category}</span>
-            </div>
-            <div>
-              Music Style: <span>{artist.speciality}</span>
-            </div>
-          </>
-        )}
+        <h1>{weddingVIP.title}</h1>
 
         <div id="description" className="mt-3">
           <div className="row">
             <div
               className={`col-md-${
-                artist.galleryImages.length || artist.imageUrl ? "6" : "12"
+                weddingVIP.galleryImages.length || weddingVIP.imageUrl ? "6" : "12"
               }`}
             >
               <h4>About</h4>
               <div
                 dangerouslySetInnerHTML={{
                   __html:
-                    addTargetToLinks(artist.description) ||
+                    addTargetToLinks(weddingVIP.description) ||
                     "<em>Description not available yet</em>",
                 }}
               />
@@ -212,18 +193,19 @@ const ArtistDetail = ({onNavigate}) => {
               </div>
             </div>
 
-            {(artist.galleryImages.length || artist.imageUrl) && (
-              <div className={`col-md-${artist.imageUrl ? "6" : "12"}`}>
-                {artist.imageUrl && (
+            {(weddingVIP.galleryImages.length || weddingVIP.imageUrl) && (
+              <div className={`col-md-${weddingVIP.imageUrl ? "6" : "12"}`}>
+                {weddingVIP.imageUrl && (
                   <img
-                    src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                    alt={artist.title}
+                    src={`${process.env.REACT_APP_API_URL}/${weddingVIP.imageUrl}`}
+                    alt={weddingVIP.title}
                     className="artist-image mb-2"
                     style={{ width: "100%", height: "auto" }}
+                    loading="lazy"
                   />
                 )}
 
-                {artist.galleryImages.length > 0 && (
+                {weddingVIP.galleryImages.length > 0 && (
                   <div className="gallery-container">
                     <h4>Gallery</h4>
                     <Gallery>
@@ -241,9 +223,10 @@ const ArtistDetail = ({onNavigate}) => {
                                 ref={ref}
                                 onClick={open}
                                 src={img.src}
-                                alt={`Galleryimage ${index + 1}`}
+                                alt={`Gallery ${index + 1}`}
                                 className="grid-item"
                                 style={{ cursor: "pointer" }}
+                                loading="lazy"
                               />
                             )}
                           </Item>
@@ -320,4 +303,4 @@ const ArtistDetail = ({onNavigate}) => {
   );
 };
 
-export default ArtistDetail;
+export default WeddingVIPDetail;

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import "./Navbar.css"; // Assuming you have styles for the sidebar and overlay
 import { BsInstagram, BsFacebook } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import InstantBookModal from "./InstantBookModal"; // Import the modal component
+// import InstantBookModal from "./InstantBookModal"; 
 
 const Navbar = ({ handleShow }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +36,7 @@ const Navbar = ({ handleShow }) => {
     <>
       {/* Main Navbar */}
       <nav className="navbar fixed-top navbar-dark bg-black">
+        
         <a className="navbar-brand" href="/">
           <img
             src="/dubai-music-white-logo.webp"
@@ -44,6 +45,7 @@ const Navbar = ({ handleShow }) => {
             alt="Logo"
           />
         </a>
+       
 
         <div className="d-flex">
           {/* Toggle icon */}
@@ -57,7 +59,7 @@ const Navbar = ({ handleShow }) => {
           </div>
           {/* Toggle iCON */}
 
-          <ul>
+          {/* <ul>
             <li className="instant-btn">
               <button
                 type="button"
@@ -69,8 +71,9 @@ const Navbar = ({ handleShow }) => {
               </button>
             </li>
           </ul>
-          <InstantBookModal />
+          <InstantBookModal /> */}
         </div>
+
       </nav>
 
       {/* Overlay */}
@@ -83,7 +86,7 @@ const Navbar = ({ handleShow }) => {
       <div className={`mobile-offcanvas ${isSidebarOpen ? "show" : ""}`}>
         <div className="offcanvas-header">
           <button
-            className="btn-close"
+            className="close"
             onClick={closeSidebar}
             aria-label="Close sidebar"
             aria-expanded={isSidebarOpen}
@@ -120,6 +123,34 @@ const Navbar = ({ handleShow }) => {
               Venues
             </NavLink>
           </li>
+
+          <li className="nav-item">
+            <NavLink
+              exact="true"
+              to="/wedding-vip-packages"
+              className="nav-link"
+              onClick={closeSidebar}
+            >
+              Wedding-VIP Packages
+            </NavLink>
+          </li>
+          
+          {/* <li className="nav-item">
+            <NavLink to="https://jobs.dubaimusic.com" className="nav-link" onClick={closeSidebar}>
+              Jobs
+            </NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="https://jobs.dubaimusic.com/submit-job/" className="nav-link" onClick={closeSidebar}>
+              Post a Job
+            </NavLink>
+          </li> */}
+          <li className="nav-item">
+            <NavLink to="/music-store" className="nav-link"  onClick={closeSidebar}>
+            Music Store
+            </NavLink>
+          </li>
+
           <li className="nav-item">
             <NavLink
               to="/favorites"
@@ -131,25 +162,11 @@ const Navbar = ({ handleShow }) => {
           </li>
 
           <li className="nav-item">
-            <NavLink to="/about" className="nav-link" >
+            <NavLink to="/about" className="nav-link" onClick={closeSidebar}>
               About
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink to="https://jobs.dubaimusic.com" className="nav-link" onClick={closeSidebar}>
-              Jobs
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="https://jobs.dubaimusic.com/submit-job/" className="nav-link" onClick={closeSidebar}>
-              Post a Job
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/music-store" className="nav-link"  onClick={closeSidebar}>
-            Music Store
-            </NavLink>
-          </li>
+
           <div className="social-icons">
             <Link to="https://www.instagram.com/dubaimusic" target="_blank">
               {" "}
@@ -163,6 +180,7 @@ const Navbar = ({ handleShow }) => {
           
 
         </ul>
+
       </div>
     </>
   );

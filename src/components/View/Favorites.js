@@ -89,7 +89,7 @@ const Favorites = () => {
 
   return (
     <div className="bg-custom">
-      <div className="container-fluid" id="favorites">
+      <div className="container-fluid p-0" id="favorites">
       <h2 className="mb-3 fav-title"><strong>Artists You've Favorited</strong></h2>
         {showArrows.left && (
           <button
@@ -142,7 +142,8 @@ const Favorites = () => {
               </div>
             ))
           ) : (
-            <p>No favorites yet!</p>
+            
+            <p className="px-3">No favorites yet!</p>
           )}
         </div>
         {showArrows.right && (
