@@ -5,14 +5,14 @@ import { BsInstagram, BsFacebook } from "react-icons/bs";
 
 const Footer = () => {
   return (
-    <div className="footer pt-3 pb-2 text-center">
+    <div className="footer pt-2 pb-2 text-center">
       <div className="container">
         <div className="social-icons">
           <Link to="https://www.instagram.com/dubaimusic" target="_blank"> <BsInstagram /> </Link>
           <Link to="https://www.facebook.com/dubaimusic.comm" target="_blank"><BsFacebook /></Link>
           {/* <Link to=""><BsYoutube /></Link> */}
         </div>
-        <p className="mt-3">© 2024 Dubai Music . All Rights Reserved.</p>
+        <p className="mt-2" style={{marginBottom: "0"}}>© 2024 Dubai Music . All Rights Reserved.</p>
       </div>
     </div>
   );

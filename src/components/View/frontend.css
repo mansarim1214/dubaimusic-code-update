@@ -212,6 +212,7 @@ background-color: rgb(51, 51, 51) !important;
 
 .artistImage, .venueImage ,.storeImage{
     position: relative;
+    cursor: pointer;
 }
 
 .artContent, .storeContent{
@@ -629,3 +630,28 @@ width: 100% !important;
 
 
 
+
+
+.coming-soon-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  background-color: #000; /* Background color */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Hide any scrollbars */
+}
+
+/* Centering content */
+.coming-soon-container {
+  text-align: center;
+  color: #fff; /* White text color */
+}
+
+/* Hide header and footer specifically for the coming soon page */
+body.coming-soon-page nav,
+body.coming-soon-page footer {
+  display: none;
+}

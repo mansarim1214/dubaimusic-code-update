@@ -145,13 +145,15 @@ const ArtistDetail = ({onNavigate}) => {
   return (
     <div className="artist-detail bg-custom">
       <div className="container">
-      <Suspense fallback={<div>Loading Back Button...</div>}>
+      
       <span onClick={handleBack} className="back-btn">
       <BsArrowLeftSquareFill  size={30} className="my-2"/> {/* Arrow icon */}
     </span>
-  </Suspense>
 
-        {artist.videoUrl && (
+
+  {loading ? (
+          <div className="spinner">Loading artist details...</div>
+        ) : (
           <div className="artist-video">
             <iframe
               width="100%"
@@ -169,16 +171,16 @@ const ArtistDetail = ({onNavigate}) => {
             <ReactPlayer url={artist.audioUrl} />
           </div>
         )}
-        <h1>{artist.title}</h1>
+        <h1>{loading ? "" : artist?.title}</h1>
 
         {/* Conditionally show Category and Speciality */}
         {!shouldHideDetails && (
           <>
             <div>
-              Category: <span>{artist.category}</span>
+              Category: <span>{loading ? "" : artist?.category || "N/A"}</span>
             </div>
             <div>
-              Music Style: <span>{artist.speciality}</span>
+              Music Style: <span>{loading ? "" : artist.speciality || "N/A" }</span>
             </div>
           </>
         )}
