@@ -21,6 +21,8 @@ const ArtistDetail = ({onNavigate}) => {
   const [formMessage, setFormMessage] = useState("");
   const [images, setImages] = useState([]);
   const [progress, setProgress] = useState(0);  
+  const [showVideo, setShowVideo] = useState(false);
+
 
   
   const navigate = useNavigate();
@@ -39,26 +41,32 @@ const ArtistDetail = ({onNavigate}) => {
   function getEmbedUrl(url) {
     if (!url) {
       console.error("URL is null or undefined");
-      return null; // Handle missing URL
+      return { embedUrl: null, thumbnailUrl: null };
     }
-
+  
     const extractVideoId = (url) => {
       const regex =
         /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
       const match = url.match(regex);
       return match ? match[1] : null;
     };
-
+  
     const videoId = extractVideoId(url);
-
     if (!videoId) {
       console.error("Invalid or unsupported YouTube URL:", url);
-      return null; // Or return a placeholder URL
+      return { embedUrl: null, thumbnailUrl: null };
     }
-
-    // Return the embed URL format with the rel=0 parameter
-    return `https://www.youtube.com/embed/${videoId}?rel=0`;
+  
+    return {
+      embedUrl: `https://www.youtube.com/embed/${videoId}?rel=0`,
+      thumbnailUrl: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    };
   }
+  
+  const handlePlayVideo = () => {
+    setShowVideo(true);
+  };
+
 
   const addTargetToLinks = (html) => {
     return html.replace(
@@ -155,15 +163,49 @@ const ArtistDetail = ({onNavigate}) => {
           <div className="spinner">Loading artist details...</div>
         ) : (
           <div className="artist-video">
-            <iframe
-              width="100%"
-              height="500"
-              src={getEmbedUrl(artist.videoUrl)}
-              title={artist.title}
-              frameBorder="0"
-              allowFullScreen
-            ></iframe>
-          </div>
+  {!showVideo ? (
+    <div
+      className="video-placeholder"
+      style={{
+        position: "relative",
+        paddingBottom: "56.25%", // 16:9 Aspect Ratio
+        height: 0,
+        backgroundImage: `url(${getEmbedUrl(artist.videoUrl)?.thumbnailUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        cursor: "pointer",
+      }}
+      onClick={handlePlayVideo}
+    >
+      <button
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          background: "rgba(0,0,0,0.6)",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "50%",
+          fontSize: "24px",
+          cursor: "pointer",
+        }}
+      >
+        ▶
+      </button>
+    </div>
+  ) : (
+    <iframe
+      width="100%"
+      height="500"
+      src={getEmbedUrl(artist.videoUrl)?.embedUrl}
+      title={artist.title}
+      frameBorder="0"
+      allowFullScreen
+    ></iframe>
+  )}
+</div>
         )}
 
         {artist.audioUrl && (

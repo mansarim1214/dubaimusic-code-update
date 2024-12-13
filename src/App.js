@@ -31,7 +31,7 @@ const App = () => {
   const [progress, setProgress] = useState(0); // State for the loading bar progress
   const [isLoading, setIsLoading] = useState(false); // State for managing global loading
 
-  const noHeaderFooterRoutes = ["/", "/login", "/unauthorized"];
+  const noHeaderFooterRoutes = [];
   const showHeaderFooter = !noHeaderFooterRoutes.includes(location.pathname);
 
   // Handle navigation and loading bar
@@ -70,10 +70,11 @@ const App = () => {
 
         {/* Content */}
         <Suspense fallback={<div></div>}>
+       
           <div className="content">
             <Routes>
-              <Route path="/musician" element={<Musicians onNavigate={handleNavigate} />} />
-              <Route path="/" element={<ComingSoon onNavigate={handleNavigate} />} />
+              <Route path="/" element={<Musicians onNavigate={handleNavigate} />} />
+              {/* <Route path="/comingsoon" element={<ComingSoon onNavigate={handleNavigate} />} /> */}
               <Route path="/login" element={<Login onNavigate={handleNavigate} />} />
               <Route path="/db-sarim-shehran1214" element={<Dashboard onNavigate={handleNavigate} />} />
               <Route path="/unauthorized" element={<Unauthorized onNavigate={handleNavigate} />} />
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="/music-store" element={<MusicStore onNavigate={handleNavigate} />} />
             </Routes>
           </div>
+         
         </Suspense>
 
         {/* Footer */}

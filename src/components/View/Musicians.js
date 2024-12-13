@@ -7,17 +7,18 @@ import { Draggable } from "gsap/Draggable";
 import axios from "axios";
 import WelcomeModal from "./WelcomeModal";
 import "./frontend.css";
+import Banner from "./Banner";
+
 
 gsap.registerPlugin(Draggable);
 
-const Musicians = ({onNavigate}) => {
+const Musicians = ({ onNavigate }) => {
   const [categories, setCategories] = useState([]);
   const [artistsByCategory, setArtistsByCategory] = useState({});
   const [favorites, setFavorites] = useState([]);
   const [showArrows, setShowArrows] = useState({ left: false, right: false });
   const carouselRefs = useRef([]);
   const [loading, setLoading] = useState(true);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,14 @@ const Musicians = ({onNavigate}) => {
           "Jin Flora",
           "Robbi McFaulds",
         ],
-        DJ: ["Dadou", "Elena", "Yana Kulyk", "Raphy J", "DJ Stylez", "DJ Melyna"],
+        DJ: [
+          "Dadou",
+          "Elena",
+          "Yana Kulyk",
+          "Raphy J",
+          "DJ Stylez",
+          "DJ Melyna",
+        ],
         Musicians: [
           "Ksenia Kot",
           "Jose Ramon Nunez",
@@ -69,7 +77,9 @@ const Musicians = ({onNavigate}) => {
         let fetchedArtists = artistsResponse.data;
 
         // Filter only published artists
-        fetchedArtists = fetchedArtists.filter(artist => artist.isPublished === 'published');
+        fetchedArtists = fetchedArtists.filter(
+          (artist) => artist.isPublished === "published"
+        );
 
         // Define the desired order
         const desiredOrder = [
@@ -128,7 +138,6 @@ const Musicians = ({onNavigate}) => {
         setCategories(sortedCategories);
         setArtistsByCategory(groupedArtists);
         setFavorites(storedFavorites);
-
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -138,7 +147,6 @@ const Musicians = ({onNavigate}) => {
 
     fetchData();
   }, []);
-  
 
   useEffect(() => {
     if (carouselRefs.current.length > 0) {
@@ -251,12 +259,14 @@ const Musicians = ({onNavigate}) => {
     }
   };
 
-
   return (
     <div className="mainFront">
       <WelcomeModal />
 
-      <div className="container-fluid p-0" id="explore">
+      <div className="container-fluid p-0" >
+
+        <Banner />
+
         {categories
           .filter(
             (category) =>
@@ -264,7 +274,7 @@ const Musicians = ({onNavigate}) => {
               artistsByCategory[category.name].length > 0
           )
           .map((category, index) => (
-            <section key={category._id} className="artSection">
+            <section key={category._id} className="artSection" id="musicians">
               <div className="div mb-2 ">
                 <h2 className="artCat">{category.name}</h2>
 
@@ -294,33 +304,35 @@ const Musicians = ({onNavigate}) => {
                     style={{
                       flex: "0 0 16.67%",
                       boxSizing: "border-box",
-                      padding: "0 5px"}}
-                     onClick={(event) => handleClick(artist, event)}
+                      padding: "0 5px",
+                    }}
+                    onClick={(event) => handleClick(artist, event)}
                   >
-                    
-                      <div className="artistImage">
-                        {artist.imageUrl && (
-                          <img
-                            src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                            alt={artist.title}
-                            width="100%"
-                            loading="lazy"
-                          />
-                        )}
-                        <div className="artContent">
-                          <h4 className="artTitle">{artist.title}</h4>
-                          
-                        </div>
+                    <div className="artistImage">
+                      {artist.imageUrl && (
+                        <img
+                          src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                          alt={artist.title}
+                          width="100%"
+                        />
+                      )}
+                      <div className="artContent">
+                        <h4 className="artTitle">{artist.title}</h4>
                       </div>
-                   
+                    </div>
 
                     {/* Add heart icon here */}
                     <div className="favoriteIcon">
-                      <button onClick={() => toggleFavorite(artist)}>
+                      <button
+                        onClick={(event) => {
+                          event.stopPropagation(); // Prevent the click event from bubbling up
+                          toggleFavorite(artist);
+                        }}
+                      >
                         {isFavorite(artist) ? (
-                          <BsHeartFill className=" favorited" />
+                          <BsHeartFill className="favorited" />
                         ) : (
-                          <BsHeartFill className="heartIcon " />
+                          <BsHeartFill className="heartIcon" />
                         )}
                       </button>
                     </div>
