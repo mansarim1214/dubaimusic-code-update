@@ -786,13 +786,29 @@ body.coming-soon-page footer {
     font-size: 14px;
     margin-top: 20px;
   }
+  .logo-container{
+    width: max-content;
+  }
 }
 
 .logo-carousel{
   margin-top: 100px;
+  overflow: hidden; /* Ensures only visible logos show */
+  white-space: nowrap;
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  flex-wrap: nowrap; /* Prevents wrapping of logos */
+  will-change: transform;
+
+}
+
+.logo {
+  width: 150px; /* Smaller logos for smaller screens */
+  height: auto;
+  flex-shrink: 0;
 }
 
 
-.logo-container img{
-  width: 150px;
-}

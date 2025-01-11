@@ -11,7 +11,7 @@ const About = () => {
 
     const calculateDuration = () => {
       const screenWidth = window.innerWidth;
-      if (screenWidth < 768) return 5; // Faster for smaller screens
+      if (screenWidth < 768) return 15; // Faster for smaller screens
       if (screenWidth < 1200) return 15; // Moderate speed for medium screens
       return 10; // Slower for larger screens
     };
