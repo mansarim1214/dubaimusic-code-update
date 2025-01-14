@@ -9,7 +9,7 @@ background-color: rgb(51, 51, 51) !important;
     color: white !important;
     
     min-height: 100vh;
-    background-color: rgb(51, 51, 51) !important;
+    background-color: rgb(0, 0, 0) !important;
     padding-bottom: 50px;
     /* padding-top: 100px; */
 }
@@ -751,7 +751,7 @@ body.coming-soon-page footer {
   margin: 0 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  background: #00000061;
+  background: #693dab5e;
 }
 
 .carousel-dot.active {
@@ -789,6 +789,20 @@ body.coming-soon-page footer {
   .logo-container{
     width: max-content;
   }
+
+  .about-us h1{
+    font-size: 30px !important;
+    
+  
+  }
+
+  .about-us p {
+    font-size: 18px !important;
+}
+
+.logo-carousel{
+  margin-top: 50px !important;
+}
 }
 
 .logo-carousel{
@@ -812,3 +826,30 @@ body.coming-soon-page footer {
 }
 
 
+.about-us h2{
+  font-size: 18px;
+}
+
+.about-us h1{
+  font-size: 65px;
+  font-weight: 900;
+
+}
+
+.about-us h3{
+  font-size: 18px;
+}
+
+.about-us p{
+  font-size: 27px;
+}
+
+.about-us h4{
+  text-transform: uppercase;
+  background-color: beige;
+  border-radius: 100px;
+  display: inline-block;
+  color: black;
+  padding: 10px 20px;
+  font-size: 18px;
+}

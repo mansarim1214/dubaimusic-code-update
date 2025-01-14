@@ -11,7 +11,7 @@ const About = () => {
 
     const calculateDuration = () => {
       const screenWidth = window.innerWidth;
-      if (screenWidth < 768) return 15; // Faster for smaller screens
+      if (screenWidth < 768) return 35; // Faster for smaller screens
       if (screenWidth < 1200) return 15; // Moderate speed for medium screens
       return 10; // Slower for larger screens
     };
@@ -36,26 +36,47 @@ const About = () => {
   }, []);
 
   return (
-    <div className="bg-custom">
-      <div className="container">
-        <div className="text-white d-flex justify-content-center align-items-center">
-          <div className="col-md-7">
-            <div className="text-center">
-              <h2>Welcome to Dubai Music</h2>
-              <p>
-                Your go-to hub for booking the best musicians in Dubai. Whether
-                you're planning a wedding, event, or managing a venue, you can
-                easily book your favorite music acts with just a click. Explore
-                our curated list of top talent and create the perfect atmosphere
-                for any experience.
+    <div className="bg-custom about-us">
+      <div className="container pt-5">
+        <div className="text-white d-flex">
+          <div className="col-md-12">
+            <div>
+              <h2>ABOUT DUBAI MUSIC</h2>
+              <h1>DISCOVER AND BOOK LIVE MUSIC IN A CLICK.</h1>
+
+
+              <div className="row pt-5">
+                <div className="col-md-7"> 
+                  <h3>MISSION</h3>
+                  <p>
+                  At Dubai Music, we connect tourists, residents,
+and music lovers to the best live music
+venues, 7 days a week.
               </p>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-md-6"></div>
+                <div className="col-md-6"> 
+                  
+                  <p>
+                Whether you’re looking to discover incredible
+performances or hire live musicians for a wedding, hotel, or
+venue, we’re here to make it happen. We offer personalized
+live music solutions that are tailored to create the perfect
+atmosphere for any event or location.
+              </p>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>
 
         {/* Logo Carousel Section */}
-        <div className="logo-carousel text-center">
-        <h1>Our Clients</h1>
+        <div className="logo-carousel">
+        <h4>Our Customers</h4>
           <div
             className="logo-container d-flex align-items-center mt-5"
             ref={logoContainerRef}
