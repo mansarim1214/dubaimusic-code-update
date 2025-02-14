@@ -8,9 +8,10 @@ const Banner = () => {
     {
       src: '/banner2.webp',
       alt: 'Banner for Venues',
-      text: 'Find the Perfect Venue',
+      text: 'Discover Live Music Venues',
       button: 'Explore Venues',
       url: '/venues',
+      class: 'center',
     },
 
     {
@@ -24,11 +25,11 @@ const Banner = () => {
     {
       src: '/banner1.webp',
       alt: 'Banner for Musicians',
-      text: 'Explore the World of Musicians',
+      text: 'Explore Dubai’s Top Musicians',
       button: 'Explore Now',
       url: '#musicians',
     },
-
+  
     {
       src: '/coca-cola-arena.webp',
       alt: 'Banner for coca cola arena',
@@ -43,6 +44,14 @@ const Banner = () => {
       text: 'Discover World-Class Performances at Dubai Opera',
       button: 'View Shows',
       url: 'https://www.dubaiopera.com/en-US/products-list?utm_source=sem&utm_medium=cpc&utm_campaign=EE_Tac_BR_BR_DO_All_GA_SEM_Web_AE_EN_PRO_Conv_2322021&utm_term=ae-en&utm_content=en&gad_source=1',
+    },
+
+    {
+      src: '/guitar-store.webp',
+      alt: 'Art of Guitar',
+      text: 'Art of Guitar',
+      button: 'View Store',
+      url: '/music-store/67afa3372272627033bafded',
     },
    
     
@@ -67,7 +76,7 @@ const Banner = () => {
       const nextIndex = (currentIndex + 1) % slides.length;
       setCurrentIndex(nextIndex);
       animateSlide(nextIndex);
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [currentIndex]);
@@ -83,7 +92,7 @@ const Banner = () => {
       <div className="carousel-track" ref={carouselRef}>
         {slides.map((slide, index) => (
           <div key={index} className="carousel-slide">
-            <img src={slide.src} alt={slide.alt} />
+            <img src={slide.src} alt={slide.alt} className={slide.class}/>
             <h1 className="carousel-text">{slide.text}</h1>
             <a href={slide.url} className="carousel-btn enquirybtn">
               {slide.button}
