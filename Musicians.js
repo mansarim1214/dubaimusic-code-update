@@ -7,53 +7,63 @@ import { Draggable } from "gsap/Draggable";
 import axios from "axios";
 import "./frontend.css";
 
+
 gsap.registerPlugin(Draggable);
 
-const Musicians = () => {
+const Musicians = ({ onNavigate }) => {
   const [categories, setCategories] = useState([]);
   const [artistsByCategory, setArtistsByCategory] = useState({});
   const [favorites, setFavorites] = useState([]);
   const [showArrows, setShowArrows] = useState({ left: false, right: false });
   const carouselRefs = useRef([]);
-
-  const manualArtistOrder = {
-    Singers: [
-      "Jerome Deligero",
-      "Emily Peacock",
-      "Toi Dupras",
-      "Yvonne Park",
-      "Matt Palmer",
-      "Lina Ammor- Jevtic",
-      "Eirini Devitt",
-      "Juan Pablo Pellicer",
-      "Nick Pritchard",
-      "Mostafa Sattar",
-      "Jin Flora",
-      "Robbi McFaulds",
-    ],
-    DJ: ["Dadou", "Elena", "Yana Kulyk", "Raphy J", "DJ Stylez", "DJ Melyna"],
-    Musicians: [
-      "Ksenia Kot",
-      "Jose Ramon Nunez",
-      "Soren Lyng Hansen",
-      "Tatiana Durova",
-      "Aleksandra Dudek",
-      "Ulyana Goncharova",
-    ],
-    Trending: [
-      "Carrie Gibson’s NuvoSoul",
-      "Jaymie Deville",
-      "Chelsey Chantelle",
-      "Golden Collective",
-      "Abdallah Seleem",
-      "Dany Echemendia",
-      "Marvin Lee",
-    ],
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      const manualArtistOrder = {
+        Singers: [
+          "Jerome Deligero",
+          "Emily Peacock",
+          "Toi Dupras",
+          "Yvonne Park",
+          "Matt Palmer",
+          "Lina Ammor- Jevtic",
+          "Eirini Devitt",
+          "Juan Pablo Pellicer",
+          "Nick Pritchard",
+          "Mostafa Sattar",
+          "Jin Flora",
+          "Robbi McFaulds",
+        ],
+        DJ: [
+          "Dadou",
+          "Elena",
+          "Yana Kulyk",
+          "Raphy J",
+          "DJ Stylez",
+          "DJ Melyna",
+        ],
+        Musicians: [
+          "Ksenia Kot",
+          "Jose Ramon Nunez",
+          "Soren Lyng Hansen",
+          "Tatiana Durova",
+          "Aleksandra Dudek",
+          "Ulyana Goncharova",
+        ],
+        Trending: [
+          "Carrie Gibson’s NuvoSoul",
+          "Jaymie Deville",
+          "Chelsey Chantelle",
+          "Golden Collective",
+          "Abdallah Seleem",
+          "Dany Echemendia",
+          "Marvin Lee",
+        ],
+      };
+
       try {
+        setLoading(true);
         const categoriesResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/categories`
         );
@@ -62,7 +72,12 @@ const Musicians = () => {
         const artistsResponse = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/artists`
         );
-        const fetchedArtists = artistsResponse.data;
+        let fetchedArtists = artistsResponse.data;
+
+        // Filter only published artists
+        fetchedArtists = fetchedArtists.filter(
+          (artist) => artist.isPublished === "published"
+        );
 
         // Define the desired order
         const desiredOrder = [
@@ -123,6 +138,8 @@ const Musicians = () => {
         setFavorites(storedFavorites);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -234,27 +251,18 @@ const Musicians = () => {
     }
   };
 
+  const handleClick = (artist) => {
+    if (onNavigate) {
+      onNavigate(`/artist/${artist._id}`);
+    }
+  };
+
   return (
     <div className="mainFront">
-      {/* Hero Section */}
 
-      {/* 
+      <div className="container-fluid p-0" >
 
-      <div className="mainsection text-center">
-        <img
-          src="/dubai-music-white-logo.webp"
-          
-          className="d-inline-block align-top"
-          alt="Logo"
-        />
 
-<h4>The Premium Guide to live music in the city</h4>
-
-      </div> */}
-
-      {/* Hero Section */}
-
-      <div className="container-fluid p-0" id="explore">
         {categories
           .filter(
             (category) =>
@@ -262,7 +270,7 @@ const Musicians = () => {
               artistsByCategory[category.name].length > 0
           )
           .map((category, index) => (
-            <section key={category._id} className="artSection">
+            <section key={category._id} className="artSection" id="musicians">
               <div className="div mb-2 ">
                 <h2 className="artCat">{category.name}</h2>
 
@@ -294,30 +302,33 @@ const Musicians = () => {
                       boxSizing: "border-box",
                       padding: "0 5px",
                     }}
+                    onClick={(event) => handleClick(artist, event)}
                   >
-                    <Link to={`/artist/${artist._id}`}>
-                      <div className="artistImage">
-                        {artist.imageUrl && (
-                          <img
-                            src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
-                            alt={artist.title}
-                            width="100%"
-                            loading="lazy"
-                          />
-                        )}
-                        <div className="artContent">
-                          <h4 className="artTitle">{artist.title}</h4>
-                        </div>
+                    <div className="artistImage">
+                      {artist.imageUrl && (
+                        <img
+                          src={`${process.env.REACT_APP_API_URL}/${artist.imageUrl}`}
+                          alt={artist.title}
+                          width="100%"
+                        />
+                      )}
+                      <div className="artContent">
+                        <h4 className="artTitle">{artist.title}</h4>
                       </div>
-                    </Link>
+                    </div>
 
                     {/* Add heart icon here */}
                     <div className="favoriteIcon">
-                      <button onClick={() => toggleFavorite(artist)}>
+                      <button
+                        onClick={(event) => {
+                          event.stopPropagation(); // Prevent the click event from bubbling up
+                          toggleFavorite(artist);
+                        }}
+                      >
                         {isFavorite(artist) ? (
-                          <BsHeartFill className=" favorited" />
+                          <BsHeartFill className="favorited" />
                         ) : (
-                          <BsHeartFill className="heartIcon " />
+                          <BsHeartFill className="heartIcon" />
                         )}
                       </button>
                     </div>

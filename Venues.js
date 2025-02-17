@@ -1,19 +1,21 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
-import { Link } from "react-router-dom";
 import { BsFillGeoAltFill } from "react-icons/bs";
-import WelcomeModal from "./WelcomeModal";
 import { BsChevronCompactRight, BsChevronCompactLeft } from "react-icons/bs";
+import Banner from "./Banner";
+import { Link } from "react-router-dom";
+import WelcomeModal from "./WelcomeModal";
+import "./frontend.css";
 
 gsap.registerPlugin(Draggable);
 
-const Venues = () => {
+const Venues = ({ onNavigate }) => {
   const [venues, setVenues] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const carouselRefs = useRef([]);
-
-  const isMobile = () => window.innerWidth <= 500;
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -21,14 +23,22 @@ const Venues = () => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/api/venues`
         );
-        setVenues(response.data);
+        const publishedVenues = response.data.filter(
+          (venue) => venue.status === "published"
+        );
+        setVenues(publishedVenues);
       } catch (error) {
+        setError("Failed to fetch venues. Please try again later.");
         console.error("Error fetching venues:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchVenues();
   }, []);
+
+  const isMobile = () => window.innerWidth <= 500;
 
   // Helper function to shuffle an array
   const shuffleArray = (array) => {
@@ -38,9 +48,7 @@ const Venues = () => {
       .map(({ item }) => item);
   };
 
-
   const categoryOrder = [
-    // "Coca Cola Arena",
     "Hot Picks",
     "Monday",
     "Tuesday",
@@ -51,12 +59,10 @@ const Venues = () => {
     "Sunday",
   ];
 
-  
   // Function to group venues by category and shuffle the venues in each category
   const groupVenuesByCategory = () => {
     const groupedVenues = {};
-    
-    // Group the venues by category
+  
     venues.forEach((venue) => {
       if (!groupedVenues[venue.category]) {
         groupedVenues[venue.category] = [];
@@ -65,11 +71,9 @@ const Venues = () => {
     });
   
     const orderedGroupedVenues = {};
-  
-    // Ensure categories appear in the order defined in categoryOrder
     categoryOrder.forEach((category) => {
       if (groupedVenues[category]) {
-        orderedGroupedVenues[category] = shuffleArray(groupedVenues[category]); // Shuffle the venues within the category
+        orderedGroupedVenues[category] = groupedVenues[category]; // No shuffle
       }
     });
   
@@ -77,21 +81,14 @@ const Venues = () => {
   };
   
 
-  // Get grouped venues
   const groupedVenues = groupVenuesByCategory();
 
-  // Carousel Setting
   const scrollCarousel = (direction, index) => {
     const carousel = carouselRefs.current[index];
     if (carousel) {
       const item = carousel.querySelector(".venueImage");
-      if (!item) {
-        console.error("No items found in carousel");
-        return;
-      }
-
-      const itemWidth = item.clientWidth; // Width of one item
-      const scrollAmount = itemWidth * 3; // Scroll 3 items at a time
+      const itemWidth = item ? item.clientWidth : 0;
+      const scrollAmount = itemWidth * 3;
 
       let newScrollPosition = carousel.scrollLeft + scrollAmount * direction;
       newScrollPosition = Math.max(
@@ -107,7 +104,6 @@ const Venues = () => {
     }
   };
 
-  // Enable dragging on mobile
   useEffect(() => {
     if (isMobile()) {
       carouselRefs.current.forEach((carousel) => {
@@ -120,14 +116,14 @@ const Venues = () => {
               minX: -carousel.scrollWidth + carousel.clientWidth,
               maxX: 0,
             },
-            inertia: true, // Enable inertia for smoother dragging end
-            throwProps: true, // Allow for smoother throw behavior
+            inertia: true,
+            throwProps: true,
             edgeResistance: 0.65,
             onThrowUpdate: () => {
               gsap.to(carousel, { x: carousel._gsap.x, ease: "power2.out" });
             },
             snap: {
-              x: (value) => Math.round(value / 16.67) * 200, // Adjust based on item width
+              x: (value) => Math.round(value / 16.67) * 200,
             },
           });
         }
@@ -135,12 +131,21 @@ const Venues = () => {
     }
   }, [groupedVenues]);
 
+  const handleClick = (venue) => {
+    if (onNavigate) {
+      onNavigate(`/venuedetail/${venue._id}`);
+    }
+  };
+
+
+
   return (
     <div className="bg-custom">
-
-<WelcomeModal />
+      <WelcomeModal />
 
       <div className="container-fluid p-0">
+      <Banner />
+
         {Object.keys(groupedVenues).map((category, index) => {
           const carousel = carouselRefs.current[index];
           const isScrollable =
@@ -148,18 +153,13 @@ const Venues = () => {
 
           return (
             <div key={category} className="category-wrapper">
-            
-
-              <div className="div mb-2 ">
-              <h2 className="my-2 fav-title">{category}</h2>
-
-
-                <hr></hr>
+              <div className="div mb-2">
+                <h2 className="my-2 fav-title">{category}</h2>
+                <hr />
               </div>
 
               <div className="row">
                 <div className="col p-relative">
-                  {/* Conditionally render the left arrow */}
                   {isScrollable && (
                     <button
                       className="arrow left react-multiple-carousel__arrow react-multiple-carousel__arrow--left"
@@ -183,15 +183,20 @@ const Venues = () => {
                         className="venueImage"
                         style={{ flex: "0 0 16.67%", padding: "0 5px" }}
                       >
-                        <Link to={`/venuedetail/${venue._id}`}>
+                        <div onClick={() => handleClick(venue)}>
                           <div className="artistImage">
-                            {venue.featuredImage && (
+                            {venue.featuredImage ? (
                               <img
                                 src={`${process.env.REACT_APP_API_URL}/${venue.featuredImage}`}
                                 alt={venue.title}
                                 width="100%"
                                 loading="lazy"
                               />
+                            ) : (
+                              <div className="image-placeholder"></div>
+                            )}
+                            {venue.isNew && (
+                              <span className="newLabel">Recently Added</span>
                             )}
                             <div className="artContent">
                               <h4 className="artTitle">{venue.title}</h4>
@@ -202,11 +207,10 @@ const Venues = () => {
                               )}
                             </div>
                           </div>
-                        </Link>
+                        </div>
                       </div>
                     ))}
                   </div>
-                  {/* Conditionally render the right arrow */}
                   {isScrollable && (
                     <button
                       className="arrow right react-multiple-carousel__arrow react-multiple-carousel__arrow--right"
