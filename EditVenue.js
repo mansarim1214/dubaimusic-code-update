@@ -8,8 +8,9 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
   const [description, setDescription] = useState(venue.description);
   const [location, setLocation] = useState(venue.location);
   const [category, setCategory] = useState(venue.category);
-  const [status, setStatus] = useState(venue.status); 
-  const [contact, setContact] = useState(venue.contact); 
+  const [status, setStatus] = useState(venue.status);
+  const [contact, setContact] = useState(venue.contact);
+  const [orderNumber, setOrderNumber] = useState(venue.orderNumber || 0); // New state for orderNumber
   const [featuredImage, setFeaturedImage] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [fileName, setFileName] = useState("No file chosen");
@@ -22,8 +23,9 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
     setDescription(venue.description);
     setLocation(venue.location);
     setCategory(venue.category);
-    setStatus(venue.status); 
-    setContact(venue.contact); 
+    setStatus(venue.status);
+    setContact(venue.contact);
+    setOrderNumber(venue.orderNumber || 0); // Initialize orderNumber
     if (venue.gallery) {
       setGallery(venue.gallery);
     }
@@ -76,8 +78,9 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
     formData.append("description", description);
     formData.append("location", location);
     formData.append("category", category);
-    formData.append("status", status); 
-    formData.append("contact", contact); 
+    formData.append("status", status);
+    formData.append("contact", contact);
+    formData.append("orderNumber", orderNumber); // Add orderNumber to formData
     if (featuredImage) formData.append("featuredImage", featuredImage);
     newGalleryImages.forEach((file) => formData.append("galleryImages", file));
 
@@ -114,7 +117,6 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            
             className="form-control"
           />
         </div>
@@ -151,6 +153,9 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             className="form-control"
           />
         </div>
+
+
+
         <div className="form-group">
           <label>Category</label>
           <select
@@ -262,6 +267,18 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
             )}
           </div>
 
+                  {/* New field for orderNumber */}
+        <div className="form-group">
+          <label>Order Number</label>
+          <input
+            type="number"
+            name="orderNumber"
+            value={orderNumber}
+            onChange={(e) => setOrderNumber(Number(e.target.value))} // Ensure it's a number
+            className="form-control"
+          />
+        </div>
+
           {/* Toggle for Publish/Draft */}
           <div className="form-group">
             <label>Status</label>
@@ -280,9 +297,6 @@ const EditVenue = ({ venue, setEditVenue, setShowAlert }) => {
               </span>
             </div>
           </div>
-
-
-          
         </div>
         <button type="submit" className="btn btn-lg btn-dark mt-5">
           Update Venue

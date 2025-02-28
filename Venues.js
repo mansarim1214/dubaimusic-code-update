@@ -40,14 +40,6 @@ const Venues = ({ onNavigate }) => {
 
   const isMobile = () => window.innerWidth <= 500;
 
-  // Helper function to shuffle an array
-  const shuffleArray = (array) => {
-    return array
-      .map((item) => ({ item, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ item }) => item);
-  };
-
   const categoryOrder = [
     "Hot Picks",
     "Monday",
@@ -59,27 +51,44 @@ const Venues = ({ onNavigate }) => {
     "Sunday",
   ];
 
-  // Function to group venues by category and shuffle the venues in each category
-  const groupVenuesByCategory = () => {
-    const groupedVenues = {};
-  
-    venues.forEach((venue) => {
-      if (!groupedVenues[venue.category]) {
-        groupedVenues[venue.category] = [];
-      }
-      groupedVenues[venue.category].push(venue);
+
+  // Function to group venues by category and sort them by orderNumber
+// Function to group venues by category and sort them by orderNumber
+const groupVenuesByCategory = () => {
+  const groupedVenues = {};
+
+  venues.forEach((venue) => {
+    if (!groupedVenues[venue.category]) {
+      groupedVenues[venue.category] = [];
+    }
+    groupedVenues[venue.category].push(venue);
+  });
+
+  // Sort venues within each category by orderNumber
+  Object.keys(groupedVenues).forEach((category) => {
+    groupedVenues[category].sort((a, b) => {
+      // Ensure orderNumber is treated as a number
+      const orderA = Number(a.orderNumber || 0); // Fallback to 0 if orderNumber is missing
+      const orderB = Number(b.orderNumber || 0); // Fallback to 0 if orderNumber is missing
+      return orderA - orderB;
     });
-  
-    const orderedGroupedVenues = {};
-    categoryOrder.forEach((category) => {
-      if (groupedVenues[category]) {
-        orderedGroupedVenues[category] = groupedVenues[category]; // No shuffle
-      }
-    });
-  
-    return orderedGroupedVenues;
-  };
-  
+
+    // Debugging: Log sorted venues for each category
+    console.log(`Sorted Venues for ${category}:`, groupedVenues[category]);
+  });
+
+  const orderedGroupedVenues = {};
+  categoryOrder.forEach((category) => {
+    if (groupedVenues[category]) {
+      orderedGroupedVenues[category] = groupedVenues[category];
+    }
+  });
+
+  return orderedGroupedVenues;
+};
+
+
+
 
   const groupedVenues = groupVenuesByCategory();
 
@@ -137,14 +146,12 @@ const Venues = ({ onNavigate }) => {
     }
   };
 
-
-
   return (
     <div className="bg-custom">
       <WelcomeModal />
 
       <div className="container-fluid p-0">
-      <Banner />
+        <Banner />
 
         {Object.keys(groupedVenues).map((category, index) => {
           const carousel = carouselRefs.current[index];

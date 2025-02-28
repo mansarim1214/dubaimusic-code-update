@@ -13,6 +13,7 @@ const AddVenue = () => {
     contact: "",
     category: "Hidden Gems",
     status: "draft", // Default to draft
+    orderNumber: 0, // New field for arranging venues
   });
 
   const [gallery, setGallery] = useState([]);
@@ -41,7 +42,7 @@ const AddVenue = () => {
   const handleStatusToggle = () => {
     setVenue((prevState) => ({
       ...prevState,
-      status: prevState.status === "publish" ? "draft" : "publish",
+      status: prevState.status === "published" ? "draft" : "published",
     }));
   };
 
@@ -54,7 +55,8 @@ const AddVenue = () => {
     formData.append("location", venue.location);
     formData.append("category", venue.category);
     formData.append("contact", venue.contact);
-    formData.append("status", venue.status); // Send status field
+    formData.append("status", venue.status);
+    formData.append("orderNumber", venue.orderNumber); // Add orderNumber to formData
 
     if (venue.featuredImage) {
       formData.append("featuredImage", venue.featuredImage);
@@ -177,14 +179,26 @@ const AddVenue = () => {
           />
         </div>
 
+        {/* New field for orderNumber */}
+        <div className="form-group">
+          <label>Order Number</label>
+          <input
+            type="number"
+            name="orderNumber"
+            value={venue.orderNumber}
+            onChange={handleChange}
+            className="form-control"
+          />
+        </div>
+
         <div className="form-group">
           <label>Status</label>
           <div className="custom-switch">
             <input
               type="checkbox"
               id="statusSwitch"
-              checked={venue.status === "publish"}
-              onChange={handleStatusToggle} // Update on change
+              checked={venue.status === "published"}
+              onChange={handleStatusToggle}
             />
             <label className="slider" htmlFor="statusSwitch"></label>
             <span className="custom-switch-label">

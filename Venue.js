@@ -9,6 +9,7 @@ const VenueSchema = new mongoose.Schema({
   gallery: { type: [String], default: [] },
   contact: { type: String },
   status: { type: String, default: 'published' },
+  orderNumber: { type: String, default: '0' },
   createdAt: {type: Date}
 }, { Timestamp: true }); // This enables the `createdAt` and `updatedAt` fields
 

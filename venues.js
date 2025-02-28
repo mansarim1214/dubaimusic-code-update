@@ -20,12 +20,12 @@ const upload = multer({ storage });
 
 // POST route to add a new venue
 router.post('/', upload.fields([{ name: 'featuredImage' }, { name: 'gallery' }]), async (req, res) => {
-  const { title, description, location, category, status, contact } = req.body; 
+  const { title, description, location, category, status, contact, orderNumber } = req.body; 
   const featuredImage = `uploads/${req.files['featuredImage'][0].filename}`;
   const gallery = req.files['gallery']?.map(file => `uploads/${file.filename}`) || [];
 
   try {
-    const newVenue = new Venue({ title, description, location, category, featuredImage, gallery, status,contact, createdAt: new Date(), }); 
+    const newVenue = new Venue({ title, description, location, category, featuredImage, gallery, status,contact,orderNumber, createdAt: new Date(), }); 
     await newVenue.save();
     res.status(201).json(newVenue);
   } catch (error) {
@@ -63,8 +63,8 @@ router.put('/:id', upload.fields([
   { name: 'featuredImage', maxCount: 1 },
   { name: 'galleryImages', maxCount: 10 }
 ]), async (req, res) => {
-  const { title, description, location, category, status, contact } = req.body; 
-  const updateData = { title, description, location, category, status, contact };
+  const { title, description, location, category, status, contact, orderNumber } = req.body; 
+  const updateData = { title, description, location, category, status, contact, orderNumber };
 
   try {
     if (req.files['featuredImage']) {
@@ -88,9 +88,6 @@ router.put('/:id', upload.fields([
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 });
-
-
-
 
 
 
