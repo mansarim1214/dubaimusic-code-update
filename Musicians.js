@@ -21,118 +21,69 @@ const Musicians = ({ onNavigate }) => {
   useEffect(() => {
     const fetchData = async () => {
       const manualArtistOrder = {
-        Singers: [
-          "Jerome Deligero",
-          "Emily Peacock",
-          "Toi Dupras",
-          "Yvonne Park",
-          "Matt Palmer",
-          "Lina Ammor- Jevtic",
-          "Eirini Devitt",
-          "Juan Pablo Pellicer",
-          "Nick Pritchard",
-          "Mostafa Sattar",
-          "Jin Flora",
-          "Robbi McFaulds",
-        ],
-        DJ: [
-          "Dadou",
-          "Elena",
-          "Yana Kulyk",
-          "Raphy J",
-          "DJ Stylez",
-          "DJ Melyna",
-        ],
-        Musicians: [
-          "Ksenia Kot",
-          "Jose Ramon Nunez",
-          "Soren Lyng Hansen",
-          "Tatiana Durova",
-          "Aleksandra Dudek",
-          "Ulyana Goncharova",
-        ],
-        Trending: [
-          "Carrie Gibson’s NuvoSoul",
-          "Jaymie Deville",
-          "Chelsey Chantelle",
-          "Golden Collective",
-          "Abdallah Seleem",
-          "Dany Echemendia",
-          "Marvin Lee",
-        ],
+        Singers: ["Jerome Deligero", "Emily Peacock", "Toi Dupras", "Yvonne Park", "Matt Palmer", "Lina Ammor- Jevtic", "Eirini Devitt", "Juan Pablo Pellicer", "Nick Pritchard", "Mostafa Sattar", "Jin Flora", "Robbi McFaulds"],
+        DJ: ["Dadou", "Elena", "Yana Kulyk", "Raphy J", "DJ Stylez", "DJ Melyna"],
+        Musicians: ["Ksenia Kot", "Jose Ramon Nunez", "Soren Lyng Hansen", "Tatiana Durova", "Aleksandra Dudek", "Ulyana Goncharova"],
+        Trending: ["Carrie Gibson’s NuvoSoul", "Jaymie Deville", "Chelsey Chantelle", "Golden Collective", "Abdallah Seleem", "Dany Echemendia", "Marvin Lee"],
       };
-
+  
       try {
         setLoading(true);
-        const categoriesResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/categories`
-        );
-        const fetchedCategories = categoriesResponse.data;
-
-        const artistsResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/artists`
-        );
-        let fetchedArtists = artistsResponse.data;
-
-        // Filter only published artists
-        fetchedArtists = fetchedArtists.filter(
-          (artist) => artist.isPublished === "published"
-        );
-
-        // Define the desired order
-        const desiredOrder = [
-          "Trending",
-          "Singers",
-          "Solo Looping Artists",
-          "Band",
-          "DJ",
-          "Musicians",
-        ];
-
-        // Sort categories based on desiredOrder
-        const sortedCategories = fetchedCategories.sort((a, b) => {
-          const aIndex = desiredOrder.indexOf(a.name);
-          const bIndex = desiredOrder.indexOf(b.name);
-          if (aIndex === -1 && bIndex === -1) return 0;
-          if (aIndex === -1) return 1;
-          if (bIndex === -1) return -1;
-          return aIndex - bIndex;
-        });
-
+        const categoriesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/categories`);
+        let fetchedCategories = categoriesResponse.data;
+  
+        const artistsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/artists`);
+        let fetchedArtists = artistsResponse.data.filter(artist => artist.isPublished === "published");
+  
         // Load favorites from localStorage
-        const storedFavorites =
-          JSON.parse(localStorage.getItem("favorites")) || [];
-
-        // Ensure favorites are marked correctly
+        const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+        
+        // Define shuffle function
+        const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
+        
+        // Define reshuffle logic
+        const lastShuffleDate = localStorage.getItem("lastShuffleDate");
+        const currentDate = new Date().toISOString().split("T")[0];
+        const shouldShuffle = !lastShuffleDate || new Date(currentDate) - new Date(lastShuffleDate) >= 3 * 24 * 60 * 60 * 1000;
+        
+        if (shouldShuffle) {
+          localStorage.setItem("lastShuffleDate", currentDate);
+        }
+        
+        // Define the desired order with Trending fixed at the top
+        let sortedCategories = fetchedCategories.sort((a, b) => {
+          if (a.name === "Trending") return -1;
+          if (b.name === "Trending") return 1;
+          return 0;
+        });
+        
+        // Shuffle categories except Trending
+        if (shouldShuffle) {
+          const categoriesToShuffle = sortedCategories.filter(cat => cat.name !== "Trending");
+          sortedCategories = [
+            sortedCategories.find(cat => cat.name === "Trending"),
+            ...shuffleArray(categoriesToShuffle)
+          ];
+        }
+  
+        // Group and shuffle artists within categories
         const groupedArtists = {};
-
-        sortedCategories.forEach((category) => {
-          let sortedArtists = fetchedArtists
-            .filter((artist) => artist.category === category.name)
-            .map((artist) => ({
-              ...artist,
-              isFavorite: storedFavorites.some((fav) => fav._id === artist._id),
-            }));
-
-          const order = manualArtistOrder[category.name];
-          if (order) {
-            // Sort based on manualArtistOrder
-            const sortedByManualOrder = sortedArtists
-              .filter((artist) => order.includes(artist.title))
-              .sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-
-            // Add artists not in the manualArtistOrder at the end
-            const remainingArtists = sortedArtists.filter(
-              (artist) => !order.includes(artist.title)
-            );
-
-            sortedArtists = [...sortedByManualOrder, ...remainingArtists];
+        sortedCategories.forEach(category => {
+          let sortedArtists = fetchedArtists.filter(artist => artist.category === category.name).map(artist => ({
+            ...artist,
+            isFavorite: storedFavorites.some(fav => fav._id === artist._id),
+          }));
+          
+          // Keep manual sorting for Trending, otherwise shuffle after a few days
+          if (category.name === "Trending") {
+            sortedArtists = sortedArtists.sort((a, b) => manualArtistOrder["Trending"].indexOf(a.title) - manualArtistOrder["Trending"].indexOf(b.title));
+          } else if (shouldShuffle) {
+            sortedArtists = shuffleArray(sortedArtists);
           }
-
+  
           groupedArtists[category.name] = sortedArtists;
         });
-
-        // Update state with sorted categories and artists
+  
         setCategories(sortedCategories);
         setArtistsByCategory(groupedArtists);
         setFavorites(storedFavorites);
@@ -142,9 +93,10 @@ const Musicians = ({ onNavigate }) => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (carouselRefs.current.length > 0) {
