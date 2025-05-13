@@ -40,55 +40,59 @@ const Venues = ({ onNavigate }) => {
 
   const isMobile = () => window.innerWidth <= 500;
 
-  const categoryOrder = [
-    "Hot Picks",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  // Get current day name (e.g., "Monday", "Tuesday", etc.)
+  const getCurrentDay = () => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[new Date().getDay()];
+  };
 
+  // Create the category order with current day first after "Hot Picks"
+  const getCategoryOrder = () => {
+    const currentDay = getCurrentDay();
+    const baseOrder = ["Hot Picks", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    
+    // Move current day to the front (after "Hot Picks")
+    const ordered = [...baseOrder];
+    const currentDayIndex = ordered.indexOf(currentDay);
+    if (currentDayIndex > -1) {
+      ordered.splice(currentDayIndex, 1); // Remove from current position
+      ordered.splice(1, 0, currentDay); // Insert after "Hot Picks"
+    }
+    
+    return ordered;
+  };
+
+  const categoryOrder = getCategoryOrder();
 
   // Function to group venues by category and sort them by orderNumber
-// Function to group venues by category and sort them by orderNumber
-const groupVenuesByCategory = () => {
-  const groupedVenues = {};
+  const groupVenuesByCategory = () => {
+    const groupedVenues = {};
 
-  venues.forEach((venue) => {
-    if (!groupedVenues[venue.category]) {
-      groupedVenues[venue.category] = [];
-    }
-    groupedVenues[venue.category].push(venue);
-  });
-
-  // Sort venues within each category by orderNumber
-  Object.keys(groupedVenues).forEach((category) => {
-    groupedVenues[category].sort((a, b) => {
-      // Ensure orderNumber is treated as a number
-      const orderA = Number(a.orderNumber || 0); // Fallback to 0 if orderNumber is missing
-      const orderB = Number(b.orderNumber || 0); // Fallback to 0 if orderNumber is missing
-      return orderA - orderB;
+    venues.forEach((venue) => {
+      if (!groupedVenues[venue.category]) {
+        groupedVenues[venue.category] = [];
+      }
+      groupedVenues[venue.category].push(venue);
     });
 
-    // Debugging: Log sorted venues for each category
-    console.log(`Sorted Venues for ${category}:`, groupedVenues[category]);
-  });
+    // Sort venues within each category by orderNumber
+    Object.keys(groupedVenues).forEach((category) => {
+      groupedVenues[category].sort((a, b) => {
+        const orderA = Number(a.orderNumber || 0);
+        const orderB = Number(b.orderNumber || 0);
+        return orderA - orderB;
+      });
+    });
 
-  const orderedGroupedVenues = {};
-  categoryOrder.forEach((category) => {
-    if (groupedVenues[category]) {
-      orderedGroupedVenues[category] = groupedVenues[category];
-    }
-  });
+    const orderedGroupedVenues = {};
+    categoryOrder.forEach((category) => {
+      if (groupedVenues[category]) {
+        orderedGroupedVenues[category] = groupedVenues[category];
+      }
+    });
 
-  return orderedGroupedVenues;
-};
-
-
-
+    return orderedGroupedVenues;
+  };
 
   const groupedVenues = groupVenuesByCategory();
 
@@ -157,11 +161,15 @@ const groupVenuesByCategory = () => {
           const carousel = carouselRefs.current[index];
           const isScrollable =
             carousel && carousel.scrollWidth > carousel.clientWidth;
+          const isCurrentDay = category === getCurrentDay();
 
           return (
             <div key={category} className="category-wrapper">
               <div className="div mb-2">
-                <h2 className="my-2 fav-title">{category}</h2>
+                <h2 className="my-2 fav-title">
+                  {category}
+                  {isCurrentDay && <span className="today-badge">Today</span>}
+                </h2>
                 <hr />
               </div>
 
