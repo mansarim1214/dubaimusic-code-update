@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import "./Navbar.css"; // Assuming you have styles for the sidebar and overlay
 import { BsInstagram, BsFacebook } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import InstantBookModal from "./InstantBookModal"; // Import the modal component
+// import InstantBookModal from "./InstantBookModal"; 
 
 const Navbar = ({ handleShow }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,6 +36,7 @@ const Navbar = ({ handleShow }) => {
     <>
       {/* Main Navbar */}
       <nav className="navbar fixed-top navbar-dark bg-black">
+        
         <a className="navbar-brand" href="/">
           <img
             src="/dubai-music-white-logo.webp"
@@ -44,6 +45,7 @@ const Navbar = ({ handleShow }) => {
             alt="Logo"
           />
         </a>
+       
 
         <div className="d-flex">
           {/* Toggle icon */}
@@ -57,7 +59,7 @@ const Navbar = ({ handleShow }) => {
           </div>
           {/* Toggle iCON */}
 
-          <ul>
+          {/* <ul>
             <li className="instant-btn">
               <button
                 type="button"
@@ -69,8 +71,9 @@ const Navbar = ({ handleShow }) => {
               </button>
             </li>
           </ul>
-          <InstantBookModal />
+          <InstantBookModal /> */}
         </div>
+
       </nav>
 
       {/* Overlay */}
@@ -113,11 +116,22 @@ const Navbar = ({ handleShow }) => {
           <li className="nav-item">
             <NavLink
               exact="true"
-              to="/venues"
+              to="/musicians"
               className="nav-link"
               onClick={closeSidebar}
             >
-              Venues
+              Musicians
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink
+              exact="true"
+              to="/introducing-series"
+              className="nav-link"
+              onClick={closeSidebar}
+            >
+              Introducing Series
             </NavLink>
           </li>
 
@@ -159,7 +173,7 @@ const Navbar = ({ handleShow }) => {
           </li>
 
           <li className="nav-item">
-            <NavLink to="/about" className="nav-link" >
+            <NavLink to="/about" className="nav-link" onClick={closeSidebar}>
               About
             </NavLink>
           </li>
@@ -177,6 +191,7 @@ const Navbar = ({ handleShow }) => {
           
 
         </ul>
+
       </div>
     </>
   );
